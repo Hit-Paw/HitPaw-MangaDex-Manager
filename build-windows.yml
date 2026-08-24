@@ -1,0 +1,54 @@
+name: Build Windows Release
+
+on:
+  push:
+    tags:
+      - 'v*'          # push a tag like v3.1.0 to trigger a release build
+  workflow_dispatch:    # or trigger manually from the Actions tab
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'          # a version aqt is known to have; bump if you
+                                     # want to chase newer Qt, see note below
+          arch: 'win64_mingw'
+          tools: 'tools_mingw1310'
+          set-env: true
+
+      - name: Build
+        shell: cmd
+        run: |
+          qmake MangaDexExporter.pro -spec win32-g++
+          mingw32-make -j4
+
+      - name: Deploy Qt dependencies
+        shell: cmd
+        run: |
+          windeployqt.exe release\MangaDexExporter.exe
+
+      - name: Package
+        shell: pwsh
+        run: |
+          Compress-Archive -Path release\* -DestinationPath HitPaw-MangaDex-Manager-Windows.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: HitPaw-MangaDex-Manager-Windows.zip
+          generate_release_notes: true
+
+# ── Notes ────────────────────────────────────────────────────────────────
+# - "version: 6.7.3" pins a Qt version the install-qt-action's index
+#   (aqtinstall) is confirmed to have. If you want to match your local
+#   6.11.1 exactly, check `aqt list-qt windows desktop` first — very new Qt
+#   releases sometimes land in aqtinstall's index a little after Qt ships
+#   them. Bumping this is safe any time; it doesn't affect your local build.
+# - Trigger a release by tagging: `git tag v3.1.0 && git push origin v3.1.0`
+# - Runs entirely on GitHub's infrastructure — nobody downloading the
+#   release needs Qt, MinGW, or anything else installed.
