@@ -2,6 +2,14 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.2.2] - 2026-08-25
+
+### Fixed
+- Refresh button now requires loaded library: `m_refreshBtn` disabled initially with tooltip `Load your library first...`, `updateRefreshButton()` (`main.cpp:2163`) enables only when `!m_accessToken.isEmpty() && !m_libraryOrder.isEmpty() && !m_fetching` — called after `finishLibrary`, `finishFetchError`, `setFetchingUi`, sign-out. `refreshLibrary()` (`main.cpp:3650`) now checks `m_libraryOrder.isEmpty()` → `QMessageBox::information` and saves `m_prevStatusMap`/`m_prevOrder` + `m_isRefresh=true` before `startLibraryFetch()`.
+
+### Added
+- Refresh detects recent activity: `finishLibrary()` (`main.cpp:3530`) diffs `currSet` vs `prevSet` — `added = curr-prev`, `removed = prev-curr`, `changed = status diff via m_prevStatusMap`. Logs colored `Refresh detected: X new bookmark(s), Y category changed` with per-title lines `+ title [status]`, `~ title: old -> new`, `- title (removed)` and `m_statsLbl` update; popup if ≤12 changes. Silent when no changes. `m_isRefresh`/`m_prev*` cleared after.
+
 ## [3.2.1] - 2026-08-25
 
 ### Added
