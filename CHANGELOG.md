@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.7] - 2026-08-25
+
+### Added
+- Silent update checker: 3.5s after launch the app queries `api.github.com/repos/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest` via a dedicated `QNetworkAccessManager` (8s timeout, `User-Agent: HitPaw-MangaDex-Manager`). Failures are silent — no crash, no popup, no log spam. If `tag_name` is newer than `applicationVersion()` (`QVersionNumber::compare`), it logs `Update available: vX -> vY - https://github.com/.../tag/vY` and updates the stats label to `Update available: vY - see Logs` in accent color.
+
 ## [3.1.6] - 2026-08-25
 
 ### Fixed
