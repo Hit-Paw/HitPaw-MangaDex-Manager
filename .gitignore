@@ -1,0 +1,34 @@
+# Build output
+build_win/
+build/
+*.o
+*.obj
+*.moc
+Makefile
+Makefile.*
+.qmake.stash
+
+# Compiled binary
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Qt generated files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Inno Setup output
+installer_output/
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.user
+*.suo
