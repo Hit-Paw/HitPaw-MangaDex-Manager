@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  scan-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan for hardcoded credentials
+        run: |
+          echo "Scanning for hardcoded secrets..."
+          if grep -R --include="*.cpp" --include="*.h" --include="*.pro" -n -E "gho_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9_]{20,}" .; then
+            echo "::error::Potential GitHub token found!"
+            exit 1
+          fi
+          echo "No hardcoded tokens."
+
+  build-check-windows:
+    runs-on: windows-latest
+    needs: scan-secrets
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.11.1'
+          arch: 'win64_mingw'
+          cache: true
+          setup-python: false
+      - name: Build check
+        shell: cmd
+        run: |
+          if exist build_win rmdir /s /q build_win
+          mkdir build_win
+          cd build_win
+          qmake ..\MangaDexExporter.pro -spec win32-g++
+          mingw32-make -j4
+          if errorlevel 1 exit /b 1
+          echo Build OK
+          dir release\MangaDexExporter.exe
