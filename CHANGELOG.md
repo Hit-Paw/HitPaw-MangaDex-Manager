@@ -2,7 +2,7 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
-## [3.3.1] - 2026-08-25
+## [3.3.4] - 2026-08-25
 
 ### Removed
 - Export preview (first 10 table + Refresh Preview + estimated sizes) — `m_exportPreview`/`m_previewInfo` (`main.cpp:1479`), `previewCard` UI (`main.cpp:2367`), `updateExportPreview()` (`main.cpp:3749`) and calls from `updateSelectionUi()`/`finishLibrary()` — per user request to keep Export tab clean. Export validation, bulk editor, cache manager, stats dashboard remain.
