@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.4] - 2026-08-25
+
+### Fixed
+- Chapter display order: root cause was `insertWidget(count()-1)` inserting into a layout whose trailing stretch spacer had been cleared, causing Ch.1 to always appear at the bottom. Fixed by using `addWidget()` to correctly append chapters in sorted order.
+
 ## [3.1.3] - 2026-08-25
 
 ### Added
