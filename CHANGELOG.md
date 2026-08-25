@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.9] - 2026-08-25
+
+### Fixed
+- Library titles not fitting: quoted long titles like `"Munou wa Iranai" to Iwareta kara Zetsuen...`, `"Omae Gotoki ga Maou ni..."`, `"Osananajimi ga Hoshii" to Tsubuyaitara...` were elided to 2 lines and cut with `...` on the second line. `MangaCard` (`main.cpp:1032`) now uses `maxLines=3` for regular cards (2 for small) via `QFontMetrics(pixelSize)` + `lineSpacing*3+8` height (vs `*2+8`), and `elideToLines()` builds up to 3 lines greedily (word-boundary, `horizontalAdvance` ≤ `availW=158`) and only elides the final line — 3-line cards still fit in `H=322` (`cover 222 + title 48 + status 15 + margins 12`) so no layout break.
+
 ## [3.1.8] - 2026-08-25
 
 ### Added
