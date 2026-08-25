@@ -2,6 +2,19 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.6] - 2026-08-25
+
+### Fixed
+- Library title truncation: long titles like `Biryuu Enshoutan ~Jikokouteikan ga Gekitei na` were cut off mid-letter (4px overflow on second line + 2px vertical descender clip) because `MangaCard` used a fixed 34px height with no eliding. During `SmoothScrollArea` momentum scrolling this clipped edge tore and looked "cut up". Cards now compute `availW = W-12`, use `QFontMetrics(pixelSize)` to size to `lineSpacing*2+8`, and elide to 2 lines (`line1 + "\n" + elided line2`) so overflow shows clean `…` instead of a half-letter.
+
+## [3.1.5] - 2026-08-25
+
+### Fixed
+- Library text glitching during scrolling: removed `QGraphicsOpacityEffect` from card entrance animation, which forced Qt to render each widget into an offscreen pixmap buffer. Cards now render directly to screen.
+
+### Removed
+- Card entrance fade-in animation (200ms opacity pop) — source of the offscreen buffer causing scroll glitches
+
 ## [3.1.4] - 2026-08-25
 
 ### Fixed
