@@ -2,6 +2,14 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.3] - 2026-08-25
+
+### Added
+- About dialog now shows credits ("Created by HitPaw") and a clickable Discord community link
+
+### Fixed
+- Version string in About dialog now matches the actual release version (was stuck on 3.1.0)
+
 ## [3.1.2] - 2026-08-25
 
 ### Fixed
