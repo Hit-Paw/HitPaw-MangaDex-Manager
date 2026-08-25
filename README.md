@@ -2,11 +2,18 @@
 
 A desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
 
-![version](https://img.shields.io/badge/version-3.1.0-orange)
+![version](https://img.shields.io/badge/version-3.1.1-orange)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 > Not affiliated with or endorsed by MangaDex.
+
+## Preview
+
+![Login](screenshots/preview-1.png)
+![Library Grid](screenshots/preview-2.png)
+![Export](screenshots/preview-3.png)
+![Settings](screenshots/preview-4.png)
 
 ## Features
 
