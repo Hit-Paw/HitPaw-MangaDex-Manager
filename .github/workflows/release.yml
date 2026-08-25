@@ -37,7 +37,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.11.1'
+          version: '6.8.3'
           arch: 'win64_mingw'
           cache: true
           setup-python: false
