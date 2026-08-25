@@ -2,6 +2,14 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.0] - 2026-08-25
+
+### Added
+- Toolbar grouping + overflow: `Library` toolbar now grouped with `QFrame` `VLine` separators (`Pal::BORDER`, 1×24px) between filter/sort vs actions vs fetch (`main.cpp:2065`), `m_densityBtn` added after `m_sortBox`.
+- Card density toggle: `m_densityBtn` (`GhostButton` 34×34, `:/icons/nav/icons8-library-48-text.png`, checkable) toggles `m_compactMode`/`m_gridCols` 5↔6, updates `m_grid->setColumnStretch` for 6 cols and calls `relayoutLibrary()` (`main.cpp:2035`). Window stays `setFixedWidth(1180)` — 5×170+4×12=898 vs 6×170+5×12=1080 both fit.
+- Status color + filter chip: `m_filterChip`/`m_filterChipLabel` (`QWidget`/`QLabel` with `Pal::CARD`/`BORDER` pill, 12px radius) below toolbar shows `Search: "x" · Status: Reading · Sort: Year` (`updateFilterChip()` `main.cpp:2245`), `x` `GhostButton` 24×24 clears `m_filterEdit`/`m_filterStatus`/`m_sortBox`. `m_filterStatus` items tinted via `statusColor(key)` + `setItemData(..., QBrush)` (`main.cpp:2258`).
+- Empty/loading skeletons: `m_skeletonCards` (`QList<QWidget*>`), `showSkeletons(10)`/`clearSkeletons()` (`main.cpp:3790`) create 10× `QFrame#skeleton` (170×322 or 112×208) with `QVBoxLayout` (cover 156×222 + 2× title 10px placeholders, `Pal::CARD`/`BORDER`), `QGraphicsOpacityEffect` 0.85→0.45 pulse `QPropertyAnimation` 900ms `InOutQuad` loop -1. Shown in `startLibraryFetch()` after `m_allIds`, cleared in `finishLibrary()`/`finishFetchError()`/`finishFetchStopped()` before real cards.
+
 ## [3.3.4] - 2026-08-25
 
 ### Removed
