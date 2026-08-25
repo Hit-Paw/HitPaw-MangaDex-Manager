@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.2.0] - 2026-08-25
+
+### Fixed
+- Crazy long titles now fit everything: removed `maxLines=3` cap and `elidedText` truncation. `MangaCard` (`main.cpp:1006`) now uses `setFixedWidth(W)` + `setMinimumHeight(H)` + `QSizePolicy::Fixed/Preferred` and `m_title` has no `setFixedHeight` — `wordWrap:true` + `sizeHint` lets the label wrap to as many lines as needed (tested with quoted 80+ char titles) and the card expands vertically (`cover 222 + title dynamic + status + margins`). No more `...` for any length; grid `QGridLayout` handles variable-height cards and `relayoutLibrary()`/`appendCardsToGrid()` pagination still shows `X / Y` correctly.
+
 ## [3.1.9] - 2026-08-25
 
 ### Fixed
