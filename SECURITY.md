@@ -4,7 +4,7 @@
 
 HitPaw MangaDex Manager **does not ship with any hardcoded credentials**.
 
-- All MangaDex authentication (username/password, client ID/secret, access tokens) is **user-supplied at runtime** via the login UI (`MainWindow` in `main.cpp:998`).
+- All MangaDex authentication (username/password, client ID/secret, access tokens) is **user-supplied at runtime** via the login UI (`MainWindow`).
 - Values are stored locally via `QSettings` (`api/client_id`, `api/client_secret`, `api/remember_creds`) on the user machine only and never committed to git.
 - The CI workflow (`.github/workflows/release.yml`, `ci.yml`) runs a `scan-secrets` job that fails the build if a pattern like `gho_`, `ghp_`, or hardcoded `client_secret` is found.
 
