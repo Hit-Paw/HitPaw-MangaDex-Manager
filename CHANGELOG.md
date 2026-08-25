@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.2.1] - 2026-08-25
+
+### Added
+- Toolbar buttons `Redo` and `Refresh` (`main.cpp:1463`, `2020`): `Redo` mirrors `Undo` icon via `QTransform` scale(-1,1) and `m_redoBtn` (`GhostButton` 34x34), backed by `m_selectionRedo` stack (`UNDO_MAX=50`). `pushUndoSnapshot()` now clears redo, `undoSelection()` pushes to redo and enables `m_redoBtn`, `redoSelection()` pops redo, pushes to undo, restores `m_selected` and calls `updateSelectionUi()`. `Refresh` uses `icons8-refresh-48-text.png` and `m_refreshBtn` → `refreshLibrary()` which checks `m_fetching`/`m_accessToken` then `startLibraryFetch()` with `Refreshing library...` log. Both respect pagination/sort state.
+
 ## [3.2.0] - 2026-08-25
 
 ### Fixed
