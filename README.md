@@ -5,6 +5,7 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 ![version](https://img.shields.io/badge/version-3.1.1-orange)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
 
 > Not affiliated with or endorsed by MangaDex.
 
@@ -66,6 +67,10 @@ Your credentials are stored locally on your machine (via Qt's `QSettings`) and a
 | Anime-Planet    | Your manga list page → scroll to bottom → "Import it now" → upload AP .gz |
 
 > MangaUpdates has no list import feature (export only). comix.to uses collections with no file-based import.
+
+## Community
+
+Join the Discord for support, suggestions, and updates: **https://discord.gg/z6yYYpcYYc**
 
 ## License
 
