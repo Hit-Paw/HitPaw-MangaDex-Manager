@@ -1,9 +1,9 @@
 # HitPaw MangaDex Manager
 
-A Windows desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
+A desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
 
 ![version](https://img.shields.io/badge/version-3.1.0-orange)
-![platform](https://img.shields.io/badge/platform-Windows-blue)
+![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 > Not affiliated with or endorsed by MangaDex.
@@ -19,7 +19,15 @@ A Windows desktop app for browsing, filtering, and exporting your MangaDex libra
 
 ## Download
 
-Grab the latest build from the [Releases](../../releases) page — download the zip, extract it anywhere, and run `MangaDexExporter.exe`. No install required, and you don't need Qt or anything else on your machine.
+Grab the latest build from the [Releases](../../releases) page:
+
+| Platform | File | Notes |
+|----------|------|-------|
+| **Windows** | `HitPaw-MangaDex-Manager-v*-Windows.zip` | Extract and run `MangaDexExporter.exe` |
+| **macOS** | `HitPaw-MangaDex-Manager-v*-macOS.dmg` | Open the DMG and drag to Applications |
+| **Linux** | `HitPaw-MangaDex-Manager-v*-Linux.tar.gz` | Extract and run `./MangaDexExporter` |
+
+No install required on any platform. You don't need Qt or anything else on your machine.
 
 ## Setup
 
@@ -51,31 +59,6 @@ Your credentials are stored locally on your machine (via Qt's `QSettings`) and a
 | Anime-Planet    | Your manga list page → scroll to bottom → "Import it now" → upload AP .gz |
 
 > MangaUpdates has no list import feature (export only). comix.to uses collections with no file-based import.
-
-## Building from source
-
-Requires Qt 6.x and a matching MinGW toolchain (built and tested against Qt 6.11.1 / MinGW 13.1.0, 64-bit).
-
-```
-qmake MangaDexExporter.pro -spec win32-g++
-mingw32-make
-windeployqt release\MangaDexExporter.exe
-```
-
-Or just run `build_windows.bat`, which locates your Qt/MinGW install automatically and does the above for you.
-
-## Project structure
-
-- `main.cpp` — the entire application (UI, networking, caching — single-file by design)
-- `MangaDexExporter.pro` — qmake project file
-- `icons.qrc` — bundled icon resources
-- `build_windows.bat` — one-command local build
-- `.github/workflows/build-windows.yml` — CI that builds a release automatically on tag push
-- `CHANGELOG.md` — version history
-
-## Contributing
-
-Issues and PRs welcome. This started as a personal tool, so expect some rough edges outside the core library/export flow — flag anything that breaks.
 
 ## License
 
