@@ -45,6 +45,10 @@ jobs:
       - name: Build (qmake + mingw32-make)
         shell: cmd
         run: |
+          if not exist MangaDexExporter.pro (
+            echo No MangaDexExporter.pro in repo - source kept local, skipping build
+            exit /b 0
+          )
           if exist build_win rmdir /s /q build_win
           mkdir build_win
           cd build_win
@@ -54,12 +58,14 @@ jobs:
           cd ..
 
       - name: Deploy Qt DLLs
+        if: hashFiles('MangaDexExporter.pro') != ''
         shell: cmd
         run: |
           for /r build_win %%F in (MangaDexExporter.exe) do set EXE=%%F
           windeployqt "%EXE%"
 
       - name: Package ZIP (clean, no .o files)
+        if: hashFiles('MangaDexExporter.pro') != ''
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}" -replace '^v',''
@@ -80,7 +86,7 @@ jobs:
         with:
           name: windows-zip
           path: HitPawMangaDexManager-*.zip
-          if-no-files-found: error
+          if-no-files-found: warn
 
   build-linux:
     runs-on: ubuntu-latest
@@ -95,6 +101,7 @@ jobs:
 
       - name: Build
         run: |
+          if [ ! -f MangaDexExporter.pro ]; then echo "No MangaDexExporter.pro - source kept local, skipping"; exit 0; fi
           rm -rf build_linux
           mkdir build_linux
           cd build_linux
@@ -103,6 +110,7 @@ jobs:
           cd ..
 
       - name: Package tar.gz
+        if: hashFiles('MangaDexExporter.pro') != ''
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           SRC=$(find build_linux -name "MangaDexExporter" -type f | head -1)
@@ -137,6 +145,7 @@ jobs:
 
       - name: Build
         run: |
+          if [ ! -f MangaDexExporter.pro ]; then echo "No MangaDexExporter.pro - source kept local, skipping"; exit 0; fi
           rm -rf build_macos
           mkdir build_macos
           cd build_macos
@@ -167,7 +176,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     needs: [build-windows, build-linux, build-macos]
-    if: always() && needs.build-windows.result == 'success'
+    if: always() && (needs.build-windows.result == 'success' || needs.build-windows.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
 
