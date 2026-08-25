@@ -2,6 +2,14 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.3.0] - 2026-08-25
+
+### Added
+- Bulk status editor: `Bulk move selected to:` combo (`Reading/Completed/On Hold/Plan to Read/Dropped/Re-reading`, `main.cpp:2075`) + `Apply` `GhostButton` (`m_bulkStatusBox`/`m_bulkApplyBtn`, `main.cpp:1445`). `onBulkStatusApply()` confirms `n` titles → `processBulkStatusBatch()` POSTs `POST /manga/{id}/status` `{"status":...}` via `apiPostJson()` (`main.cpp:2975`) with `Bearer` token, `350ms` rate-limit, updates `m_statusMap`/`m_entries` locally, re-sorts if `Status` sort active, `relayoutLibrary()` + `updateStats()` + `updateRefreshButton()`. `updateSelectionUi()` enables `Apply` only when `n>0 && !m_bulkRunning`.
+- Cover cache manager: `m_cacheSizeLbl` + `Clear Cover Cache` `GhostButton` (`main.cpp:2090`) in Library tab. `updateCacheSizeLabel()` (`main.cpp:2242`) scans `AppDataLocation/covers` via `QDirIterator` recursive, shows `X files, Y MB`. `clearCoverCache()` (`main.cpp:2251`) removes files + empty dirs, logs `Cleared: N files`, `QMessageBox`.
+- Statistics dashboard: `m_statsDashLbl` (`main.cpp:1455`) + `updateStatsDashboard()` (`main.cpp:3729`) shows `Years: 2024:12 2023:8 ...` top 5 years + `Total N` from `m_entries[].year`, sorted descending. `updateStats()` now calls dashboard; shown in `dashRow` below cache row.
+- Export preview: `m_exportPreview` `QTableWidget` 3 cols (`Title/Status/Year`, `main.cpp:2360`) + `m_previewInfo` + `Refresh Preview` `GhostButton` in Export tab `previewCard`. `updateExportPreview()` (`main.cpp:3745`) shows first 10 of `selected ? selected : all`, fills rows, estimates `CSV ~150/title, JSON ~280, MAL ~420` → `Est. CSV X KB...` and auto-called from `updateSelectionUi()` and `finishLibrary()` (`+700ms`).
+
 ## [3.2.2] - 2026-08-25
 
 ### Fixed
