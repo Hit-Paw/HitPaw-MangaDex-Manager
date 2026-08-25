@@ -215,6 +215,31 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: HitPaw MangaDex Manager v${{ steps.version.outputs.VERSION }}
-          body: ${{ steps.changelog.outputs.NOTES }}
+          body: |
+            ## What it does
+
+            Browse and search your MangaDex library with cover art
+            Download chapters for offline reading
+            Export your list to CSV, JSON, MAL XML, MangaBaka JSON, and Anime-Planet .xml.gz
+            Import-compatible with MyAnimeList, AniList, MangaBaka, Kitsu, MangaFire, Anime-Planet
+
+            ## What changed in v${{ steps.version.outputs.VERSION }}
+
+            ${{ steps.changelog.outputs.NOTES }}
+
+            ## How to use
+
+            1. Download and extract the ZIP
+            2. Run MangaDexExporter.exe
+            3. Log in with your MangaDex account (username/password or access token)
+
+            ## Requirements
+
+            - Windows 10/11 (64-bit)
+            - No Qt installation needed -- all DLLs are bundled
+
+            ## Build from source
+
+            See README.md for build instructions on Windows, Linux, and macOS.
           draft: false
           files: dist/*
