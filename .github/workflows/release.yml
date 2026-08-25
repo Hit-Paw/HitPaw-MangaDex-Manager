@@ -154,6 +154,7 @@ jobs:
           cd ..
 
       - name: Package tar.gz
+        if: hashFiles('MangaDexExporter.pro') != ''
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           APP="build_macos/MangaDexExporter.app"
@@ -182,12 +183,13 @@ jobs:
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           path: dist
           merge-multiple: true
 
       - name: List artifacts
-        run: ls -R dist; ls -lh dist || true
+        run: ls -R dist || true; ls -lh dist || true
 
       - name: Get version from tag
         id: version
