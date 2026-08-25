@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.2] - 2026-08-25
+
+### Fixed
+- Chapter sort order: chapters now sort correctly numerically (Ch.1 before Ch.2) on all system locales, using locale-independent parsing via QLocale::c()
+
 ## [3.1.1] - 2026-08-25
 
 ### Fixed
