@@ -2,6 +2,14 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.1.8] - 2026-08-25
+
+### Added
+- Library sorting: toolbar combo `Title A-Z / Z-A / Year Newest / Year Oldest / Status` (`main.cpp:2008`, `m_sortBox`). `applyLibrarySort()` / `sortLibrary()` sort `m_libraryOrder` and `m_libCards` via `QVersionNumber`-aware comparators (year parsed via `toInt`, status via `localeAwareCompare`), then `relayoutLibrary()` — no rebuild needed.
+- Export validation: `validateExportFile()` (`main.cpp:3726`) checks every saved file — CSV header + line count, JSON array/object + `schema_version`, MAL XML well-formedness via `QXmlStreamReader` + `manga` count + `user_total_manga`, MangaBaka JSON `entries` size, AP `.gz` gzip magic + `gzopen` decompress + XML check. `onExport()` logs `Validated X - OK` in green or `Validation failed` in red and aborts with `QMessageBox::warning` on failure (`main.cpp:3791`).
+- Persistent download queue: `saveDownloadState()` / `clearDownloadState()` / `loadDownloadState()` (`main.cpp:2775`) store `dl/mangaId`, `dl/queue`, `dl/current`, `dl/path` in `QSettings` (sync after each `++m_dlCurrent` and on `onDlStart`/`Stopped`/`Done`). `loadDownloadState()` at `+800ms` restores interrupted `m_dlQueue` notice in `m_dlStatusLbl` accent — resume without losing progress.
+- Pagination for large libraries: `m_paginationLimit` / `PAGINATION_STEP=60` + `m_loadMoreBtn` (`main.cpp:1467`, `2145`). `relayoutLibrary()` / `appendCardsToGrid()` now show only `limit` matching cards, `m_countLbl` shows `X / Y shown`, button `Show more (N remaining)` increments `limit` — 3000-title libraries render 60 at a time instead of all widgets.
+
 ## [3.1.7] - 2026-08-25
 
 ### Added
