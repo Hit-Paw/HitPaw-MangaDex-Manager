@@ -1,0 +1,33 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make HitPaw MangaDex Manager better? Let me know!
+
+  - type: textarea
+    id: feature
+    attributes:
+      label: What feature do you want?
+      description: Describe the feature or improvement you'd like to see.
+      placeholder: e.g. Support for importing from AnimeList
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is this useful?
+      description: Explain the problem this solves or how it would help you.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Any alternatives you considered?
+      description: Other ways you've worked around this or similar features on other apps.
+    validations:
+      required: false

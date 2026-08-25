@@ -1,0 +1,23 @@
+# Changelog
+
+All notable changes to HitPaw MangaDex Manager will be documented in this file.
+
+## [3.1.1] - 2026-08-25
+
+### Fixed
+- MAL XML export: corrected field names (`manga_num_volumes`, `manga_num_chapters`) that caused import failures on MyAnimeList, AniList, Kitsu, and MangaFire
+- MAL XML `<myinfo>` section: added missing required fields (`user_id`, `user_name`, per-status counts) for proper import validation
+- Anime-Planet gzipped export: same MAL XML corrections applied
+
+## [3.1.0] - 2026-08-24
+
+### Added
+- Initial public release
+- MangaDex library browser with cover grid view
+- Login via username/password or personal API client
+- Bulk-select and export with undo
+- Export to CSV, JSON, MAL XML, MangaBaka JSON, Anime-Planet `.xml.gz`
+- Cover caching with disk-backed CDN retry/backoff
+- Dark AMOLED-style UI with animated widgets
+- Smooth momentum-based scrolling
+- Cross-platform support (Windows, macOS, Linux)
