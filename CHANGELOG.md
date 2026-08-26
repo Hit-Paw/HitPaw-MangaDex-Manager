@@ -2,6 +2,12 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.3] - 2026-08-26
+
+### Fixed
+- `All status` dropdown now shows status colors: `m_filterStatus` items tinted via `statusColor(key)` + `setItemData(..., QBrush)` and current text colored via `updateFilterStatusColor()` stylesheet (`QComboBox { color: ... }`), matching `m_bulkStatusBox` fix in `3.4.1`, dropdown `QAbstractItemView` background kept `Pal::CARD`.
+- Filter bar text cut: `Year:` `m_filterYear` and `Tags:` `m_filterTag` increased `setFixedHeight(30)` -> `34` and added stylesheets (`QComboBox`/`QLineEdit` `background: Pal::CARD` `border: 1px solid Pal::BORDER` `border-radius: 6px` `padding: 4px 8px`) to prevent placeholder/text clipping, `Clear filters` button also `34`.
+
 ## [3.4.2] - 2026-08-26
 
 ### Fixed
