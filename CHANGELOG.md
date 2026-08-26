@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.2] - 2026-08-26
+
+### Fixed
+- Build failure: `moc` reported `No relevant classes found` at `main.cpp:186`/`2643` due to `R"([\\/:*?"<>|])"` raw string containing `?"` confusing `Qt 6.11.1` `moc` parser (`test_illegal_raw` `0 B` vs `normal` `2853 B`). Fixed by using normal string `"[\\\\/:*?\"<>|]"` (`main.cpp:186`) and `uuid` regex `R"(([0-9a-f]{8}...))"` -> normal string (`main.cpp:2424`), restoring `20001 B` `main.moc` and successful `qmake`/`mingw32-make -j4` build (`MangaDexExporter.exe` `754688 B`).
+
 ## [3.4.1] - 2026-08-25
 
 ### Fixed
