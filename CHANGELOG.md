@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.1] - 2026-08-25
+
+### Fixed
+- Bulk move dropdown now shows status colors: each item tinted via `statusColor(key)` + `setItemData(..., QBrush)` and `m_bulkStatusBox` current text colored via `updateBulkColor()` stylesheet (`QComboBox { color: ... }`), matching `m_filterStatus` chip. Dropdown `QAbstractItemView` background/selection kept `Pal::CARD`/`ACCENT`.
+
 ## [3.4.0] - 2026-08-25
 
 ### Added
