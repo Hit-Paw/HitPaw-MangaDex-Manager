@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.6] - 2026-08-27
+
+### Fixed
+- Update popup icons: `onUpdateCheckFinished()` manual `QMessageBox` popups now all use HitPaw icon `QPixmap(":/icons/icon_64.png")` 48×48 `setIconPixmap` (`main.cpp:3024`, `3035`, `3044`, `3105`, `3120`) instead of default blue `i` `QMessageBox::information` / yellow `QMessageBox::warning` — `Update Check Failed` (network `reply->errorString()`, parse, tag, version), `Up to Date` (`You are up to date! vX (latest vY)`), fallback `Check for Updates`, and `Update Available` (`Download Latest Version` → `https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest`) now consistently show HitPaw logo per user request.
+
 ## [3.4.5] - 2026-08-27
 
 ### Added
