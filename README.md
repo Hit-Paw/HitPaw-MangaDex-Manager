@@ -2,9 +2,10 @@
 
 A desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
 
-![version](https://img.shields.io/badge/version-3.4.0-orange)
+![version](https://img.shields.io/badge/version-3.4.6-orange)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
+![downloads](https://img.shields.io/github/downloads/Hit-Paw/HitPaw-MangaDex-Manager/total?color=brightgreen)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
 
 > Not affiliated with or endorsed by MangaDex.
@@ -12,18 +13,29 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 ## Preview
 
 ![Login](screenshots/preview-1.png)
-![Library Grid](screenshots/preview-2.png)
+![Library Grid — 3276 titles, 5 columns, Show All + Check for updates (v3.4.6)](screenshots/preview-2.png)
 ![Export](screenshots/preview-3.png)
 ![Settings](screenshots/preview-4.png)
 
+> Preview updated for **v3.4.6** — grid density toggle removed, `Show All (N)` added, manual update popup now uses HitPaw icon.
+
+## What's New in 3.4.6
+
+- **HitPaw icon on every update popup** — `Check for updates` now shows HitPaw logo (`:/icons/icon_64.png` 48×48) for `Update Available` / `Up to Date` / `Failed` instead of the generic blue `i`
+- **Load all at once** — `Show All (N)` loads your entire filtered library in one click, next to `Show more (60)`
+- **Cleaner toolbar** — grid density (`5 ↔ 6`) button removed, grid fixed to `5` columns
+
 ## Features
 
-- Sign in with your MangaDex account (username/password or a personal API client)
-- Browse your full library as a cover grid, with fast filtering/search
-- Bulk-select and export titles (with undo)
-- Export to CSV, JSON, MAL-compatible XML (works for MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire), and Anime-Planet's gzipped XML
-- Cover caching with disk-backed CDN retry/backoff, so re-opening the app is fast
-- Dark AMOLED-style UI throughout
+- Sign in with your MangaDex account (username/password or personal API client) — credentials stored locally via `QSettings`, never hardcoded
+- Browse your full library as a cover grid (5 columns, 170×322 cards) with fast filtering/search by title, status, year, and tags
+- Pagination that scales: `Show more (60)` for incremental loading + `Show All (N)` to load your entire library at once — `3276 shown` in one click
+- Manual update check: `Check for updates` → popup with HitPaw icon showing `You are on vX / Latest vY / You are outdated` and `Download Latest Version` → `https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest` (silent auto-check still runs at launch)
+- Bulk-select and export titles with undo/redo (`Ctrl+Z` / `Ctrl+Y`), and bulk status editor (`Reading/Completed/On Hold/Plan to Read/Dropped/Re-reading`)
+- Export to CSV, JSON, MAL-compatible XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire), MangaBaka JSON, and Anime-Planet's gzipped XML — with validation and import guides
+- Cover caching with disk-backed CDN retry/backoff + `Clear Cover Cache` and stats dashboard (`Years: 2026:143 … Total 3276`)
+- Library sorting (`Title A-Z/Z-A, Year Newest/Oldest, Status`), year/tag filters, and status-color chips
+- Dark AMOLED-style UI, smooth scrolling, and skeleton loading
 
 ## Download
 

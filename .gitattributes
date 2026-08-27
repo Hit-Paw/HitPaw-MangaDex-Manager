@@ -1,0 +1,32 @@
+# C++/Qt project - source is kept local for private builds, but GitHub linguist should still show C++
+*.pro linguist-language=QMake
+*.cpp linguist-language=C++
+*.h linguist-language=C++
+*.qrc linguist-language=XML
+*.yml linguist-language=YAML
+*.md linguist-documentation=false
+*.sh linguist-language=Shell
+
+# Vendored / build artifacts
+build_win/** linguist-vendored
+build_linux/** linguist-vendored
+build_macos/** linguist-vendored
+stage-win/** linguist-vendored
+debug/** linguist-vendored
+release/** linguist-vendored
+generic/** linguist-vendored
+iconengines/** linguist-vendored
+imageformats/** linguist-vendored
+platforms/** linguist-vendored
+styles/** linguist-vendored
+tls/** linguist-vendored
+translations/** linguist-vendored
+networkinformation/** linguist-vendored
+
+# Binary
+*.png binary
+*.ico binary
+*.zip binary
+*.gz binary
+*.exe binary
+*.dll binary
