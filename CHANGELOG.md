@@ -2,6 +2,14 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.4] - 2026-08-27
+
+### Removed
+- Grid density toggle: `m_densityBtn` (`:/icons/nav/icons8-library-48-text.png`, `m_compactMode`/`m_gridCols` 5↔6) removed from toolbar (`main.cpp:1770`, `1800`), grid fixed to `GRID_COLS=5` (170×322 cards, cover 156×222), skeletons fixed to `W=170 H=322 CW=156 CH=222` (`main.cpp:3675`) and `i / GRID_COLS` (`main.cpp:3726`), per user request to remove grid icon.
+
+### Added
+- Load all option: `m_showAllBtn` (`GhostButton "Show All"` `Hide`, `ToolTip: Load all remaining titles at once`) alongside `m_loadMoreBtn` (`"Show more"`) in `paginationRow` `QHBoxLayout` (`main.cpp:2028`, `QHBoxLayout` 8px/12px centered) — `Show All (N)` sets `m_paginationLimit = totalMatched` (`cardMatchesFilter` count) and `relayoutLibrary()` to load entire library at once, while `Show more (N remaining)` keeps `PAGINATION_STEP=60` incremental. Both buttons share `relayoutLibrary()`/`appendCardsToGrid()`/`updateSelectionUi()` visibility (`main.cpp:3808`, `3849`, `4019`).
+
 ## [3.4.3] - 2026-08-26
 
 ### Fixed
