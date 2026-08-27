@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.4.5] - 2026-08-27
+
+### Added
+- Manual update check popup: `Check for updates` (`GhostButton` `main.cpp:1926` in cache row) now triggers `manualCheckForUpdates()` (`main.cpp:3067`) with `m_manualUpdateCheck` flag (`main.cpp:1231`). `onUpdateCheckFinished()` (`main.cpp:3010`) now shows `QMessageBox` popup: if outdated → `Update Available! You are on vX, latest is vY. You are outdated.` with `Download Latest Version` (`QDesktopServices::openUrl("https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest")`); if up to date → `You are up to date! vX (latest vY)`; if failed → `Update Check Failed` warning. Silent `checkForUpdates()` (`QTimer::singleShot 3500`, `main.cpp:1089`) banner/logs remain unchanged.
+
 ## [3.4.4] - 2026-08-27
 
 ### Removed
