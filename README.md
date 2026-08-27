@@ -12,10 +12,10 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 
 ## Preview
 
-![Library Grid — 3276 titles, 5 columns, Show All + Check for updates (v3.4.6)](screenshots/preview-1.png)
-![Activity Log — v3.4.6, HitPaw icon on update popup, cover cache](screenshots/preview-2.png)
-![Export Formats — CSV, JSON, MAL XML, AP .gz, MangaBaka JSON](screenshots/preview-3.png)
-![Download — Windows • macOS • Linux (v3.4.6)](screenshots/preview-4.png)
+![Login](screenshots/preview-1.png)
+![Library Grid — 3276 titles, 5 columns, Show All + Check for updates (v3.4.6)](screenshots/preview-2.png)
+![Export](screenshots/preview-3.png)
+![Settings](screenshots/preview-4.png)
 
 > Preview updated for **v3.4.6** — grid density toggle removed, `Show All (N)` added, manual update popup now uses HitPaw icon.
 
