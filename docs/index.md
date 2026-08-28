@@ -73,35 +73,43 @@ features:
 
 ## Preview
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:16px 0">
-  <img src="/preview-1.png" alt="Library Grid — your titles" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
-  <img src="/preview-2.png" alt="Activity Log HitPaw icon" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
-  <img src="/preview-3.png" alt="Export Formats" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
-  <img src="/preview-4.png" alt="Download Chapters" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
+<div class="preview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:16px 0">
+  <img src="/preview-1.png" alt="Library Grid — your titles" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-1.png" />
+  <img src="/preview-2.png" alt="Activity Log HitPaw icon" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-2.png" />
+  <img src="/preview-3.png" alt="Export Formats" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-3.png" />
+  <img src="/preview-4.png" alt="Download Chapters" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-4.png" />
 </div>
+
+<div id="lightbox" class="lightbox" aria-hidden="true"><img alt="Preview enlarged" /><div class="lightbox-caption"></div></div>
 
 > Not affiliated with or endorsed by MangaDex. Preview updated for **v3.4.6**.
 
 ## Why HitPaw?
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0">
-  <div style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><img src="/icons/outline-zap.svg" alt="" width="20" height="20" style="opacity:.95" /><strong style="color:#ff6a00">Instant Library</strong></div>Load your entire filtered library at once — <code>Show All (N)</code> next to <code>Show more (60)</code>. No pagination limits.
+<div class="why-grid">
+  <div class="why-card" style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
+    <div class="icon-wrap"><img src="/icons/outline-zap.svg" alt="" width="22" height="22" /></div><div style="text-align:center"><strong style="color:#ff6a00">Instant Library</strong><br/>Load your entire filtered library at once — <code>Show All (N)</code> next to <code>Show more (60)</code>. No pagination limits.</div>
   </div>
-  <div style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><img src="/icons/outline-puzzle.svg" alt="" width="20" height="20" style="opacity:.95" /><strong style="color:#ff6a00">Smart Export</strong></div>One click → CSV/JSON/MAL/AP/MangaBaka. Validated and ready for MyAnimeList, AniList, Kitsu and more.
+  <div class="why-card" style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
+    <div class="icon-wrap"><img src="/icons/outline-puzzle.svg" alt="" width="22" height="22" /></div><div style="text-align:center"><strong style="color:#ff6a00">Smart Export</strong><br/>One click → CSV/JSON/MAL/AP/MangaBaka. Validated and ready for MyAnimeList, AniList, Kitsu and more.</div>
   </div>
-  <div style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><img src="/icons/outline-palette.svg" alt="" width="20" height="20" style="opacity:.95" /><strong style="color:#ff6a00">AMOLED Craft</strong></div>Pure black (#000) UI, 5-column grid, skeleton loading, smooth 60fps scroll — built for binge browsers.
+  <div class="why-card" style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
+    <div class="icon-wrap"><img src="/icons/outline-palette.svg" alt="" width="22" height="22" /></div><div style="text-align:center"><strong style="color:#ff6a00">AMOLED Craft</strong><br/>Pure black (#000) UI, 5-column grid, skeleton loading, smooth 60fps scroll — built for binge browsers.</div>
   </div>
 </div>
 
 ## Quick Start
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0">
-  <div style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:16px;text-align:center"><img src="/icons/outline-download.svg" alt="" width="28" height="28" style="margin-bottom:6px;opacity:.95" /><br/><strong>1. Download</strong><br/><span style="opacity:.8">Releases → <code>*-windows-x64.zip</code></span></div>
-  <div style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:16px;text-align:center"><img src="/icons/outline-package.svg" alt="" width="28" height="28" style="margin-bottom:6px;opacity:.95" /><br/><strong>2. Extract & Run</strong><br/><span style="opacity:.8"><code>MangaDexExporter.exe</code> — no installer</span></div>
-  <div style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:16px;text-align:center"><img src="/icons/outline-key.svg" alt="" width="28" height="28" style="margin-bottom:6px;opacity:.95" /><br/><strong>3. Login</strong><br/><span style="opacity:.8">MangaDex + API client → <code>Load Library</code></span></div>
+<div class="quick-grid">
+  <div class="quick-card" style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:18px;text-align:center">
+    <div class="icon-wrap"><img src="/icons/outline-download.svg" alt="" width="28" height="28" /></div><strong>1. Download</strong><br/><span style="opacity:.85">Releases → <code>*-windows-x64.zip</code></span>
+  </div>
+  <div class="quick-card" style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:18px;text-align:center">
+    <div class="icon-wrap"><img src="/icons/outline-package.svg" alt="" width="28" height="28" /></div><strong>2. Extract & Run</strong><br/><span style="opacity:.85"><code>MangaDexExporter.exe</code> — no installer</span>
+  </div>
+  <div class="quick-card" style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:18px;text-align:center">
+    <div class="icon-wrap"><img src="/icons/outline-key.svg" alt="" width="28" height="28" /></div><strong>3. Login</strong><br/><span style="opacity:.85">MangaDex + API client → <code>Load Library</code></span>
+  </div>
 </div>
 
 See [Getting Started](/getting-started) for full setup, [Building](/building) for source builds, and [Export Formats](/export) for site imports.
