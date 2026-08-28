@@ -26,7 +26,6 @@ export default {
         '.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
       )
       if (!els.length) return
-      // No IntersectionObserver fallback — reveal all immediately
       if (!('IntersectionObserver' in window)) {
         els.forEach((el) => el.classList.add('in-view'))
         return
@@ -45,7 +44,6 @@ export default {
       els.forEach((el) => io.observe(el))
     }
 
-    // Lightbox — a11y dialog, focus trap, keyboard
     let cleanupLightbox: (() => void) | null = null
 
     const setupLightbox = () => {
@@ -53,15 +51,10 @@ export default {
       const lb = document.getElementById('lightbox') as HTMLElement | null
       if (!lb) return
 
-      // The page content has a transform animation. A fixed-position element
-      // inside a transformed ancestor is positioned relative to that ancestor
-      // instead of the viewport. Move the lightbox to <body> so fixed centering
-      // is always relative to the actual browser viewport.
-      if (lb.parentElement !== document.body) {
-        document.body.appendChild(lb)
-      }
+      // Keep the lightbox outside VitePress's transformed content so fixed
+      // positioning is always calculated against the browser viewport.
+      if (lb.parentElement !== document.body) document.body.appendChild(lb)
 
-      // Ensure a11y attributes on lightbox container
       lb.setAttribute('role', 'dialog')
       lb.setAttribute('aria-modal', 'true')
       lb.setAttribute('aria-label', 'Image preview — press Escape to close')
@@ -70,7 +63,6 @@ export default {
       let caption = lb.querySelector('.lightbox-caption') as HTMLElement | null
       const closeBtn = lb.querySelector('.lightbox-close') as HTMLButtonElement | null
 
-      // Ensure close button exists
       let btn = closeBtn
       if (!btn) {
         btn = document.createElement('button')
@@ -103,47 +95,37 @@ export default {
         lb.classList.add('open')
         lb.setAttribute('aria-hidden', 'false')
         document.body.style.overflow = 'hidden'
-        // Move focus to close button for screen readers
         requestAnimationFrame(() => btn && btn.focus())
       }
       const close = () => {
         lb.classList.remove('open')
         lb.setAttribute('aria-hidden', 'true')
         document.body.style.overflow = ''
-        // Restore focus
         if (lastFocus && typeof lastFocus.focus === 'function') {
           try { lastFocus.focus() } catch {}
         }
       }
 
-      // Click on backdrop closes
       lb.addEventListener('click', (e) => { if (e.target === lb) close() }, { signal: ac() })
       if (btn) btn.addEventListener('click', close, { signal: ac() })
       if (img) img.addEventListener('click', close, { signal: ac() })
 
-      // Keyboard — Escape, Tab trap
       const onKey = (e: KeyboardEvent) => {
         if (!lb.classList.contains('open')) return
         if (e.key === 'Escape') { e.preventDefault(); close(); return }
         if (e.key === 'Tab' && btn && img) {
-          const focusables = [btn, img].filter(Boolean) as HTMLElement[]
-          // Simple trap: keep focus on close button
           if (e.shiftKey && document.activeElement === btn) { e.preventDefault(); btn.focus() }
         }
       }
       document.addEventListener('keydown', onKey, { signal: ac() })
 
-      // Enhance preview images — a11y button behavior
       const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img')
       previews.forEach((el) => {
         el.setAttribute('tabindex', '0')
         el.setAttribute('role', 'button')
         el.setAttribute('aria-label', `Enlarge preview: ${el.alt || 'screenshot'}`)
         el.style.cursor = 'zoom-in'
-        const handler = () => {
-          const src = (el as any).currentSrc || el.src
-          open(src, el.alt || '')
-        }
+        const handler = () => open((el as any).currentSrc || el.src, el.alt || '')
         el.addEventListener('click', handler, { signal: ac() })
         el.addEventListener('keydown', (e: KeyboardEvent) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler() }
@@ -158,7 +140,6 @@ export default {
 
     onMounted(() => {
       markJS()
-      // Fix: refresh always jumped to bottom — disable browser scroll restoration and force top if no hash
       try {
         if ('scrollRestoration' in history) (history as any).scrollRestoration = 'manual'
         if (!window.location.hash) {
@@ -170,7 +151,6 @@ export default {
       nextTick(() => { observe(); setupLightbox() })
     })
     watch(() => route.path, () => nextTick(() => {
-      // On route change, ensure top unless hash anchor
       try { if (!window.location.hash) window.scrollTo(0, 0) } catch {}
       observe(); setupLightbox()
     }))
