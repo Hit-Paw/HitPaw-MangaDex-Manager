@@ -5,11 +5,19 @@ import { useRoute } from 'vitepress'
 
 export default {
   extends: DefaultTheme,
-  setup() {
+  setup(props: any, ctx: any) {
+    // Preserve DefaultTheme setup (critical for local search + other Vue logic)
+    let parentResult: any = undefined
+    try {
+      const maybeSetup = (DefaultTheme as any).setup
+      if (typeof maybeSetup === 'function') {
+        parentResult = maybeSetup(props, ctx)
+      }
+    } catch {}
     const route = useRoute()
     const observe = () => {
       const els = document.querySelectorAll(
-        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*=\"language-\"], .vp-doc pre'
+        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
       )
       const io = new IntersectionObserver(
         (entries) => {
@@ -43,30 +51,41 @@ export default {
         lb.setAttribute('aria-hidden', 'true')
         document.body.style.overflow = ''
       }
-      lb.addEventListener('click', (e) => {
-        if (e.target === lb) close()
+      // dedupe listeners (route changes call setupLightbox again)
+      lb.replaceWith(lb.cloneNode(true))
+      const freshLb = document.getElementById('lightbox') as HTMLElement | null
+      if (!freshLb) return
+      const freshImg = freshLb.querySelector('img') as HTMLImageElement | null
+      const freshCaption = freshLb.querySelector('.lightbox-caption') as HTMLElement | null
+      const freshOpen = (src: string, alt: string) => {
+        if (!freshImg) return
+        freshImg.src = src
+        freshImg.alt = alt
+        if (freshCaption) freshCaption.textContent = alt
+        freshLb.classList.add('open')
+        freshLb.setAttribute('aria-hidden', 'false')
+        document.body.style.overflow = 'hidden'
+      }
+      const freshClose = () => {
+        freshLb.classList.remove('open')
+        freshLb.setAttribute('aria-hidden', 'true')
+        document.body.style.overflow = ''
+      }
+      freshLb.addEventListener('click', (e) => {
+        if (e.target === freshLb) freshClose()
       })
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lb.classList.contains('open')) close()
+        if (e.key === 'Escape' && freshLb.classList.contains('open')) freshClose()
       })
       document.querySelectorAll<HTMLImageElement>('.preview-grid img').forEach((el) => {
         el.style.cursor = 'zoom-in'
-        // use currentSrc (resolved with base) — data-full was missing base (/HitPaw-MangaDex-Manager/) and 404'd
         el.addEventListener('click', () => {
           const src = (el as any).currentSrc || el.src
-          open(src, el.alt || '')
+          freshOpen(src, el.alt || '')
         })
       })
-      // close on image click as well
-      if (img) {
-        img.addEventListener('click', () => {
-          const lbEl = document.getElementById('lightbox')
-          if (lbEl?.classList.contains('open')) {
-            lbEl.classList.remove('open')
-            lbEl.setAttribute('aria-hidden', 'true')
-            document.body.style.overflow = ''
-          }
-        })
+      if (freshImg) {
+        freshImg.addEventListener('click', freshClose)
       }
     }
     onMounted(() => {
@@ -75,11 +94,14 @@ export default {
         setupLightbox()
       })
     })
-    watch(() => route.path, () =>
-      nextTick(() => {
-        observe()
-        setupLightbox()
-      })
+    watch(
+      () => route.path,
+      () =>
+        nextTick(() => {
+          observe()
+          setupLightbox()
+        })
     )
+    return parentResult
   }
 }
