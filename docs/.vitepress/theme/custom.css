@@ -251,6 +251,26 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .vp-doc tr:nth-child(even) { background: rgba(0,0,0,0.015); }
 .dark .vp-doc tr:nth-child(even) { background: rgba(255,255,255,0.02); }
 
+/* ── VS Table — premium comparison (replaces markdown table) ── */
+.vs-table { width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.22); margin: 18px 0; background: #0f0f0f; }
+.vs-row { display: grid; grid-template-columns: 1.15fr 1.25fr 1fr 0.9fr; gap: 0; }
+.vs-header { background: linear-gradient(135deg, rgba(255,106,0,0.22), rgba(255,140,26,0.14)); border-bottom: 1px solid rgba(255,106,0,0.22); }
+.vs-header div { padding: 12px 14px; font-weight: 750; font-size: 0.88rem; letter-spacing: -0.01em; color: #ff9a4a; }
+.vs-header div:nth-child(2) { color: #fff; background: rgba(255,106,0,0.14); border-left: 1px solid rgba(255,106,0,0.18); border-right: 1px solid rgba(255,106,0,0.18); }
+.vs-row:not(.vs-header) { border-top: 1px solid rgba(255,255,255,0.06); }
+.vs-row:not(.vs-header):nth-child(even) { background: rgba(255,255,255,0.02); }
+.vs-row:not(.vs-header):nth-child(odd):not(.vs-header) { background: rgba(255,255,255,0.01); }
+.vs-row div { padding: 11px 14px; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; line-height: 1.4; }
+.vs-feature { font-weight: 600; color: #e8e8e8; }
+.vs-hitpaw { background: rgba(255,106,0,0.07); color: #fff; font-weight: 600; border-left: 1px solid rgba(255,106,0,0.14); border-right: 1px solid rgba(255,255,255,0.06); }
+.vs-hitpaw code { background: rgba(255,106,0,0.16) !important; border-color: rgba(255,106,0,0.22) !important; color: #ff8c1a !important; font-size: 0.82rem; padding: 2px 6px; border-radius: 6px; }
+.vs-manual, .vs-bookmark { color: #b8b8b8; }
+.vs-bookmark { color: #888; justify-content: center; }
+@media (max-width: 760px) {
+  .vs-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .vs-row { min-width: 560px; }
+}
+
 /* ── Doc page reveal (only when JS) ── */
 html.js .vp-doc h1, html.js .vp-doc h2, html.js .vp-doc h3 { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
 html.js .vp-doc h1.in-view, html.js .vp-doc h2.in-view, html.js .vp-doc h3.in-view { opacity: 1; transform: translateY(0); }

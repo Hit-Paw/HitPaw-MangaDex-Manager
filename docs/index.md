@@ -158,14 +158,50 @@ MangaDex issues personal API clients for free — **MangaDex → Settings → AP
 
 ## HitPaw vs. manual
 
-|  | **HitPaw** | Manual export | Browser bookmark |
-|---|------------|---------------|----------------|
-| Load 3k titles | One click `Show All (N)` | 50 at a time, paginate | — |
-| Filter by year/tag/status | Instant client-side | Manual search | — |
-| Export to MAL/AniList | Validated XML/JSON/.gz | Copy-paste each title | — |
-| Update check | Silent + manual popup | Check GitHub yourself | — |
-| Works offline exports | Yes — cached covers, retries | No | No |
-| Platform | Win / macOS / Linux portable | Browser only | — |
+<div class="vs-table">
+  <div class="vs-row vs-header">
+    <div>Feature</div>
+    <div>HitPaw</div>
+    <div>Manual</div>
+    <div>Bookmark</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-feature">Load 3k titles</div>
+    <div class="vs-hitpaw">One click <code>Show All (N)</code></div>
+    <div class="vs-manual">50 / page</div>
+    <div class="vs-bookmark">—</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-feature">Filter by year/tag/status</div>
+    <div class="vs-hitpaw">Instant, client-side</div>
+    <div class="vs-manual">Manual search</div>
+    <div class="vs-bookmark">—</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-feature">Export to MAL / AniList</div>
+    <div class="vs-hitpaw">Validated XML · JSON · .gz</div>
+    <div class="vs-manual">Copy-paste each</div>
+    <div class="vs-bookmark">—</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-feature">Update check</div>
+    <div class="vs-hitpaw">Silent + popup</div>
+    <div class="vs-manual">Check GitHub</div>
+    <div class="vs-bookmark">—</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-feature">Works offline</div>
+    <div class="vs-hitpaw">Yes — cached, retries</div>
+    <div class="vs-manual">No</div>
+    <div class="vs-bookmark">No</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-feature">Platform</div>
+    <div class="vs-hitpaw">Win · macOS · Linux portable</div>
+    <div class="vs-manual">Browser only</div>
+    <div class="vs-bookmark">—</div>
+  </div>
+</div>
 
 ## What users get
 
