@@ -1,0 +1,66 @@
+name: Docs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'package.json'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install deps
+        run: npm ci
+      - name: Build VitePress
+        run: npm run docs:build
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Custom domain note:
+  # 1. In GitHub: Settings → Pages → Custom domain → enter your domain (e.g., docs.hitpaw.dev)
+  # 2. Replace docs/public/CNAME content (currently docs.example.com) with your domain
+  # 3. Add DNS CNAME: host docs → Hit-Paw.github.io (or A records for apex)
+  # 4. VitePress base is '/' — for project page without custom domain, change base to '/HitPaw-MangaDex-Manager/' in docs/.vitepress/config.mts

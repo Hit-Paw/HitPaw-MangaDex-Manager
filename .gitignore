@@ -61,3 +61,10 @@ compile_commands.json
 
 # pre-commit / gitleaks
 .gitleaks.toml.bak
+
+# VitePress / Node
+node_modules/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+.npm/
+package-lock.json.bak
