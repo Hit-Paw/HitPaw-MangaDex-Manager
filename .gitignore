@@ -22,6 +22,14 @@ ui_*.h
 # Inno Setup output
 installer_output/
 
+# Release staging and distributable archives
+stage-win/
+stage-linux/
+stage-macos/
+*.zip
+*.tar.gz
+*.dmg
+
 # OS files
 Thumbs.db
 .DS_Store

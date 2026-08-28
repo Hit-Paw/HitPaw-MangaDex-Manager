@@ -43,9 +43,9 @@ Grab the latest build from the [Releases](../../releases) page:
 
 | Platform | File | Notes |
 |----------|------|-------|
-| **Windows** | `HitPaw-MangaDex-Manager-v*-Windows.zip` | Extract and run `MangaDexExporter.exe` |
-| **macOS** | `HitPaw-MangaDex-Manager-v*-macOS.dmg` | Open the DMG and drag to Applications |
-| **Linux** | `HitPaw-MangaDex-Manager-v*-Linux.tar.gz` | Extract and run `./MangaDexExporter` |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | Extract and run `MangaDexExporter.exe` |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | Extract and run the bundled app or executable |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | Extract and run `./MangaDexExporter` |
 
 No install required on any platform. You don't need Qt or anything else on your machine.
 

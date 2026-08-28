@@ -46,8 +46,8 @@ jobs:
         shell: cmd
         run: |
           if not exist MangaDexExporter.pro (
-            echo No MangaDexExporter.pro in repo - source kept local, skipping build
-            exit /b 0
+            echo ::error::MangaDexExporter.pro is missing; refusing to create an unverified release.
+            exit /b 1
           )
           if exist build_win rmdir /s /q build_win
           mkdir build_win
@@ -58,14 +58,12 @@ jobs:
           cd ..
 
       - name: Deploy Qt DLLs
-        if: hashFiles('MangaDexExporter.pro') != ''
         shell: cmd
         run: |
           for /r build_win %%F in (MangaDexExporter.exe) do set EXE=%%F
           windeployqt "%EXE%"
 
       - name: Package ZIP (clean, no .o files)
-        if: hashFiles('MangaDexExporter.pro') != ''
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}" -replace '^v',''
@@ -86,7 +84,7 @@ jobs:
         with:
           name: windows-zip
           path: HitPawMangaDexManager-*.zip
-          if-no-files-found: warn
+          if-no-files-found: error
 
   build-linux:
     runs-on: ubuntu-latest
@@ -101,7 +99,7 @@ jobs:
 
       - name: Build
         run: |
-          if [ ! -f MangaDexExporter.pro ]; then echo "No MangaDexExporter.pro - source kept local, skipping"; exit 0; fi
+          if [ ! -f MangaDexExporter.pro ]; then echo "::error::MangaDexExporter.pro is missing; refusing to create an unverified release."; exit 1; fi
           rm -rf build_linux
           mkdir build_linux
           cd build_linux
@@ -110,7 +108,6 @@ jobs:
           cd ..
 
       - name: Package tar.gz
-        if: hashFiles('MangaDexExporter.pro') != ''
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           SRC=$(find build_linux -name "MangaDexExporter" -type f | head -1)
@@ -129,7 +126,7 @@ jobs:
         with:
           name: linux-tar
           path: HitPawMangaDexManager-*.tar.gz
-          if-no-files-found: warn
+          if-no-files-found: error
 
   build-macos:
     runs-on: macos-latest
@@ -145,7 +142,7 @@ jobs:
 
       - name: Build
         run: |
-          if [ ! -f MangaDexExporter.pro ]; then echo "No MangaDexExporter.pro - source kept local, skipping"; exit 0; fi
+          if [ ! -f MangaDexExporter.pro ]; then echo "::error::MangaDexExporter.pro is missing; refusing to create an unverified release."; exit 1; fi
           rm -rf build_macos
           mkdir build_macos
           cd build_macos
@@ -154,7 +151,6 @@ jobs:
           cd ..
 
       - name: Package tar.gz
-        if: hashFiles('MangaDexExporter.pro') != ''
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           APP="build_macos/MangaDexExporter.app"
@@ -172,12 +168,12 @@ jobs:
         with:
           name: macos-tar
           path: HitPawMangaDexManager-*.tar.gz
-          if-no-files-found: warn
+          if-no-files-found: error
 
   create-release:
     runs-on: ubuntu-latest
     needs: [build-windows, build-linux, build-macos]
-    if: always() && (needs.build-windows.result == 'success' || needs.build-windows.result == 'skipped')
+    if: needs.build-windows.result == 'success' && needs.build-linux.result == 'success' && needs.build-macos.result == 'success'
     steps:
       - uses: actions/checkout@v4
 
