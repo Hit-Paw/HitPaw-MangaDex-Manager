@@ -20,12 +20,6 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 
 > Preview updated for **v3.4.6** — grid density toggle removed, `Show All (N)` added, manual update popup now uses HitPaw icon.
 
-## What's New in 3.4.6
-
-- **HitPaw icon on every update popup** — `Check for updates` now shows HitPaw logo (`:/icons/icon_64.png` 48×48) for `Update Available` / `Up to Date` / `Failed` instead of the generic blue `i`
-- **Load all at once** — `Show All (N)` loads your entire filtered library in one click, next to `Show more (60)`
-- **Cleaner toolbar** — grid density (`5 ↔ 6`) button removed, grid fixed to `5` columns
-
 ## Features
 
 - Sign in with your MangaDex account (username/password or personal API client) — credentials stored locally via `QSettings`, never hardcoded
