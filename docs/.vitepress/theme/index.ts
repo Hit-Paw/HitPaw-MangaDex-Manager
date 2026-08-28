@@ -8,7 +8,9 @@ export default {
   setup() {
     const route = useRoute()
     const observe = () => {
-      const els = document.querySelectorAll('.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img')
+      const els = document.querySelectorAll(
+        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*=\"language-\"], .vp-doc pre'
+      )
       const io = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {

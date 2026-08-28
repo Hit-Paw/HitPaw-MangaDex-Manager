@@ -56,14 +56,14 @@ html { scroll-behavior: smooth; }
 .VPContent { animation: fadeIn 0.45s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Hero — centered, no glow, super smooth float */
+/* Hero — centered, no glow, static (no float) */
 .VPHomeHero .image-bg { display: none !important; }
 .VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; }
 .VPHero .image-src {
-  animation: float 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  will-change: transform;
+  animation: none !important;
+  will-change: auto;
   backface-visibility: hidden;
-  transform: translate3d(0, 0, 0);
+  transform: none;
   filter: drop-shadow(0 8px 20px rgba(0,0,0,0.22));
   position: relative;
   left: 0;
@@ -71,7 +71,6 @@ html { scroll-behavior: smooth; }
   max-width: 220px;
   margin: 0 auto;
 }
-@keyframes float { 0%,100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -10px, 0); } }
 .VPHero .name {
   background-size: 200% 200%;
   animation: gradientShift 8s ease infinite;
@@ -138,6 +137,20 @@ html { scroll-behavior: smooth; }
 .why-card:hover, .quick-card:hover { transform: translateY(-5px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); border-color: rgba(255,106,0,0.24); }
 .why-card .icon-wrap, .quick-card .icon-wrap { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
 .why-card .icon-wrap img, .quick-card .icon-wrap img { width: 26px; height: 26px; }
+
+/* Doc pages — scroll reveal (getting_started etc.) */
+.vp-doc h1, .vp-doc h2, .vp-doc h3 { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.vp-doc h1.in-view, .vp-doc h2.in-view, .vp-doc h3.in-view { opacity: 1; transform: translateY(0); }
+.vp-doc p, .vp-doc li, .vp-doc blockquote { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.vp-doc p.in-view, .vp-doc li.in-view, .vp-doc blockquote.in-view { opacity: 1; transform: translateY(0); }
+.vp-doc table { opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.vp-doc table.in-view { opacity: 1; transform: translateY(0); }
+.vp-doc div[class*='language-'], .vp-doc pre { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.vp-doc div[class*='language-'].in-view, .vp-doc pre.in-view { opacity: 1; transform: translateY(0); }
+.VPSidebarItem { transition: transform 0.2s ease; }
+.VPSidebarItem:hover { transform: translateX(3px); }
+.VPSidebarItem.is-active > .item { animation: sidebarPulse 0.4s ease; }
+@keyframes sidebarPulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
