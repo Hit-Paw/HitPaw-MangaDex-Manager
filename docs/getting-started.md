@@ -23,7 +23,7 @@ Credentials are stored locally via `QSettings` (`api/client_id`, `api/client_sec
 
 ## Features Overview
 
-* **Library Grid**: 5 columns, 170×322 cards, filter by title/status/year/tags, pagination `Show more (60)` + `Show All (N)` (e.g., `3276 shown`).
+* **Library Grid**: 5 columns, 170×322 cards, filter by title/status/year/tags, pagination `Show more (60)` + `Show All (N)` (e.g., your `N shown` — loads your entire filtered library).
 * **Sorting**: Title A-Z/Z-A, Year Newest/Oldest, Status. Year/tag filters + status-color chips.
 * **Bulk Actions**: Select, export, undo/redo (`Ctrl+Z` / `Ctrl+Y`), status editor (`Reading`/`Completed`/`On Hold`/`Plan to Read`/`Dropped`/`Re-reading`).
 * **Update Check**: `Check for updates` → HitPaw icon popup (`You are on vX / Latest vY`) → `Download Latest Version` → `https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest`.
