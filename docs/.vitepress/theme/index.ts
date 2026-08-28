@@ -8,7 +8,7 @@ export default {
   setup() {
     const route = useRoute()
     const observe = () => {
-      const els = document.querySelectorAll('.VPFeatures .item, .vp-doc img, .stat-card')
+      const els = document.querySelectorAll('.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img')
       const io = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
@@ -22,9 +22,50 @@ export default {
       )
       els.forEach((el) => io.observe(el))
     }
+    const setupLightbox = () => {
+      const lb = document.getElementById('lightbox') as HTMLElement | null
+      if (!lb) return
+      const img = lb.querySelector('img') as HTMLImageElement | null
+      const caption = lb.querySelector('.lightbox-caption') as HTMLElement | null
+      const open = (src: string, alt: string) => {
+        if (!img) return
+        img.src = src
+        img.alt = alt
+        if (caption) caption.textContent = alt
+        lb.classList.add('open')
+        lb.setAttribute('aria-hidden', 'false')
+        document.body.style.overflow = 'hidden'
+      }
+      const close = () => {
+        lb.classList.remove('open')
+        lb.setAttribute('aria-hidden', 'true')
+        document.body.style.overflow = ''
+      }
+      lb.addEventListener('click', (e) => {
+        if (e.target === lb) close()
+      })
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lb.classList.contains('open')) close()
+      })
+      document.querySelectorAll<HTMLImageElement>('.preview-grid img').forEach((el) => {
+        el.style.cursor = 'zoom-in'
+        el.addEventListener('click', () => {
+          const src = el.getAttribute('data-full') || el.src
+          open(src, el.alt || '')
+        })
+      })
+    }
     onMounted(() => {
-      nextTick(observe)
+      nextTick(() => {
+        observe()
+        setupLightbox()
+      })
     })
-    watch(() => route.path, () => nextTick(observe))
+    watch(() => route.path, () =>
+      nextTick(() => {
+        observe()
+        setupLightbox()
+      })
+    )
   }
 }
