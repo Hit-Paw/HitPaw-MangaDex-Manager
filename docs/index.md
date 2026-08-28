@@ -20,22 +20,46 @@ hero:
       link: https://github.com/Hit-Paw/HitPaw-MangaDex-Manager
 
 features:
-  - icon: 📚
+  - icon:
+      src: /icons/outline-library.svg
+      alt: Library grid outline
+      width: 24
+      height: 24
     title: Library Grid
     details: 5 columns • fast filter by title/status/year/tags • 3276 shown in one click with Show All (N) + Show more (60)
-  - icon: 🔄
+  - icon:
+      src: /icons/outline-sync.svg
+      alt: Sync outline
+      width: 24
+      height: 24
     title: Stay Up to Date
     details: Check for updates popup with HitPaw icon — You are on vX / Latest vY / You are outdated → Download Latest
-  - icon: 📤
+  - icon:
+      src: /icons/outline-export.svg
+      alt: Export outline
+      width: 24
+      height: 24
     title: Export Anywhere
     details: CSV, JSON, MAL XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire), MangaBaka JSON, Anime-Planet .xml.gz with validation
-  - icon: 🔒
+  - icon:
+      src: /icons/outline-lock.svg
+      alt: Lock outline
+      width: 24
+      height: 24
     title: Secure & Local
     details: Credentials via QSettings only (never hardcoded) — stored locally, OS keychain roadmap (QKeychain)
-  - icon: 🎨
+  - icon:
+      src: /icons/outline-palette.svg
+      alt: Palette outline
+      width: 24
+      height: 24
     title: Dark AMOLED UI
     details: Smooth scrolling, skeleton loading, status-color chips, cover caching with CDN retry/backoff
-  - icon: 🛠️
+  - icon:
+      src: /icons/outline-layers.svg
+      alt: Layers outline
+      width: 24
+      height: 24
     title: Cross-Platform
     details: Windows 10/11 x64 (bundled DLLs) • macOS • Linux — Qt 6.8.3 + MinGW 13.1, CMakePresets + qmake
 ---

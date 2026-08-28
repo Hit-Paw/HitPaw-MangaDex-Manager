@@ -30,10 +30,20 @@
   background: linear-gradient(135deg, #e55e00, #ff6a00);
 }
 
-/* Feature icons subtle orange glow */
+/* Feature icons — outline style */
 .VPFeature .icon {
   background: rgba(255,106,0,0.08);
-  border: 1px solid rgba(255,106,0,0.18);
+  border: 1px solid rgba(255,106,0,0.22);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.VPFeature .icon img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
 /* Nav active link orange */
