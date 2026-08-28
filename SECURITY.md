@@ -13,6 +13,16 @@ HitPaw MangaDex Manager **does not ship with any hardcoded credentials**.
 - `build_win/`, `*.o`, `*.exe`, `*.dll` (excluded by `.gitignore`)
 - Any API keys, tokens, or passwords
 
+## Roadmap: OS keychain
+
+`secure_store.h:4` currently uses `QSettings` (registry/plist/ini — per-user, per-machine, plaintext on Windows). Planned migration:
+
+1. Add `QKeychain` (`qtkeychain`) as optional dependency — `SecureStore` keeps same API (`clientId()`/`setClientId()` etc.) but swaps backend to `QKeychain::Job` on Windows Credential Manager / macOS Keychain / libsecret on Linux.
+2. Fallback to `QSettings` if keychain unavailable; `clearCredentials()` wipes both backends.
+3. No API change for callers — see `secure_store.h:16-67` wrapper; CI `scan-secrets` continues to enforce `gho_/ghp_` absence.
+
+Contributions welcome — open an issue before large `secure_store.h` changes.
+
 ## Reporting a vulnerability
 
 If you find a credential leak or security issue, please open a private security advisory on GitHub or contact the maintainer directly. Do not file a public issue for sensitive reports.

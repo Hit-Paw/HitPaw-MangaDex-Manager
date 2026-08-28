@@ -21,19 +21,59 @@ jobs:
             echo "::error::Potential GitHub token found!"
             exit 1
           fi
+          # client_secret literal check (allowlist QSettings)
+          if grep -R --include="*.cpp" -n -E "client_secret.*=.*\"[^\"]{8,}\"" . | grep -v "QSettings" | grep -v "m_settings.value" | grep -q .; then
+            echo "::error::Hardcoded client_secret!"
+            exit 1
+          fi
           echo "No hardcoded tokens."
 
-  build-check-windows:
-    runs-on: windows-latest
+  lint:
+    runs-on: ubuntu-latest
     needs: scan-secrets
     steps:
       - uses: actions/checkout@v4
-      - name: Install Qt
+      - name: Install clang-format + shellcheck
+        run: sudo apt-get update && sudo apt-get install -y clang-format shellcheck
+      - name: clang-format check
+        run: |
+          echo "Checking C++ formatting (clang-format --dry-run)..."
+          if ! clang-format --dry-run --Werror main.cpp domain.h export.h pal.h secure_store.h 2>&1; then
+            echo "::warning::clang-format would reformat files — run clang-format -i"
+            # non-blocking for now — change to exit 1 to enforce
+          fi
+          echo "clang-format check done"
+      - name: shellcheck
+        run: |
+          shellcheck build_linux.sh build_macos.sh || true
+          shellcheck -s batch build_windows.bat || true
+      - name: whitespace check
+        run: |
+          git diff --check || (echo "::error::Whitespace errors"; exit 1)
+          echo "No whitespace errors"
+
+  build-check-windows:
+    runs-on: windows-latest
+    needs: [scan-secrets, lint]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - qt_version: '6.8.3'
+            qt_arch: 'win64_mingw'
+            qt_tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
+          # Uncomment to test Qt 6.9 on PRs (adds ~3 min):
+          # - qt_version: '6.9.1'
+          #   qt_arch: 'win64_mingw'
+          #   qt_tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt ${{ matrix.qt_version }}
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.8.3'
-          arch: 'win64_mingw'
-          tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
+          version: ${{ matrix.qt_version }}
+          arch: ${{ matrix.qt_arch }}
+          tools: ${{ matrix.qt_tools }}
           cache: true
           setup-python: false
       - name: Build check
@@ -51,3 +91,55 @@ jobs:
           if errorlevel 1 exit /b 1
           echo Build OK
           dir release\MangaDexExporter.exe
+
+  build-check-linux:
+    runs-on: ubuntu-latest
+    needs: [scan-secrets, lint]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt6 + deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev qt6-tools-dev zlib1g-dev build-essential pkg-config
+      - name: Build check (qmake)
+        run: |
+          if [ ! -f MangaDexExporter.pro ]; then echo "::error::MangaDexExporter.pro missing"; exit 1; fi
+          rm -rf build_linux && mkdir build_linux && cd build_linux
+          qmake6 ../MangaDexExporter.pro || qmake ../MangaDexExporter.pro
+          make -j$(nproc)
+          echo "Linux build OK"
+
+  build-check-macos:
+    runs-on: macos-latest
+    needs: [scan-secrets, lint]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt6
+        run: |
+          brew update
+          brew install qt@6
+          echo "$(brew --prefix qt@6)/bin" >> $GITHUB_PATH
+      - name: Build check (qmake)
+        run: |
+          if [ ! -f MangaDexExporter.pro ]; then echo "::error::MangaDexExporter.pro missing"; exit 1; fi
+          rm -rf build_macos && mkdir build_macos && cd build_macos
+          qmake ../MangaDexExporter.pro
+          make -j$(sysctl -n hw.ncpu)
+          echo "macOS build OK"
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [scan-secrets, lint]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt6 + deps
+        run: sudo apt-get update && sudo apt-get install -y qt6-base-dev zlib1g-dev
+      - name: Build + run Qt Test (if present)
+        run: |
+          if [ -d tests ]; then
+            cmake -S tests -B build_tests -DCMAKE_BUILD_TYPE=Release
+            cmake --build build_tests -j$(nproc)
+            ctest --test-dir build_tests --output-on-failure
+          else
+            echo "No tests/ yet — skipping"
+          fi

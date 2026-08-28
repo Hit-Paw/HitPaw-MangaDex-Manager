@@ -7,6 +7,9 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
+  security-events: write
 
 jobs:
   scan-secrets:
@@ -28,9 +31,31 @@ jobs:
           fi
           echo "No hardcoded credentials found - all auth is user-supplied via QSettings/UI at runtime."
 
+  check-version:
+    runs-on: ubuntu-latest
+    needs: scan-secrets
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify tag matches CMakeLists and CHANGELOG
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          echo "Tag: $TAG"
+          CMAKE_VER=$(grep -oP 'project\(MangaDexExporter VERSION \K[0-9.]+' CMakeLists.txt)
+          echo "CMakeLists.txt version: $CMAKE_VER"
+          if [ "$TAG" != "$CMAKE_VER" ]; then
+            echo "::error::Tag v$TAG != CMakeLists.txt $CMAKE_VER — bump CMakeLists.txt project(VERSION) to match tag"
+            exit 1
+          fi
+          if ! grep -q "## \[$TAG\]" CHANGELOG.md; then
+            echo "::warning::CHANGELOG.md has no ## [$TAG] section — notes will be 'Release v$TAG'"
+          else
+            echo "CHANGELOG has $TAG"
+          fi
+          echo "Version check OK"
+
   build-windows:
     runs-on: windows-latest
-    needs: scan-secrets
+    needs: check-version
     steps:
       - uses: actions/checkout@v4
 
@@ -80,6 +105,18 @@ jobs:
           Write-Host "Created $zip ($( (Get-Item $zip).Length / 1MB ) MB, $((Get-ChildItem $stage -Recurse | Measure-Object).Count) files)"
           if (Test-Path $zip) { Write-Host "ZIP OK" } else { exit 1 }
 
+      - name: Generate SBOM (SPDX)
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./HitPawMangaDexManager-*.zip
+          format: spdx-json
+          upload-artifact: false
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: HitPawMangaDexManager-*.zip
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -89,7 +126,7 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
-    needs: scan-secrets
+    needs: check-version
     steps:
       - uses: actions/checkout@v4
 
@@ -122,6 +159,18 @@ jobs:
           tar -czf "$TAR" -C "$STAGE" .
           ls -lh "$TAR"
 
+      - name: Generate SBOM (SPDX)
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./HitPawMangaDexManager-*.tar.gz
+          format: spdx-json
+          upload-artifact: false
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: HitPawMangaDexManager-*.tar.gz
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -131,7 +180,7 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
-    needs: scan-secrets
+    needs: check-version
     steps:
       - uses: actions/checkout@v4
 
@@ -163,6 +212,18 @@ jobs:
           TAR="HitPawMangaDexManager-v${VERSION}-macOS.tar.gz"
           tar -czf "$TAR" -C "$STAGE" .
           ls -lh "$TAR"
+
+      - name: Generate SBOM (SPDX)
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./HitPawMangaDexManager-*.tar.gz
+          format: spdx-json
+          upload-artifact: false
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: HitPawMangaDexManager-*.tar.gz
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

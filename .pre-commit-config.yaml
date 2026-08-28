@@ -1,0 +1,34 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+        args: ['--maxkb=5000']
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Fast local secret check — mirrors CI scan-secrets (gho_/ghp_ 20+ chars)
+  - repo: local
+    hooks:
+      - id: no-ghp-gho-tokens
+        name: no hardcoded GitHub tokens
+        entry: bash -c 'if grep -R -n -E "gho_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9_]{20,}" --include="*.cpp" --include="*.h" --include="*.pro" .; then echo "::error::Potential token found"; exit 1; fi; exit 0'
+        language: system
+        types: [file]
+        pass_filenames: false
+      - id: no-client-secret-literal
+        name: no hardcoded client_secret literal
+        entry: bash -c 'if grep -R -n -E "client_secret.*=.*\"[^\"]{8,}\"" --include="*.cpp" . | grep -v "QSettings" | grep -v "m_settings.value" | grep -q .; then echo "::error::Hardcoded client_secret"; exit 1; fi; exit 0'
+        language: system
+        types: [file]
+        pass_filenames: false
+
+  # Optional: gitleaks (install via `pip install pre-commit` + `gitleaks` binary)
+  # - repo: https://github.com/gitleaks/gitleaks
+  #   rev: v8.18.0
+  #   hooks:
+  #     - id: gitleaks

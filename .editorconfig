@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{cpp,h}]
+indent_size = 4
+tab_width = 4
+
+[*.{yml,yaml,json,md,sh,bat,pro,qrc}]
+indent_size = 2
+
+[Makefile*]
+indent_style = tab
+
+[*.{png,ico,icns,zip,tar.gz,dmg,dll,exe,so,dylib}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset

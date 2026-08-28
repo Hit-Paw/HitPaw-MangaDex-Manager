@@ -40,3 +40,24 @@ desktop.ini
 .idea/
 *.user
 *.suo
+
+# CMake presets / Ninja
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+.cmake/
+build-debug/
+
+# Test output
+Testing/
+CTestTestfile.cmake
+DartConfiguration.tcl
+
+# clangd / ccache
+.cache/
+compile_commands.json
+.cache/clangd/
+
+# pre-commit / gitleaks
+.gitleaks.toml.bak

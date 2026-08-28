@@ -1,0 +1,5 @@
+# Allowlisted QSettings keys (not secrets)
+secure_store.h:api/client_secret
+secure_store.h:api/client_id
+# CI comment that mentions gho_/ghp_ pattern
+secure_store.h:gho_/ghp_
