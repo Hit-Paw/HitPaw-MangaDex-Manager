@@ -882,7 +882,7 @@ protected:
         QPainter p(this);
         p.setRenderHint(QPainter::Antialiasing);
 
-        QPen pen(QColor(Pal::MUTED));
+        QPen pen{QColor(Pal::MUTED)};
         pen.setWidthF(1.6);
         pen.setJoinStyle(Qt::RoundJoin);
         pen.setCapStyle(Qt::RoundCap);
