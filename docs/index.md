@@ -167,39 +167,39 @@ MangaDex issues personal API clients for free — **MangaDex → Settings → AP
   </div>
   <div class="vs-row">
     <div class="vs-feature">Load 3k titles</div>
-    <div class="vs-hitpaw">One click <code>Show All (N)</code></div>
-    <div class="vs-manual">50 / page</div>
-    <div class="vs-bookmark">—</div>
+    <div class="vs-hitpaw" data-label="HitPaw">One click <code>Show All (N)</code></div>
+    <div class="vs-manual" data-label="Manual">50 / page</div>
+    <div class="vs-bookmark" data-label="Bookmark">—</div>
   </div>
   <div class="vs-row">
     <div class="vs-feature">Filter by year/tag/status</div>
-    <div class="vs-hitpaw">Instant, client-side</div>
-    <div class="vs-manual">Manual search</div>
-    <div class="vs-bookmark">—</div>
+    <div class="vs-hitpaw" data-label="HitPaw">Instant, client-side</div>
+    <div class="vs-manual" data-label="Manual">Manual search</div>
+    <div class="vs-bookmark" data-label="Bookmark">—</div>
   </div>
   <div class="vs-row">
     <div class="vs-feature">Export to MAL / AniList</div>
-    <div class="vs-hitpaw">Validated XML · JSON · .gz</div>
-    <div class="vs-manual">Copy-paste each</div>
-    <div class="vs-bookmark">—</div>
+    <div class="vs-hitpaw" data-label="HitPaw">Validated XML · JSON · .gz</div>
+    <div class="vs-manual" data-label="Manual">Copy-paste each</div>
+    <div class="vs-bookmark" data-label="Bookmark">—</div>
   </div>
   <div class="vs-row">
     <div class="vs-feature">Update check</div>
-    <div class="vs-hitpaw">Silent + popup</div>
-    <div class="vs-manual">Check GitHub</div>
-    <div class="vs-bookmark">—</div>
+    <div class="vs-hitpaw" data-label="HitPaw">Silent + popup</div>
+    <div class="vs-manual" data-label="Manual">Check GitHub</div>
+    <div class="vs-bookmark" data-label="Bookmark">—</div>
   </div>
   <div class="vs-row">
     <div class="vs-feature">Works offline</div>
-    <div class="vs-hitpaw">Yes — cached, retries</div>
-    <div class="vs-manual">No</div>
-    <div class="vs-bookmark">No</div>
+    <div class="vs-hitpaw" data-label="HitPaw">Yes — cached, retries</div>
+    <div class="vs-manual" data-label="Manual">No</div>
+    <div class="vs-bookmark" data-label="Bookmark">No</div>
   </div>
   <div class="vs-row">
     <div class="vs-feature">Platform</div>
-    <div class="vs-hitpaw">Win · macOS · Linux portable</div>
-    <div class="vs-manual">Browser only</div>
-    <div class="vs-bookmark">—</div>
+    <div class="vs-hitpaw" data-label="HitPaw">Win · macOS · Linux portable</div>
+    <div class="vs-manual" data-label="Manual">Browser only</div>
+    <div class="vs-bookmark" data-label="Bookmark">—</div>
   </div>
 </div>
 
