@@ -1,0 +1,42 @@
+/* HitPaw Orange theme — overrides VitePress brand */
+:root {
+  --vp-c-brand-1: #ff6a00;
+  --vp-c-brand-2: #e55e00;
+  --vp-c-brand-3: #cc5300;
+  --vp-c-brand-soft: rgba(255,106,0,0.14);
+
+  --vp-button-brand-bg: #ff6a00;
+  --vp-button-brand-hover-bg: #e55e00;
+  --vp-button-brand-active-bg: #cc5300;
+  --vp-button-brand-border: #ff6a00;
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #ff6a00 30%, #ff8c1a 100%);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #ff6a00 50%, #ffb14a 50%);
+  --vp-home-hero-image-filter: blur(44px);
+}
+
+.dark {
+  --vp-c-brand-1: #ff8c1a;
+  --vp-c-brand-2: #ff6a00;
+  --vp-c-brand-3: #e55e00;
+}
+
+.VPHero .VPButton.brand {
+  background: linear-gradient(135deg, #ff6a00, #ff8c1a);
+  border-color: #ff6a00;
+}
+.VPHero .VPButton.brand:hover {
+  background: linear-gradient(135deg, #e55e00, #ff6a00);
+}
+
+/* Feature icons subtle orange glow */
+.VPFeature .icon {
+  background: rgba(255,106,0,0.08);
+  border: 1px solid rgba(255,106,0,0.18);
+}
+
+/* Nav active link orange */
+.VPNavBarMenuLink.active, .VPSidebarItem.is-active > .item > .link {
+  color: var(--vp-c-brand-1);
+}
