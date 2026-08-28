@@ -50,3 +50,58 @@
 .VPNavBarMenuLink.active, .VPSidebarItem.is-active > .item > .link {
   color: var(--vp-c-brand-1);
 }
+
+/* Smooth scroll + page fade */
+html { scroll-behavior: smooth; }
+.VPContent { animation: fadeIn 0.45s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Hero */
+.VPHero .image-src { animation: float 6s ease-in-out infinite; filter: drop-shadow(0 12px 24px rgba(255,106,0,0.25)); }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.VPHero .name {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.VPHero .VPButton { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.VPHero .VPButton:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(255,106,0,0.3); }
+.VPHero .VPButton:active { transform: translateY(0) scale(0.98); }
+
+/* Features — scroll reveal + hover */
+.VPFeatures .item { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.VPFeatures .item.in-view { opacity: 1; transform: translateY(0); }
+.VPFeatures .item:nth-child(1) { transition-delay: 0.05s; }
+.VPFeatures .item:nth-child(2) { transition-delay: 0.12s; }
+.VPFeatures .item:nth-child(3) { transition-delay: 0.19s; }
+.VPFeatures .item:nth-child(4) { transition-delay: 0.26s; }
+.VPFeatures .item:nth-child(5) { transition-delay: 0.33s; }
+.VPFeatures .item:nth-child(6) { transition-delay: 0.40s; }
+.VPFeature { transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; border-radius: 12px; }
+.VPFeature:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,0.22), 0 4px 12px rgba(255,106,0,0.12); border-color: rgba(255,106,0,0.28); }
+.VPFeature:hover .icon { transform: scale(1.08) rotate(2deg); box-shadow: 0 6px 16px rgba(255,106,0,0.18); }
+.VPFeature .icon { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.VPFeature:hover .icon img { animation: iconPulse 0.6s ease; }
+@keyframes iconPulse { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+/* Preview grid */
+.vp-doc img { transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease; }
+.vp-doc img:hover { transform: scale(1.025); box-shadow: 0 12px 32px rgba(0,0,0,0.35); filter: brightness(1.05); }
+.vp-doc .container img { opacity: 0; transform: translateY(12px); animation: fadeInUp 0.7s ease forwards; }
+.vp-doc .container img:nth-child(1) { animation-delay: 0.1s; }
+.vp-doc .container img:nth-child(2) { animation-delay: 0.18s; }
+.vp-doc .container img:nth-child(3) { animation-delay: 0.26s; }
+.vp-doc .container img:nth-child(4) { animation-delay: 0.34s; }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+/* Stats bar */
+.stats-bar { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 14px; margin: 28px 0; }
+.stat-card { background: linear-gradient(135deg, rgba(255,106,0,0.08), rgba(255,140,26,0.04)); border: 1px solid rgba(255,106,0,0.16); border-radius: 12px; padding: 16px; text-align: center; transition: transform 0.25s ease; }
+.stat-card:hover { transform: translateY(-4px); border-color: rgba(255,106,0,0.32); }
+.stat-number { font-size: 1.9em; font-weight: 800; background: linear-gradient(120deg, #ff6a00, #ff8c1a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-label { font-size: 0.85em; opacity: 0.75; margin-top: 2px; }
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
