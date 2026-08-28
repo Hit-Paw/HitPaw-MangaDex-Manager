@@ -5,6 +5,8 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 ![version](https://img.shields.io/badge/version-3.4.6-orange)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
+![CI](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml/badge.svg)
+![CodeQL](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/codeql.yml/badge.svg)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
 
 > Not affiliated with or endorsed by MangaDex.
@@ -47,6 +49,8 @@ Grab the latest build from the [Releases](../../releases) page:
 | **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | Extract and run `./MangaDexExporter` |
 
 No install required on any platform. You don't need Qt or anything else on your machine.
+
+> **Build from source?** See [BUILDING.md](BUILDING.md) for exact Qt 6.8.3 + MinGW 13.1 steps, `CMakePresets.json`, and `clang-format`/`ctest` usage.
 
 ## Setup
 

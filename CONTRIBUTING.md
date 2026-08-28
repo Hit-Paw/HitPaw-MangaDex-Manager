@@ -10,23 +10,29 @@ Thanks for helping improve HitPaw MangaDex Manager!
 
 ## Development
 
+See [BUILDING.md](BUILDING.md) for full toolchain (Qt 6.8.3 + MinGW 13.1 via `jurplel/install-qt-action@v4`).
+
 ```bash
 # Linux
-sudo apt install qt6-base-dev zlib1g-dev
-qmake6 MangaDexExporter.pro && make -j$(nproc)
+sudo apt install qt6-base-dev qt6-tools-dev zlib1g-dev
+cmake --preset linux-release && cmake --build --preset linux
+# or: qmake6 MangaDexExporter.pro && make -j$(nproc)
 
-# Windows (Qt 6.11 + MinGW 13.1)
+# Windows (Qt 6.8.3 + MinGW 13.1)
 # Open MangaDexExporter.pro in Qt Creator → Build → Run
-# or
-build_windows.bat
+# or: build_windows.bat
+# or: cmake --preset windows-release && cmake --build --preset windows
 
 # macOS
 brew install qt@6
-qmake MangaDexExporter.pro && make
+cmake --preset macos-release && cmake --build --preset macos
+# or: qmake MangaDexExporter.pro && make
 ```
 
-- Source is C++/Qt6, kept local for private builds — commits to this repo are typically `CHANGELOG.md` + version bumps. If you add `MangaDexExporter.pro`/`main.cpp`, the CI `build-check` will run `qmake + mingw32-make` and must pass.
-- Run `scan-secrets` locally before pushing: `grep -R "gho_\|ghp_" --include="*.cpp" --include="*.h"` should be empty — all auth is `QSettings`-driven at runtime.
+- Source is C++/Qt6 (`main.cpp` 4405 lines, splitting into `src/api`, `src/models`, `src/ui` — see `src/README.md`). `CMakeLists.txt` `project(VERSION 3.4.6)` must match `CHANGELOG.md` tag.
+- Formatting: `clang-format --dry-run --Werror` (config `.clang-format`), whitespace `git diff --check`, `shellcheck` for `build_*.sh`.
+- Tests: `cmake -S tests -B build_tests && ctest --test-dir build_tests` (Qt Test, see `tests/test_export.cpp`).
+- Secrets: `grep -R -n -E "gho_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9_]{20,}" --include="*.cpp" --include="*.h"` must be empty — all auth is `QSettings`-driven at runtime (`secure_store.h`). Also `pre-commit` hook (`.pre-commit-config.yaml`) mirrors CI `scan-secrets`.
 
 ## Pull requests
 

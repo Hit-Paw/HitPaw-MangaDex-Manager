@@ -10,9 +10,11 @@
 
 ## Checklist
 
-- [ ] Tested on Windows (Qt 6.11 + MinGW 13.1)
+- [ ] Tested on Windows (Qt 6.8.3 + MinGW 13.1, see `BUILDING.md`)
 - [ ] Updated `CHANGELOG.md` under `## [Unreleased]`
-- [ ] No hardcoded secrets (`QSettings` only, `scan-secrets` passes)
+- [ ] No hardcoded secrets (`QSettings` only, `scan-secrets` passes, `git diff --check` clean)
+- [ ] Ran `clang-format --dry-run --Werror` (if touching `*.cpp`/`*.h`)
+- [ ] `tests/` pass (`ctest` / `qmake && make check`)
 - [ ] Single focused change, ready for squash-merge
 
 ## Notes
