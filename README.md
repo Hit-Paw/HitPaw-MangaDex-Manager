@@ -5,7 +5,6 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 ![version](https://img.shields.io/badge/version-3.4.6-orange)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
-![downloads](https://img.shields.io/github/downloads/Hit-Paw/HitPaw-MangaDex-Manager/total?color=brightgreen)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
 
 > Not affiliated with or endorsed by MangaDex.
@@ -43,9 +42,9 @@ Grab the latest build from the [Releases](../../releases) page:
 
 | Platform | File | Notes |
 |----------|------|-------|
-| **Windows** | `HitPaw-MangaDex-Manager-v*-Windows.zip` | Extract and run `MangaDexExporter.exe` |
-| **macOS** | `HitPaw-MangaDex-Manager-v*-macOS.dmg` | Open the DMG and drag to Applications |
-| **Linux** | `HitPaw-MangaDex-Manager-v*-Linux.tar.gz` | Extract and run `./MangaDexExporter` |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | Extract and run `MangaDexExporter.exe` |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | Extract and run the bundled app or executable |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | Extract and run `./MangaDexExporter` |
 
 No install required on any platform. You don't need Qt or anything else on your machine.
 

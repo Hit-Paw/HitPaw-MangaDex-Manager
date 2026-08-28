@@ -33,14 +33,15 @@ jobs:
         with:
           version: '6.8.3'
           arch: 'win64_mingw'
+          tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
           cache: true
           setup-python: false
       - name: Build check
         shell: cmd
         run: |
           if not exist MangaDexExporter.pro (
-            echo No MangaDexExporter.pro in repo - source kept local per user request, skipping build check
-            exit /b 0
+            echo ::error::MangaDexExporter.pro is missing; source must be committed for CI to validate a release.
+            exit /b 1
           )
           if exist build_win rmdir /s /q build_win
           mkdir build_win
