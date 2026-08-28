@@ -79,16 +79,16 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
   opacity: 0.9;
 }
 .dark .VPHero::before { background: radial-gradient(820px 380px at 50% 0%, rgba(255,106,0,0.09), transparent 72%); }
-.VPHero .container { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 32px; overflow: visible; }
-.VPHero .main { flex: 1 1 0; min-width: 0; }
-.VPHero .image { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: visible; }
+.VPHero .container { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 24px; overflow: visible; max-width: 1152px; margin: 0 auto; }
+.VPHero .main { flex: 0 1 560px; min-width: 0; }
+.VPHero .image { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: visible; margin-left: -8px; }
 .VPHomeHero .image-bg { display: none !important; }
-.VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 320px; overflow: visible; }
+.VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 280px; overflow: visible; }
 .VPHero .image-container::after { display: none; }
 .VPHero .image-src {
   animation: none !important; will-change: auto; backface-visibility: hidden; transform: none;
   filter: drop-shadow(0 12px 28px rgba(0,0,0,0.28)) drop-shadow(0 2px 10px rgba(255,106,0,0.18));
-  max-width: 100%; width: clamp(200px, 26vw, 300px); height: auto; margin: 0 auto; position: relative; z-index: 1;
+  max-width: 100%; width: clamp(180px, 22vw, 260px); height: auto; margin: 0 auto; position: relative; z-index: 1;
   transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease;
   object-fit: contain;
 }
