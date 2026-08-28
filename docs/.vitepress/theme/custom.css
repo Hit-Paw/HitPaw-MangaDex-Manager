@@ -253,7 +253,7 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 
 /* ── VS Table — premium comparison (replaces markdown table) ── */
 .vs-table { width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.22); margin: 18px 0; background: #0f0f0f; }
-.vs-row { display: grid; grid-template-columns: 1.15fr 1.25fr 1fr 0.9fr; gap: 0; }
+.vs-row { display: grid; grid-template-columns: 1.2fr 1.3fr 0.9fr 0.65fr; gap: 0; }
 .vs-header { background: linear-gradient(135deg, rgba(255,106,0,0.22), rgba(255,140,26,0.14)); border-bottom: 1px solid rgba(255,106,0,0.22); }
 .vs-header div { padding: 12px 14px; font-weight: 750; font-size: 0.88rem; letter-spacing: -0.01em; color: #ff9a4a; display: flex; align-items: center; }
 .vs-header div:last-child { justify-content: center; }
@@ -261,15 +261,30 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .vs-row:not(.vs-header) { border-top: 1px solid rgba(255,255,255,0.06); }
 .vs-row:not(.vs-header):nth-child(even) { background: rgba(255,255,255,0.02); }
 .vs-row:not(.vs-header):nth-child(odd):not(.vs-header) { background: rgba(255,255,255,0.01); }
-.vs-row div { padding: 11px 14px; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; line-height: 1.4; }
+.vs-row div { padding: 11px 14px; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; line-height: 1.4; min-width: 0; }
 .vs-feature { font-weight: 600; color: #e8e8e8; }
 .vs-hitpaw { background: rgba(255,106,0,0.07); color: #fff; font-weight: 600; border-left: 1px solid rgba(255,106,0,0.14); border-right: 1px solid rgba(255,255,255,0.06); }
 .vs-hitpaw code { background: rgba(255,106,0,0.16) !important; border-color: rgba(255,106,0,0.22) !important; color: #ff8c1a !important; font-size: 0.82rem; padding: 2px 6px; border-radius: 6px; }
 .vs-manual, .vs-bookmark { color: #b8b8b8; }
 .vs-bookmark { color: #888; justify-content: center; }
-@media (max-width: 760px) {
+/* Tablet: horizontal scroll, tighter */
+@media (max-width: 860px) {
   .vs-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .vs-row { min-width: 560px; }
+}
+/* Mobile: card view — no horizontal scroll, Bookmark not far */
+@media (max-width: 640px) {
+  .vs-table { border: none; background: transparent; box-shadow: none; overflow: visible; border-radius: 0; }
+  .vs-header { display: none; }
+  .vs-row { display: block; border: 1px solid rgba(255,106,0,0.16); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: #111 !important; box-shadow: 0 6px 18px rgba(0,0,0,0.22); min-width: 0 !important; }
+  .vs-row div { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.06); gap: 12px; }
+  .vs-row div:first-child { background: linear-gradient(135deg, rgba(255,106,0,0.10), rgba(255,140,26,0.06)); font-weight: 700; color: #ff9a4a; border-top: none; padding-top: 12px; }
+  .vs-row .vs-hitpaw { background: rgba(255,106,0,0.08); border-left: none; border-right: none; border-top: 1px solid rgba(255,106,0,0.14); }
+  .vs-row div::before { content: attr(data-label); font-size: 0.76rem; font-weight: 600; color: #888; letter-spacing: 0.02em; text-transform: uppercase; flex-shrink: 0; }
+  .vs-row div:first-child::before { content: none; }
+  .vs-feature { color: #ff9a4a !important; }
+  .vs-bookmark { justify-content: space-between !important; }
+  .vs-bookmark::before { color: #888; }
 }
 
 /* ── Doc page reveal (only when JS) ── */
