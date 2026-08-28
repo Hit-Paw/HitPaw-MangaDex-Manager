@@ -118,12 +118,17 @@ jobs:
         run: |
           brew update
           brew install qt@6
+          # Ensure qmake is linked and available
+          brew link qt@6 --force || true
           echo "$(brew --prefix qt@6)/bin" >> $GITHUB_PATH
+          echo "Qt prefix: $(brew --prefix qt@6)"
+          ls -l $(brew --prefix qt@6)/bin/qmake* || true
       - name: Build check (qmake)
         run: |
+          export PATH="$(brew --prefix qt@6)/bin:$PATH"
           if [ ! -f MangaDexExporter.pro ]; then echo "::error::MangaDexExporter.pro missing"; exit 1; fi
           rm -rf build_macos && mkdir build_macos && cd build_macos
-          qmake ../MangaDexExporter.pro
+          qmake6 ../MangaDexExporter.pro 2>/dev/null || qmake ../MangaDexExporter.pro 2>/dev/null || /opt/homebrew/opt/qt@6/bin/qmake ../MangaDexExporter.pro || $(brew --prefix qt@6)/bin/qmake ../MangaDexExporter.pro
           make -j$(sysctl -n hw.ncpu)
           echo "macOS build OK"
 
