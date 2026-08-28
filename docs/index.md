@@ -64,25 +64,54 @@ features:
     details: Windows 10/11 x64 (bundled DLLs) • macOS • Linux — Qt 6.8.3 + MinGW 13.1, CMakePresets + qmake
 ---
 
+<div class="stats-bar">
+  <div class="stat-card"><div class="stat-number">3276</div><div class="stat-label">Titles in one grid</div></div>
+  <div class="stat-card"><div class="stat-number">5+</div><div class="stat-label">Export formats</div></div>
+  <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Platforms</div></div>
+  <div class="stat-card"><div class="stat-number">100%</div><div class="stat-label">Local & secure</div></div>
+</div>
+
 ## Preview
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:16px 0">
-  <img src="/preview-1.png" alt="Library Grid 3276 titles" style="border-radius:8px;border:1px solid #222" />
-  <img src="/preview-2.png" alt="Activity Log HitPaw icon" style="border-radius:8px;border:1px solid #222" />
-  <img src="/preview-3.png" alt="Export Formats" style="border-radius:8px;border:1px solid #222" />
-  <img src="/preview-4.png" alt="Download Chapters" style="border-radius:8px;border:1px solid #222" />
+  <img src="/preview-1.png" alt="Library Grid 3276 titles" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
+  <img src="/preview-2.png" alt="Activity Log HitPaw icon" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
+  <img src="/preview-3.png" alt="Export Formats" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
+  <img src="/preview-4.png" alt="Download Chapters" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18)" />
 </div>
 
 > Not affiliated with or endorsed by MangaDex. Preview updated for **v3.4.6**.
 
+## Why HitPaw?
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0">
+  <div style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
+    <strong style="color:#ff6a00">⚡ Instant Library</strong><br/>Load your entire filtered library at once — <code>Show All (N)</code> next to <code>Show more (60)</code>. No pagination limits.
+  </div>
+  <div style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
+    <strong style="color:#ff6a00">🧩 Smart Export</strong><br/>One click → CSV/JSON/MAL/AP/MangaBaka. Validated and ready for MyAnimeList, AniList, Kitsu and more.
+  </div>
+  <div style="background:linear-gradient(135deg,rgba(255,106,0,0.06),rgba(0,0,0,0));border:1px solid rgba(255,106,0,0.12);border-radius:12px;padding:18px">
+    <strong style="color:#ff6a00">🌙 AMOLED Craft</strong><br/>Pure black (#000) UI, 5-column grid, skeleton loading, smooth 60fps scroll — built for binge browsers.
+  </div>
+</div>
+
 ## Quick Start
 
-1. Download from [Releases](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases) — `HitPawMangaDexManager-v*-windows-x64.zip` etc.
-2. Extract and run `MangaDexExporter.exe` (Windows) or bundle (macOS/Linux)
-3. Login with MangaDex username/password + personal API client (`Settings → API Clients`)
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0">
+  <div style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:16px;text-align:center"><div style="font-size:1.6em">⬇️</div><strong>1. Download</strong><br/><span style="opacity:.8">Releases → <code>*-windows-x64.zip</code></span></div>
+  <div style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:16px;text-align:center"><div style="font-size:1.6em">📦</div><strong>2. Extract & Run</strong><br/><span style="opacity:.8"><code>MangaDexExporter.exe</code> — no installer</span></div>
+  <div style="border:1px solid rgba(255,106,0,0.18);border-radius:12px;padding:16px;text-align:center"><div style="font-size:1.6em">🔑</div><strong>3. Login</strong><br/><span style="opacity:.8">MangaDex + API client → <code>Load Library</code></span></div>
+</div>
 
 See [Getting Started](/getting-started) for full setup, [Building](/building) for source builds, and [Export Formats](/export) for site imports.
 
 ## Community
 
 Join [Discord](https://discord.gg/z6yYYpcYYc) for support. Found a bug? Use [Bug report](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml). Want a feature? [Feature request](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=feature_request.yml).
+
+<div style="margin:24px 0;padding:20px;border-radius:12px;background:linear-gradient(135deg,#ff6a00 0%,#ff8c1a 100%);color:white;text-align:center">
+  <div style="font-size:1.3em;font-weight:800;margin-bottom:6px">Ready to manage your library?</div>
+  <div style="opacity:.9;margin-bottom:14px">Free, open-source, MIT — no ads, no tracking.</div>
+  <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" style="display:inline-block;background:white;color:#ff6a00;font-weight:700;padding:10px 18px;border-radius:8px;text-decoration:none;transition:transform .2s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">Download HitPaw Manager →</a>
+</div>
