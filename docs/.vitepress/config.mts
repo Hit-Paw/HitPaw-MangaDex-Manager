@@ -4,8 +4,8 @@ export default defineConfig({
   title: 'HitPaw MangaDex Manager',
   description: 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.',
   lang: 'en-US',
-  // For custom domain, base is '/'. For GitHub Pages project site without custom domain, set base: '/HitPaw-MangaDex-Manager/'
-  base: '/',
+  // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set to '/'
+  base: '/HitPaw-MangaDex-Manager/',
   head: [
     ['link', { rel: 'icon', href: '/hitpaw.ico' }],
     ['meta', { name: 'theme-color', content: '#0ea5e9' }],
