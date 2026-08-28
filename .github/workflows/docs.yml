@@ -38,6 +38,19 @@ jobs:
         run: npm ci
       - name: Build VitePress
         run: npm run docs:build
+      - name: Fix sitemap base (project pages)
+        run: |
+          python3 -c "
+          import pathlib, re
+          p = pathlib.Path('docs/.vitepress/dist/sitemap.xml')
+          if p.exists():
+              t = p.read_text(encoding='utf-8')
+              t2 = t.replace('https://hit-paw.github.io/', 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/')
+              t2 = t2.replace('HitPaw-MangaDex-Manager//', 'HitPaw-MangaDex-Manager/')
+              p.write_text(t2, encoding='utf-8')
+              print('Sitemap fixed:')
+              print(p.read_text()[:500])
+          "
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
