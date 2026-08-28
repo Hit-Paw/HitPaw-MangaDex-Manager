@@ -70,8 +70,8 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .VPSidebarItem.is-active > .item { animation: sidebarPulse 0.4s ease; }
 @keyframes sidebarPulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-/* ── HERO — clean, no muddy glow ── */
-.VPHero { position: relative; overflow: hidden; padding-top: 32px; padding-bottom: 12px; }
+/* ── HERO — fixed layout, no cutoff, clean glow ── */
+.VPHero { position: relative; overflow: visible; padding-top: 32px; padding-bottom: 32px; }
 .VPHero::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 420px;
   background: radial-gradient(820px 380px at 50% 0%, rgba(255,106,0,0.07), transparent 72%);
@@ -79,15 +79,18 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
   opacity: 0.9;
 }
 .dark .VPHero::before { background: radial-gradient(820px 380px at 50% 0%, rgba(255,106,0,0.09), transparent 72%); }
-.VPHero .container { position: relative; z-index: 1; }
+.VPHero .container { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 32px; overflow: visible; }
+.VPHero .main { flex: 1 1 0; min-width: 0; }
+.VPHero .image { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: visible; }
 .VPHomeHero .image-bg { display: none !important; }
-.VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; position: relative; }
+.VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 320px; overflow: visible; }
 .VPHero .image-container::after { display: none; }
 .VPHero .image-src {
   animation: none !important; will-change: auto; backface-visibility: hidden; transform: none;
   filter: drop-shadow(0 12px 28px rgba(0,0,0,0.28)) drop-shadow(0 2px 10px rgba(255,106,0,0.18));
-  max-width: clamp(180px, 22vw, 240px); margin: 0 auto; position: relative; z-index: 1;
+  max-width: 100%; width: clamp(200px, 26vw, 300px); height: auto; margin: 0 auto; position: relative; z-index: 1;
   transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease;
+  object-fit: contain;
 }
 .VPHero .image-src:hover { transform: scale(1.03) rotate(1deg); filter: drop-shadow(0 18px 36px rgba(0,0,0,0.32)) drop-shadow(0 4px 16px rgba(255,106,0,0.22)); }
 .VPHero .name {
@@ -269,13 +272,17 @@ html.js .vp-doc div[class*='language-'].in-view, html.js .vp-doc pre.in-view { o
 
 /* Responsive hero */
 @media (max-width: 960px) {
-  .VPHero .image-src { max-width: 200px; }
+  .VPHero .container { flex-direction: column; align-items: stretch; gap: 20px; }
+  .VPHero .image { width: 100%; justify-content: center; order: -1; }
+  .VPHero .image-container { max-width: 260px; margin: 0 auto; }
+  .VPHero .image-src { width: clamp(180px, 42vw, 240px); max-width: 240px; }
   .stats-bar { grid-template-columns: repeat(2,1fr); }
   .preview-grid { grid-template-columns: repeat(2,1fr); }
 }
 @media (max-width: 640px) {
-  .VPHero { padding-top: 18px; }
+  .VPHero { padding-top: 18px; padding-bottom: 20px; }
   .VPHero .tagline { font-size: 0.98rem; }
+  .VPHero .image-src { width: clamp(160px, 48vw, 220px); }
   .stats-bar { grid-template-columns: repeat(2,1fr); gap: 10px; }
   .preview-grid { grid-template-columns: 1fr; }
   .why-grid { grid-template-columns: 1fr; }
