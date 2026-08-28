@@ -149,9 +149,22 @@ export default {
 
     onMounted(() => {
       markJS()
+      // Fix: refresh always jumped to bottom — disable browser scroll restoration and force top if no hash
+      try {
+        if ('scrollRestoration' in history) (history as any).scrollRestoration = 'manual'
+        if (!window.location.hash) {
+          window.scrollTo(0, 0)
+          requestAnimationFrame(() => window.scrollTo(0, 0))
+          setTimeout(() => window.scrollTo(0, 0), 50)
+        }
+      } catch {}
       nextTick(() => { observe(); setupLightbox() })
     })
-    watch(() => route.path, () => nextTick(() => { observe(); setupLightbox() }))
+    watch(() => route.path, () => nextTick(() => {
+      // On route change, ensure top unless hash anchor
+      try { if (!window.location.hash) window.scrollTo(0, 0) } catch {}
+      observe(); setupLightbox()
+    }))
 
     return parentResult
   }
