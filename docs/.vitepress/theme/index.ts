@@ -51,11 +51,23 @@ export default {
       })
       document.querySelectorAll<HTMLImageElement>('.preview-grid img').forEach((el) => {
         el.style.cursor = 'zoom-in'
+        // use currentSrc (resolved with base) — data-full was missing base (/HitPaw-MangaDex-Manager/) and 404'd
         el.addEventListener('click', () => {
-          const src = el.getAttribute('data-full') || el.src
+          const src = (el as any).currentSrc || el.src
           open(src, el.alt || '')
         })
       })
+      // close on image click as well
+      if (img) {
+        img.addEventListener('click', () => {
+          const lbEl = document.getElementById('lightbox')
+          if (lbEl?.classList.contains('open')) {
+            lbEl.classList.remove('open')
+            lbEl.setAttribute('aria-hidden', 'true')
+            document.body.style.overflow = ''
+          }
+        })
+      }
     }
     onMounted(() => {
       nextTick(() => {

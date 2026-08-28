@@ -74,10 +74,10 @@ features:
 ## Preview
 
 <div class="preview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:16px 0">
-  <img src="/preview-1.png" alt="Library Grid — your titles" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-1.png" />
-  <img src="/preview-2.png" alt="Activity Log HitPaw icon" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-2.png" />
-  <img src="/preview-3.png" alt="Export Formats" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-3.png" />
-  <img src="/preview-4.png" alt="Download Chapters" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" data-full="/preview-4.png" />
+  <img src="/preview-1.png" alt="Library Grid — your titles" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" />
+  <img src="/preview-2.png" alt="Activity Log HitPaw icon" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" />
+  <img src="/preview-3.png" alt="Export Formats" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" />
+  <img src="/preview-4.png" alt="Download Chapters" style="border-radius:12px;border:1px solid rgba(255,106,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.18);cursor:zoom-in" />
 </div>
 
 <div id="lightbox" class="lightbox" aria-hidden="true"><img alt="Preview enlarged" /><div class="lightbox-caption"></div></div>
