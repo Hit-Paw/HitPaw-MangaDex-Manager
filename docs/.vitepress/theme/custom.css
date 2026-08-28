@@ -70,24 +70,19 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .VPSidebarItem.is-active > .item { animation: sidebarPulse 0.4s ease; }
 @keyframes sidebarPulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-/* ── HERO — premium mesh + glass ── */
+/* ── HERO — clean, no muddy glow ── */
 .VPHero { position: relative; overflow: hidden; padding-top: 32px; padding-bottom: 12px; }
 .VPHero::before {
-  content: ""; position: absolute; inset: -40% -20% auto -20%; height: 520px;
-  background:
-    radial-gradient(600px 320px at 18% 18%, rgba(255,106,0,0.14), transparent 62%),
-    radial-gradient(520px 360px at 82% 22%, rgba(255,140,26,0.10), transparent 64%),
-    radial-gradient(760px 420px at 50% 0%, rgba(255,106,0,0.06), transparent 72%);
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 420px;
+  background: radial-gradient(820px 380px at 50% 0%, rgba(255,106,0,0.07), transparent 72%);
   pointer-events: none; z-index: 0;
+  opacity: 0.9;
 }
+.dark .VPHero::before { background: radial-gradient(820px 380px at 50% 0%, rgba(255,106,0,0.09), transparent 72%); }
 .VPHero .container { position: relative; z-index: 1; }
 .VPHomeHero .image-bg { display: none !important; }
 .VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; position: relative; }
-.VPHero .image-container::after {
-  content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255,106,0,0.18), transparent 72%);
-  filter: blur(6px); z-index: 0; pointer-events: none;
-}
+.VPHero .image-container::after { display: none; }
 .VPHero .image-src {
   animation: none !important; will-change: auto; backface-visibility: hidden; transform: none;
   filter: drop-shadow(0 12px 28px rgba(0,0,0,0.28)) drop-shadow(0 2px 10px rgba(255,106,0,0.18));
@@ -179,21 +174,34 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .preview-caption small { font-weight: 500; opacity: 0.62; font-size: 0.78rem; }
 .lightbox-hint { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; opacity: 0.58; font-weight: 500; }
 
-/* ── LIGHTBOX — backdrop blur + a11y ── */
+/* ── LIGHTBOX — backdrop blur + a11y — always centered ── */
 .lightbox {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.84); backdrop-filter: blur(10px) saturate(1.1);
-  display: flex; align-items: center; justify-content: center; z-index: 9999;
-  opacity: 0; visibility: hidden; transition: opacity 0.32s ease, visibility 0.32s; padding: 24px;
+  position: fixed; inset: 0;
+  display: grid; place-items: center; align-content: center;
+  padding: 24px;
+  background: rgba(0,0,0,0.84); backdrop-filter: blur(12px) saturate(1.1);
+  z-index: 9999;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.32s ease, visibility 0.32s;
+  overflow: auto; overscroll-behavior: contain;
 }
 .lightbox.open { opacity: 1; visibility: visible; }
-.lightbox img { max-width: min(92vw, 1280px); max-height: 86vh; border-radius: 14px; box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08); transform: scale(0.96) translateY(8px); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1); }
-.lightbox.open img { transform: scale(1) translateY(0); }
-.lightbox-caption { position: absolute; bottom: max(20px, 2vh); left: 50%; transform: translateX(-50%); color: #fff; opacity: 0.9; font-size: 0.92rem; text-align: center; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 999px; max-width: 90vw; }
+.lightbox img {
+  max-width: min(92vw, 1280px);
+  max-height: min(86vh, 900px);
+  width: auto; height: auto;
+  margin: auto; display: block;
+  border-radius: 14px; box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+  transform: scale(0.96); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1);
+}
+.lightbox.open img { transform: scale(1); }
+.lightbox-caption { position: fixed; bottom: max(20px, 2vh); left: 50%; transform: translateX(-50%); color: #fff; opacity: 0.9; font-size: 0.92rem; text-align: center; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 999px; max-width: 90vw; pointer-events: none; }
 .lightbox-close {
-  position: absolute; top: 18px; right: 18px; width: 40px; height: 40px; border-radius: 999px;
+  position: fixed; top: 18px; right: 18px; width: 40px; height: 40px; border-radius: 999px;
   background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.14); color: #fff;
   display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(8px);
   transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  z-index: 10000;
 }
 .lightbox-close:hover { background: rgba(255,255,255,0.16); transform: scale(1.06); border-color: rgba(255,255,255,0.22); }
 .lightbox-close:active { transform: scale(0.96); }
