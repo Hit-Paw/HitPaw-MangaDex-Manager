@@ -1,0 +1,36 @@
+/* Lightbox viewport centering
+   The page content animation must not apply a transform to .VPContent.
+   Any transformed ancestor becomes the containing block for position:fixed,
+   which makes the lightbox appear offset instead of centered in the viewport. */
+html.js .VPContent {
+  animation: hitpawFadeIn 0.45s ease both !important;
+}
+
+@keyframes hitpawFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 24px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.lightbox img {
+  width: auto !important;
+  height: auto !important;
+  max-width: min(92vw, 1280px) !important;
+  max-height: calc(100vh - 100px) !important;
+  margin: 0 !important;
+  flex: 0 1 auto !important;
+  object-fit: contain !important;
+}
