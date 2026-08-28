@@ -53,6 +53,14 @@ export default {
       const lb = document.getElementById('lightbox') as HTMLElement | null
       if (!lb) return
 
+      // The page content has a transform animation. A fixed-position element
+      // inside a transformed ancestor is positioned relative to that ancestor
+      // instead of the viewport. Move the lightbox to <body> so fixed centering
+      // is always relative to the actual browser viewport.
+      if (lb.parentElement !== document.body) {
+        document.body.appendChild(lb)
+      }
+
       // Ensure a11y attributes on lightbox container
       lb.setAttribute('role', 'dialog')
       lb.setAttribute('aria-modal', 'true')
