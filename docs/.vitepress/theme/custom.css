@@ -12,8 +12,8 @@
 
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(120deg, #ff6a00 30%, #ff8c1a 100%);
-  --vp-home-hero-image-background-image: linear-gradient(-45deg, #ff6a00 50%, #ffb14a 50%);
-  --vp-home-hero-image-filter: blur(44px);
+  --vp-home-hero-image-background-image: none;
+  --vp-home-hero-image-filter: none;
 }
 
 .dark {
@@ -56,9 +56,20 @@ html { scroll-behavior: smooth; }
 .VPContent { animation: fadeIn 0.45s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Hero */
-.VPHero .image-src { animation: float 6s ease-in-out infinite; filter: drop-shadow(0 12px 24px rgba(255,106,0,0.25)); }
-@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+/* Hero — centered, no glow */
+.VPHomeHero .image-bg { display: none !important; }
+.VPHero .image-container { transform: none !important; display: flex; align-items: center; justify-content: center; }
+.VPHero .image-src {
+  animation: float 6s ease-in-out infinite;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.22));
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: none;
+  max-width: 220px;
+  margin: 0 auto;
+}
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 .VPHero .name {
   background-size: 200% 200%;
   animation: gradientShift 8s ease infinite;
