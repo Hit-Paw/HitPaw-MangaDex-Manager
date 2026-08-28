@@ -1,9 +1,10 @@
-/* Ensure enlarged preview images are always fully visible. */
+/* Ensure enlarged preview images fit completely inside the available viewport. */
 .lightbox {
   box-sizing: border-box !important;
   padding: 24px !important;
   overflow: hidden !important;
 }
+
 .lightbox img {
   display: block !important;
   width: auto !important;
@@ -13,6 +14,7 @@
   object-fit: contain !important;
   margin: 0 !important;
 }
+
 @media (max-width: 640px) {
   .lightbox { padding: 16px !important; }
   .lightbox img {
