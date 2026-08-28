@@ -54,6 +54,12 @@ export default {
       const lb = document.getElementById('lightbox') as HTMLElement | null
       if (!lb) return
 
+      // Keep the lightbox outside VitePress content so fixed positioning is relative
+      // to the actual browser viewport even when page content has transforms/animations.
+      if (lb.parentElement !== document.body) {
+        document.body.appendChild(lb)
+      }
+
       // Ensure a11y attributes on lightbox container
       lb.setAttribute('role', 'dialog')
       lb.setAttribute('aria-modal', 'true')
