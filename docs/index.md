@@ -164,7 +164,7 @@ MangaDex issues personal API clients for free — **MangaDex → Settings → AP
 | Filter by year/tag/status | Instant client-side | Manual search | — |
 | Export to MAL/AniList | Validated XML/JSON/.gz | Copy-paste each title | — |
 | Update check | Silent + manual popup | Check GitHub yourself | — |
-| Works offline exports | ✅ Cached covers, retries | ❌ | ❌ |
+| Works offline exports | Yes — cached covers, retries | No | No |
 | Platform | Win / macOS / Linux portable | Browser only | — |
 
 ## What users get
@@ -180,10 +180,10 @@ See [Getting Started](/getting-started) for full setup, [Building](/building) fo
 
 HitPaw is built in the open. Join the conversation, report a bug, or request a feature:
 
-- 💬 **Discord**: [discord.gg/z6yYYpcYYc](https://discord.gg/z6yYYpcYYc) — support, suggestions, sneak peeks
-- 🐛 **Bug report**: [Open an issue](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml) — include `v3.4.6`, OS, steps
-- 💡 **Feature request**: [Request a feature](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=feature_request.yml)
-- ✏️ **Docs**: every page has **Edit this page on GitHub** — PRs welcome (see [Contributing](/contributing))
+- **Discord**: [discord.gg/z6yYYpcYYc](https://discord.gg/z6yYYpcYYc) — support, suggestions, sneak peeks
+- **Bug report**: [Open an issue](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml) — include `v3.4.6`, OS, steps
+- **Feature request**: [Request a feature](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=feature_request.yml)
+- **Docs**: every page has **Edit this page on GitHub** — PRs welcome (see [Contributing](/contributing))
 
 <div class="cta-banner">
   <div class="cta-title">Ready to manage your library?</div>
