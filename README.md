@@ -5,7 +5,6 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 ![version](https://img.shields.io/badge/version-3.4.6-orange)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
-![downloads](https://img.shields.io/github/downloads/Hit-Paw/HitPaw-MangaDex-Manager/total?color=brightgreen)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
 
 > Not affiliated with or endorsed by MangaDex.
