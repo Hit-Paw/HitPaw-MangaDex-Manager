@@ -1,28 +1,64 @@
+---
+title: Security — HitPaw MangaDex Manager
+description: How HitPaw stores credentials locally via QSettings, what is not in the repo, OS keychain roadmap, and how to report vulnerabilities.
+outline: deep
+---
+
 # Security Policy
 
-## Credentials
+<div class="badge-row">
+  <span class="badge badge--accent">No hardcoded secrets</span>
+  <span class="badge">QSettings • local only</span>
+  <span class="badge">scan-secrets CI</span>
+  <span class="badge">MIT</span>
+</div>
 
-HitPaw MangaDex Manager **does not ship with any hardcoded credentials**.
+## Credentials — user-supplied at runtime only
 
-- All MangaDex authentication (username/password, client ID/secret, access tokens) is **user-supplied at runtime** via the login UI (`MainWindow`).
-- Values are stored locally via `QSettings` (`api/client_id`, `api/client_secret`, `api/remember_creds`) on the user machine only and never committed to git.
-- The CI workflow (`.github/workflows/release.yml`, `ci.yml`) runs a `scan-secrets` job that fails the build if a pattern like `gho_`, `ghp_`, or hardcoded `client_secret` is found.
+HitPaw **ships with zero credentials**.
 
-## What is NOT in the repo
+- All MangaDex authentication — **username/password, Client ID/Secret, access & refresh tokens** — is entered by you in the login UI (`MainWindow`).
+- Stored locally via `QSettings` keys `api/client_id`, `api/client_secret`, `api/remember_creds` — Windows Registry / macOS plist / Linux INI, per-user, per-machine.
+- Never committed to git, never sent anywhere except MangaDex’s own API (`https://api.mangadex.org`).
 
-- `build_win/`, `*.o`, `*.exe`, `*.dll` (excluded by `.gitignore`)
-- Any API keys, tokens, or passwords
+::: warning What is NOT in the repo
+`build_win/` • `*.o` / `*.exe` / `*.dll` / `*.so` • any API keys, tokens, or passwords — all excluded by [`.gitignore`](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/.gitignore). The [`scan-secrets`](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/.github/workflows/ci.yml) job fails the build if `gho_` / `ghp_` or `client_secret` appears hardcoded.
+:::
 
-## Roadmap: OS keychain
+### Quick self-check
 
-`secure_store.h:4` currently uses `QSettings` (registry/plist/ini — per-user, per-machine, plaintext on Windows). Planned migration:
+```bash
+# Must print nothing — run before every push
+grep -R -n -E "gho_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9_]{20,}" --include="*.cpp" --include="*.h" --include="*.pro" .
+clang-format --dry-run --Werror main.cpp export.h domain.h pal.h secure_store.h
+```
 
-1. Add `QKeychain` (`qtkeychain`) as optional dependency — `SecureStore` keeps same API (`clientId()`/`setClientId()` etc.) but swaps backend to `QKeychain::Job` on Windows Credential Manager / macOS Keychain / libsecret on Linux.
+Also covered by the local `pre-commit` hook (`.pre-commit-config.yaml`).
+
+## Roadmap — OS keychain
+
+`secure_store.h:4` currently uses `QSettings` (plaintext per-user on Windows). Planned migration keeps the same API (`clientId()` / `setClientId()` etc.) but swaps backend when available:
+
+1. Add **`QKeychain` (`qtkeychain`)** optional dependency — `SecureStore` keeps API but uses `QKeychain::Job` → **Windows Credential Manager / macOS Keychain / libsecret (Linux)**.
 2. Fallback to `QSettings` if keychain unavailable; `clearCredentials()` wipes both backends.
-3. No API change for callers — see `secure_store.h:16-67` wrapper; CI `scan-secrets` continues to enforce `gho_/ghp_` absence.
+3. No caller changes — see `secure_store.h:16-67` wrapper. CI `scan-secrets` continues to enforce absence of `gho_/ghp_`.
 
-Contributions welcome — open an issue before large `secure_store.h` changes.
+Contributions welcome — please open an issue before large `secure_store.h` changes so API stays stable.
 
 ## Reporting a vulnerability
 
-If you find a credential leak or security issue, please open a private security advisory on GitHub or contact the maintainer directly. Do not file a public issue for sensitive reports.
+Do **not** file a public issue for sensitive reports.
+
+- **Preferred**: GitHub → *Security* → *Report a vulnerability* (private advisory) on [Hit-Paw/HitPaw-MangaDex-Manager](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/security/advisories/new)
+- **Alternative**: Discord DM to maintainer via [discord.gg/z6yYYpcYYc](https://discord.gg/z6yYYpcYYc) or email listed in the advisory
+- Include: version (`v3.4.6`), OS, steps, impact, and whether credentials were exposed. We aim to acknowledge within 48h and fix within 14 days.
+
+Non-sensitive bugs → [Bug report](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml) is fine.
+
+## Hardening tips for users
+
+- Enable **Remember credentials** only on private machines — otherwise sign out before closing; `QSettings` is per-OS-user but not encrypted on Windows (until keychain lands).
+- Use a **unique MangaDex API client** per device (MangaDex → Settings → API Clients) so you can revoke one without killing all.
+- Keep HitPaw updated — `Check for updates` in-app plus the silent 3.5s startup check logs `Update available: vX → vY`.
+
+See [Getting Started](/getting-started) for setup and [Contributing](/contributing) for the `scan-secrets` workflow.

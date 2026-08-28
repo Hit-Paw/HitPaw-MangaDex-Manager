@@ -8,7 +8,10 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "vitepress": "^1.3.4",
+    "vitepress": "^1.6.4",
     "vue": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

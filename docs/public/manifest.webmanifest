@@ -1,0 +1,74 @@
+{
+  "name": "HitPaw MangaDex Manager",
+  "short_name": "HitPaw",
+  "description": "Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.",
+  "start_url": "/HitPaw-MangaDex-Manager/",
+  "scope": "/HitPaw-MangaDex-Manager/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff6a00",
+  "lang": "en-US",
+  "dir": "ltr",
+  "orientation": "any",
+  "categories": ["utilities", "books"],
+  "icons": [
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/HitPaw-MangaDex-Manager/icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/HitPaw-MangaDex-Manager/preview-1.png",
+      "sizes": "1477x1164",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "HitPaw Library Grid"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Download Latest",
+      "url": "https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest",
+      "description": "Download HitPaw MangaDex Manager"
+    },
+    {
+      "name": "Getting Started",
+      "url": "/HitPaw-MangaDex-Manager/getting-started.html",
+      "description": "Quick start guide"
+    }
+  ]
+}
