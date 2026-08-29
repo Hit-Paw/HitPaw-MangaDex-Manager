@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: HitPaw MangaDex Manager
-  text: Browse, filter, and export your MangaDex library.
-  tagline: Desktop app built with Qt6/C++ — 5-column AMOLED grid, Show All (N), offline exports. 100% local.
+  text: Fast, private, offline MangaDex library manager.
+  tagline: Browse, filter, and export your entire library — no cloud, no tracking, no ads.
   image:
     src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icon_256.png
     alt: HitPaw MangaDex Manager — AMOLED library grid
@@ -25,42 +25,42 @@ features:
       width: 24
       height: 24
     title: Library Grid
-    details: 5 columns • 170×322 cards • filter by title/status/year/tags • Show All (N) + Show more (60). Instant.
+    details: Cover grid with fast search by title, status, year, and tags. Load your entire library instantly.
   - icon:
       src: /icons/outline-sync.svg
       alt: Sync
       width: 24
       height: 24
     title: Stay Up to Date
-    details: Manual + silent checks. HitPaw icon popups — "You are on vX / Latest vY" → one-click Download Latest.
+    details: Silent update checks at launch. One-click download when a new version drops.
   - icon:
       src: /icons/outline-export.svg
       alt: Export
       width: 24
       height: 24
     title: Export Anywhere
-    details: CSV • JSON • MAL XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire) • AP .xml.gz • MangaBaka JSON. Validated.
+    details: CSV, JSON, MAL XML, Anime-Planet, MangaBaka — validated and ready to import.
   - icon:
       src: /icons/outline-lock.svg
       alt: Lock
       width: 24
       height: 24
     title: Secure & Local
-    details: QSettings only, never hardcoded. OS keychain roadmap (QKeychain). No tracking, no ads.
+    details: Credentials stay on your machine. No tracking, no ads, no data leaves your PC.
   - icon:
       src: /icons/outline-palette.svg
       alt: Palette
       width: 24
       height: 24
     title: Dark AMOLED UI
-    details: Pure #000, skeleton loading, status-color chips, cover caching with CDN retry/backoff. 60fps.
+    details: Pure black theme with smooth scrolling, skeleton loading, and status-color chips.
   - icon:
       src: /icons/outline-layers.svg
       alt: Layers
       width: 24
       height: 24
     title: Cross-Platform
-    details: Windows 10/11 x64 (bundled DLLs) • macOS • Linux — Qt 6.8.3 + MinGW 13.1, CMake & qmake.
+    details: Windows, macOS, and Linux. Extract and run — no installer needed.
 ---
 
 <div class="badge-row">
@@ -68,8 +68,10 @@ features:
   <span class="badge">Windows • macOS • Linux</span>
   <span class="badge">MIT • Open Source</span>
   <span class="badge">No install • Portable</span>
-  <span class="badge badge--muted">Not affiliated with MangaDex</span>
+  <a href="https://discord.gg/z6yYYpcYYc" class="badge badge--brand">Discord</a>
 </div>
+
+> **Disclaimer:** HitPaw MangaDex Manager is not affiliated with or endorsed by MangaDex.
 
 ## Preview
 
@@ -97,15 +99,13 @@ features:
 
 </div>
 
-> **v3.4.6** — grid fixed to 5 cols, `Show All (N)` added, update popups now use HitPaw icon (48×48).
-
 ## Quick Start
 
-- Download the latest release → https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases
-- Extract and run (no installer)
-- Sign in & create a personal MangaDex API client (MangaDex → Settings → API Clients)
+1. Download the latest release from [GitHub Releases](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
+2. Extract and run — no installer needed
+3. Sign in with your MangaDex account and create a personal API client ([MangaDex → Settings → API Clients](https://mangadex.org/settings))
 
 ## Community
 
-- Discord: https://discord.gg/z6yYYpcYYc
-- Issues: https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
+[![Issues](https://img.shields.io/badge/GitHub-Issues-181717)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues)
