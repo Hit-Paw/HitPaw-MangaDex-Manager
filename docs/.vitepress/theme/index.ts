@@ -1,8 +1,8 @@
 import DefaultTheme from 'vitepress/theme'
 import './custom.css'
-import './lightbox-fix.css'
-import './lightbox-viewport.css'
-import './lightbox-final-fit.css'
+// import './lightbox-fix.css'        // ← removed (no longer needed)
+import './lightbox-viewport.css'    // ← kept from main
+
 import { onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vitepress'
 
@@ -18,7 +18,7 @@ export default {
 
     const route = useRoute()
 
-    // Mark JS enabled for CSS no-js fallback
+    // Mark JS enabled for CSS no‑js fallback
     const markJS = () => {
       try { document.documentElement.classList.add('js') } catch {}
     }
@@ -53,6 +53,12 @@ export default {
       if (cleanupLightbox) { cleanupLightbox(); cleanupLightbox = null }
       const lb = document.getElementById('lightbox') as HTMLElement | null
       if (!lb) return
+
+      // Keep the lightbox outside VitePress content so fixed positioning is relative
+      // to the actual browser viewport even when page content has transforms/animations.
+      if (lb.parentElement !== document.body) {
+        document.body.appendChild(lb)
+      }
 
       // Ensure a11y attributes on lightbox container
       lb.setAttribute('role', 'dialog')
