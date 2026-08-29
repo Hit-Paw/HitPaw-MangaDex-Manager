@@ -20,42 +20,42 @@ hero:
       link: https://github.com/Hit-Paw/HitPaw-MangaDex-Manager
 features:
   - icon:
-      src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icons/outline-library.svg
+      src: /icons/outline-library.svg
       alt: Library grid
       width: 24
       height: 24
     title: Library Grid
     details: 5 columns • 170×322 cards • filter by title/status/year/tags • Show All (N) + Show more (60). Instant.
   - icon:
-      src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icons/outline-sync.svg
+      src: /icons/outline-sync.svg
       alt: Sync
       width: 24
       height: 24
     title: Stay Up to Date
-    details: Manual + silent checks. HitPaw icon popups — “You are on vX / Latest vY” → one-click Download Latest.
+    details: Manual + silent checks. HitPaw icon popups — "You are on vX / Latest vY" → one-click Download Latest.
   - icon:
-      src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icons/outline-export.svg
+      src: /icons/outline-export.svg
       alt: Export
       width: 24
       height: 24
     title: Export Anywhere
     details: CSV • JSON • MAL XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire) • AP .xml.gz • MangaBaka JSON. Validated.
   - icon:
-      src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icons/outline-lock.svg
+      src: /icons/outline-lock.svg
       alt: Lock
       width: 24
       height: 24
     title: Secure & Local
     details: QSettings only, never hardcoded. OS keychain roadmap (QKeychain). No tracking, no ads.
   - icon:
-      src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icons/outline-palette.svg
+      src: /icons/outline-palette.svg
       alt: Palette
       width: 24
       height: 24
     title: Dark AMOLED UI
     details: Pure #000, skeleton loading, status-color chips, cover caching with CDN retry/backoff. 60fps.
   - icon:
-      src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icons/outline-layers.svg
+      src: /icons/outline-layers.svg
       alt: Layers
       width: 24
       height: 24
