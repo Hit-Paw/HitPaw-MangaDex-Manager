@@ -97,7 +97,7 @@ features:
 
 </div>
 
-> **v3.4.6** — grid fixed to 5 cols, `Show All (N)` added, update popups now use HitPaw icon (48×48). See [CHANGELOG](/CHANGELOG.md).
+> **v3.4.6** — grid fixed to 5 cols, `Show All (N)` added, update popups now use HitPaw icon (48×48).
 
 ## Quick Start
 
