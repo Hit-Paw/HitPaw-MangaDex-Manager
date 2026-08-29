@@ -92,6 +92,9 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
   transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease;
   object-fit: contain;
 }
+/* VitePress positions the home-image for its desktop layout. Reset those
+   offsets because this theme uses a normal flex-based hero at every width. */
+.VPHero .image-src { inset: auto !important; }
 .VPHero .image-src:hover { transform: scale(1.03) rotate(1deg); filter: drop-shadow(0 18px 36px rgba(0,0,0,0.32)) drop-shadow(0 4px 16px rgba(255,106,0,0.22)); }
 .VPHero .name {
   background-size: 200% 200%; animation: gradientShift 8s ease infinite;
@@ -193,7 +196,12 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
   max-width: min(92vw, 1280px);
   max-height: min(86vh, 900px);
   width: auto; height: auto;
-  margin: auto; display: block;
+  /* Reset VitePress image offsets so the preview stays centered in the overlay. */
+  position: static !important;
+  inset: auto !important;
+  justify-self: center;
+  align-self: center;
+  margin: auto !important; display: block;
   border-radius: 14px; box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
   transform: scale(0.96); transition: transform 0.38s cubic-bezier(0.32,0.72,0,1);
 }
@@ -317,13 +325,23 @@ html.js .vp-doc div[class*='language-'].in-view, html.js .vp-doc pre.in-view { o
 }
 @media (max-width: 640px) {
   .VPHero { padding-top: 18px; padding-bottom: 20px; }
+  .VPHero .container { gap: 16px; }
+  .VPHero .image { margin-left: 0; }
+  .VPHero .image-container { max-width: 220px; }
   .VPHero .tagline { font-size: 0.98rem; }
   .VPHero .image-src { width: clamp(160px, 48vw, 220px); }
+  .VPHero .actions { gap: 8px; }
+  .VPHero .actions .VPButton { justify-content: center; min-height: 44px; }
   .stats-bar { grid-template-columns: repeat(2,1fr); gap: 10px; }
   .preview-grid { grid-template-columns: 1fr; }
+  .preview-caption { align-items: flex-start; flex-direction: column; }
   .why-grid { grid-template-columns: 1fr; }
   .quick-grid { grid-template-columns: 1fr; }
   .cta-banner { padding: 18px 14px; }
+  .lightbox { padding: 12px; }
+  .lightbox img { max-width: 100%; max-height: 80vh; border-radius: 10px; }
+  .lightbox-caption { bottom: 12px; font-size: 0.8rem; }
+  .lightbox-close { top: 10px; right: 10px; min-width: 44px; min-height: 44px; }
 }
 
 /* Reduce motion */
