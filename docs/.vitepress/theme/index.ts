@@ -1,7 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import './custom.css'
-// import './lightbox-fix.css'        // ← removed (no longer needed)
-import './lightbox-viewport.css'    // ← kept from main
+import './lightbox-viewport.css'
 
 import { onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vitepress'
