@@ -96,7 +96,7 @@ export default defineConfig({
   },
   themeConfig: {
     logo: '/icon_64.png',
-    siteTitle: 'HitPaw Manager',
+    siteTitle: 'HitPaw MangaDex Manager',
     outline: { level: [2, 3], label: 'On this page' },
     lastUpdated: { text: 'Last updated', formatOptions: { dateStyle: 'medium' } },
     docFooter: { prev: 'Previous', next: 'Next' },
