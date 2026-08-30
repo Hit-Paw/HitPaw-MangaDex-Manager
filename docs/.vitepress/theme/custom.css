@@ -63,11 +63,11 @@ html:not(.js) .vp-doc div[class*='language-'],
 html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 
 /* Nav */
-.VPNavBar { backdrop-filter: saturate(1.2) blur(12px); border-bottom: 1px solid rgba(255,106,0,0.08); }
-.VPNavBar .VPNavBarTitle { overflow: visible; margin-right: 16px; }
-.VPNavBar .VPNavBarTitle .title { overflow: visible; white-space: nowrap; letter-spacing: -0.01em; }
-.VPNavBar .VPNavBarTitle .logo { margin-right: 8px; }
-.VPNavBarMenu { gap: 4px; }
+.VPNavBar { backdrop-filter: saturate(1.2) blur(12px); }
+.VPNavBar .container { align-items: center; }
+.VPNavBar .container .title { flex: 0 0 auto; }
+.VPNavBar .container .content { flex: 1 1 auto; justify-content: flex-end; }
+.VPNavBar .divider { display: none; }
 .VPNavBarMenuLink.active, .VPSidebarItem.is-active > .item > .link { color: var(--vp-c-brand-1); font-weight: 600; }
 .VPSidebar { border-right: 1px solid rgba(255,106,0,0.06) !important; padding-top: 8px; }
 .VPSidebarItem { transition: transform 0.2s ease, border-color 0.2s ease; }
