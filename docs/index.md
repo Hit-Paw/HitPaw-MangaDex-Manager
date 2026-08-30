@@ -68,7 +68,6 @@ features:
   <span class="badge">Windows • macOS • Linux</span>
   <span class="badge">MIT • Open Source</span>
   <span class="badge">No install • Portable</span>
-  <a href="https://discord.gg/z6yYYpcYYc" class="badge badge--brand">Discord</a>
 </div>
 
 > **Disclaimer:** HitPaw MangaDex Manager is not affiliated with or endorsed by MangaDex.
