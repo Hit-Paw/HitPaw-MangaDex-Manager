@@ -63,8 +63,13 @@ html:not(.js) .vp-doc div[class*='language-'],
 html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 
 /* Nav */
-.VPNavBar { backdrop-filter: saturate(1.2) blur(12px); border-bottom: 1px solid rgba(255,106,0,0.08); }
+.VPNavBar { backdrop-filter: saturate(1.2) blur(12px); }
+.VPNavBar .container { align-items: center; }
+.VPNavBar .container .title { flex: 0 0 auto; }
+.VPNavBar .container .content { flex: 1 1 auto; justify-content: flex-end; }
+.VPNavBar .divider { display: none; }
 .VPNavBarMenuLink.active, .VPSidebarItem.is-active > .item > .link { color: var(--vp-c-brand-1); font-weight: 600; }
+.VPSidebar { border-right: 1px solid rgba(255,106,0,0.06) !important; padding-top: 8px; }
 .VPSidebarItem { transition: transform 0.2s ease, border-color 0.2s ease; }
 .VPSidebarItem:hover { transform: translateX(4px); }
 .VPSidebarItem.is-active > .item { animation: sidebarPulse 0.4s ease; }
@@ -250,6 +255,8 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; letter-spacing: -0.01em; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.88); backdrop-filter: blur(8px); }
 .dark .badge { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.10); color: #eee; }
 .badge--accent { background: linear-gradient(135deg, #ff6a00, #ff8c1a); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(255,106,0,0.22); }
+.badge--brand { background: #5865F2; color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(88,101,242,0.22); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.badge--brand:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(88,101,242,0.3); color: white; }
 .badge--muted { opacity: 0.78; }
 
 /* Feature table pro */

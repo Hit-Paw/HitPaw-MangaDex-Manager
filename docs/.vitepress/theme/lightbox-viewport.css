@@ -1,0 +1,87 @@
+/* Preview lightbox: centered and sized as large as possible without clipping. */
+html.js .VPContent {
+  animation: hitpawFadeIn 0.45s ease both !important;
+}
+
+
+@keyframes hitpawFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+.lightbox {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 24px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+
+.lightbox img {
+  display: block !important;
+  width: min(92vw, 1280px) !important;
+  height: calc(100vh - 100px) !important;
+  max-width: 92vw !important;
+  max-height: calc(100vh - 100px) !important;
+  margin: 0 !important;
+  flex: 0 1 auto !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+}
+
+
+.lightbox .lightbox-close {
+  position: absolute !important;
+  top: 24px !important;
+  right: 24px !important;
+}
+
+
+.lightbox .lightbox-caption {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 18px !important;
+  transform: translateX(-50%) !important;
+  max-width: calc(100vw - 48px) !important;
+  margin: 0 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  pointer-events: none !important;
+}
+
+
+@media (max-width: 640px) {
+  .lightbox {
+    padding: 16px !important;
+  }
+
+
+  .lightbox img {
+    width: 94vw !important;
+    height: calc(100vh - 84px) !important;
+    max-width: 94vw !important;
+    max-height: calc(100vh - 84px) !important;
+  }
+
+
+  .lightbox .lightbox-close {
+    top: 16px !important;
+    right: 16px !important;
+  }
+
+
+  .lightbox .lightbox-caption {
+    bottom: 14px !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+}
