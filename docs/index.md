@@ -6,7 +6,7 @@ hero:
   text: Fast, private, offline MangaDex library manager.
   tagline: Browse, filter, and export your entire library — no cloud, no tracking, no ads.
   image:
-    src: https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/icon_256.png
+    src: /icon_256.png
     alt: HitPaw MangaDex Manager — AMOLED library grid
   actions:
     - theme: brand
@@ -77,22 +77,22 @@ features:
 <div class="preview-grid">
 
   <div class="preview-card">
-    <img src="https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/screenshots/preview-1.png" alt="Library Grid — 3276 titles" loading="lazy" decoding="async" />
+    <img src="/preview-1.png" alt="Library Grid — 3276 titles" loading="lazy" decoding="async" />
     <div class="preview-caption"><span>Library Grid</span> <small>5 cols • filter • Show All (N)</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/screenshots/preview-2.png" alt="Activity Log & Update Check" loading="lazy" decoding="async" />
+    <img src="/preview-2.png" alt="Activity Log & Update Check" loading="lazy" decoding="async" />
     <div class="preview-caption"><span>Activity Log</span> <small>HitPaw icon • update check</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/screenshots/preview-3.png" alt="Export — Output Folder & validated formats" loading="lazy" decoding="async" />
+    <img src="/preview-3.png" alt="Export — Output Folder & validated formats" loading="lazy" decoding="async" />
     <div class="preview-caption"><span>Export</span> <small>CSV / JSON / MAL / AP / MB</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="https://raw.githubusercontent.com/Hit-Paw/HitPaw-MangaDex-Manager/main/screenshots/preview-4.png" alt="Download — Paste URL & chapter queue" loading="lazy" decoding="async" />
+    <img src="/preview-4.png" alt="Download — Paste URL & chapter queue" loading="lazy" decoding="async" />
     <div class="preview-caption"><span>Download</span> <small>Queue • retry/backoff</small></div>
   </div>
 
