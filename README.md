@@ -2,7 +2,7 @@
 
 A desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
 
-[![version](https://img.shields.io/badge/version-3.4.6-orange)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
+[![version](https://img.shields.io/badge/version-3.5.0-orange)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
 [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](BUILDING.md)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml/badge.svg)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml)
@@ -27,6 +27,7 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 - Pagination that scales: `Show more (60)` for incremental loading + `Show All (N)` to load your entire library at once — `3276 shown` in one click
 - Manual update check: `Check for updates` → popup with HitPaw icon showing `You are on vX / Latest vY / You are outdated` and `Download Latest Version` → `https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest` (silent auto-check still runs at launch)
 - Bulk-select and export titles with undo/redo (`Ctrl+Z` / `Ctrl+Y`), and bulk status editor (`Reading/Completed/On Hold/Plan to Read/Dropped/Re-reading`)
+- **Sync to MDList**: push your whole library (or just the selected titles) into a MangaDex custom list — reuses an existing list by name or creates one, skips duplicates, live progress, never touches reading statuses
 - Export to CSV, JSON, MAL-compatible XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire), MangaBaka JSON, and Anime-Planet's gzipped XML — with validation and import guides
 - Cover caching with disk-backed CDN retry/backoff + `Clear Cover Cache` and stats dashboard (`Years: 2026:143 … Total 3276`)
 - Library sorting (`Title A-Z/Z-A, Year Newest/Oldest, Status`), year/tag filters, and status-color chips

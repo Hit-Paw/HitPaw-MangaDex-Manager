@@ -1195,6 +1195,27 @@ private:
     QTextEdit*      m_log            = nullptr;
     QPropertyAnimation* m_logScrollAnim = nullptr;
 
+    // MDList sync (Export tab) — pushes bookmarks into a MangaDex custom list
+    QLineEdit*      m_mdlistNameEdit = nullptr;
+    QComboBox*      m_mdlistVisBox   = nullptr;
+    AccentButton*   m_mdlistAllBtn   = nullptr;
+    GhostButton*    m_mdlistSelBtn   = nullptr;
+    GhostButton*    m_mdlistStopBtn  = nullptr;
+    SmoothProgressBar* m_mdlistProgress = nullptr;
+    QLabel*         m_mdlistStatusLbl   = nullptr;
+    bool            m_mdlistRunning  = false;
+    bool            m_mdlistStop     = false;
+    QStringList     m_mdlistQueue;      // manga ids still to add
+    int             m_mdlistCurrent  = 0;
+    QString         m_mdlistListId;     // resolved/created custom list id
+    QString         m_mdlistListName;
+    int             m_mdlistAdded    = 0;
+    int             m_mdlistSkipped  = 0;
+    int             m_mdlistFailed   = 0;
+    int             m_mdlistRateRetries = 0;   // consecutive 429 retries on the current title
+    bool            m_mdlistAuthRetried = false;
+    QString         m_mdlistStartError;    // why the run aborted before/while adding
+
     // Download tab
     QLineEdit*      m_dlUrlEdit      = nullptr;
     AccentButton*   m_dlLookupBtn    = nullptr;
@@ -2213,6 +2234,67 @@ private:
         m_selInfo = new QLabel("Nothing selected — pick titles in Library to enable Export Selected.", page);
         m_selInfo->setStyleSheet(QString("QLabel { color: %1; font-size: 12px; background: transparent; }").arg(Pal::MUTED));
         v->addWidget(m_selInfo);
+
+        // ── MDList sync — push bookmarks into a MangaDex custom list ────────
+        auto* mdCard = new Card(page);
+        auto* ml     = new QVBoxLayout(mdCard);
+        ml->setContentsMargins(16, 14, 16, 14);
+        ml->setSpacing(10);
+
+        auto* mdTitle = new QLabel("Sync to MDList (MangaDex custom list)", mdCard);
+        mdTitle->setStyleSheet(QString("QLabel { background: transparent; color: %1; font-size: 13px; font-weight: 700; }").arg(Pal::TEXT));
+        ml->addWidget(mdTitle);
+
+        auto* mdRow = new QHBoxLayout;
+        m_mdlistNameEdit = new QLineEdit(mdCard);
+        m_mdlistNameEdit->setPlaceholderText("MDList name (e.g. My Favorites)");
+        m_mdlistNameEdit->setText(m_settings.value("mdlist/name", "My Favorites").toString());
+        m_mdlistNameEdit->addAction(QIcon(":/icons/nav/icons8-select-all-48-text.png"), QLineEdit::LeadingPosition);
+        m_mdlistVisBox = new QComboBox(mdCard);
+        m_mdlistVisBox->addItem("Private", "private");
+        m_mdlistVisBox->addItem("Public",  "public");
+        const int visIdx = m_mdlistVisBox->findData(m_settings.value("mdlist/visibility", "private").toString());
+        if (visIdx >= 0) m_mdlistVisBox->setCurrentIndex(visIdx);
+        m_mdlistVisBox->setFixedWidth(110);
+        m_mdlistVisBox->setToolTip("Only used when a new list is created — an existing list with the same name keeps its visibility");
+        mdRow->addWidget(m_mdlistNameEdit, 1);
+        mdRow->addWidget(m_mdlistVisBox);
+        ml->addLayout(mdRow);
+
+        auto* mdBtnRow = new QHBoxLayout;
+        m_mdlistAllBtn = new AccentButton("Sync Entire Library", mdCard);
+        m_mdlistAllBtn->setFixedWidth(210);
+        m_mdlistAllBtn->setToolTip("Add every bookmarked title in your library to this MDList on MangaDex");
+        connect(m_mdlistAllBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(/*selectedOnly*/false); });
+        m_mdlistSelBtn = new GhostButton("Sync Selected", mdCard);
+        m_mdlistSelBtn->setFixedWidth(210);
+        m_mdlistSelBtn->setEnabled(false);
+        m_mdlistSelBtn->setToolTip("Add only the titles selected in Library to this MDList on MangaDex");
+        connect(m_mdlistSelBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(/*selectedOnly*/true); });
+        m_mdlistStopBtn = new GhostButton("Stop", mdCard);
+        m_mdlistStopBtn->setFixedWidth(80);
+        m_mdlistStopBtn->hide();
+        connect(m_mdlistStopBtn, &QPushButton::clicked, this, &MainWindow::onMdlistStopClicked);
+        mdBtnRow->addWidget(m_mdlistAllBtn);
+        mdBtnRow->addWidget(m_mdlistSelBtn);
+        mdBtnRow->addWidget(m_mdlistStopBtn);
+        mdBtnRow->addStretch();
+        ml->addLayout(mdBtnRow);
+
+        m_mdlistProgress = new SmoothProgressBar(mdCard);
+        m_mdlistProgress->setRange(0, 100);
+        m_mdlistProgress->setValueInstant(0);
+        m_mdlistProgress->setTextVisible(false);
+        m_mdlistProgress->setFixedHeight(6);
+        m_mdlistProgress->hide();
+        ml->addWidget(m_mdlistProgress);
+
+        m_mdlistStatusLbl = new QLabel(
+            "Reuses an existing list with this name (or creates one), then adds your titles to it on MangaDex. Reading statuses are not changed.", mdCard);
+        m_mdlistStatusLbl->setWordWrap(true);
+        m_mdlistStatusLbl->setStyleSheet(QString("QLabel { color: %1; font-size: 11px; background: transparent; }").arg(Pal::MUTED));
+        ml->addWidget(m_mdlistStatusLbl);
+        v->addWidget(mdCard);
 
         auto* sep2 = new QFrame(page);
         sep2->setFrameShape(QFrame::HLine);
@@ -3328,6 +3410,9 @@ private:
     }
 
     void onLogout() {
+        // A running MDList sync can't continue without a session — let the
+        // in-flight request land, then the loop stops at m_mdlistStop.
+        if (m_mdlistRunning) m_mdlistStop = true;
         m_refreshTimer->stop();
         m_accessToken.clear();
         m_refreshToken.clear();
@@ -4057,6 +4142,258 @@ private:
         });
     }
 
+    // ── MDList sync ──────────────────────────────────────────────────────────
+    // Pushes every bookmarked title (or just the selection) into a MangaDex
+    // custom list ("MDList"). Titles are added one at a time via
+    // POST /manga/{id}/list/{listId} — the list-update endpoint replaces the
+    // whole manga array and caps the request body at 8KB, so per-title adds
+    // are the only way to move a full library of 3000+ entries.
+
+    void onMdlistSync(bool selectedOnly) {
+        if (m_mdlistRunning) { appendLog("MDList sync already running..."); return; }
+        if (m_accessToken.isEmpty()) {
+            QMessageBox::information(this, "MDList sync", "Sign in to MangaDex first.");
+            return;
+        }
+        if (m_libraryOrder.isEmpty()) {
+            QMessageBox::information(this, "MDList sync", "Load your library first (Library tab → Load Library), then sync.");
+            return;
+        }
+        if (selectedOnly && m_selected.isEmpty()) {
+            QMessageBox::information(this, "MDList sync", "No titles selected - pick titles in Library first.");
+            return;
+        }
+        const QString name = m_mdlistNameEdit ? m_mdlistNameEdit->text().trimmed() : QString();
+        if (name.isEmpty()) {
+            QMessageBox::warning(this, "MDList sync", "Enter a name for the MDList (e.g. \"My Favorites\").");
+            return;
+        }
+        const QString vis = m_mdlistVisBox ? m_mdlistVisBox->currentData().toString() : QStringLiteral("private");
+
+        QStringList ids;
+        if (!selectedOnly) {
+            ids = m_libraryOrder;
+        } else {
+            for (const auto& id : m_libraryOrder)
+                if (m_selected.contains(id)) ids << id;
+        }
+        if (ids.isEmpty()) {
+            QMessageBox::information(this, "MDList sync", "Nothing to sync.");
+            return;
+        }
+
+        if (QMessageBox::question(this, "MDList sync",
+            QString("Add %1 title(s) to the MDList \"%2\" on MangaDex?\n\n"
+                    "An existing list with this name is reused - otherwise a new %3 list is created. "
+                    "Titles already in the list are skipped. Your reading statuses are not changed.")
+                .arg(ids.size()).arg(name, vis),
+            QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes) return;
+        if (m_bulkRunning) {
+            QMessageBox::information(this, "MDList sync", "A bulk status update is running - wait for it to finish first.");
+            return;
+        }
+
+        m_settings.setValue("mdlist/name", name);
+        m_settings.setValue("mdlist/visibility", vis);
+
+        m_mdlistRunning = true;
+        m_mdlistStop    = false;
+        m_mdlistQueue   = ids;
+        m_mdlistCurrent = 0;
+        m_mdlistAdded = m_mdlistSkipped = m_mdlistFailed = 0;
+        m_mdlistRateRetries   = 0;
+        m_mdlistAuthRetried   = false;
+        m_mdlistStartError.clear();
+        m_mdlistListId.clear();
+        m_mdlistListName = name;
+        if (m_mdlistAllBtn)  m_mdlistAllBtn->setEnabled(false);
+        if (m_mdlistSelBtn)  m_mdlistSelBtn->setEnabled(false);
+        if (m_mdlistStopBtn) { m_mdlistStopBtn->setEnabled(true); m_mdlistStopBtn->show(); }
+        if (m_mdlistProgress) { m_mdlistProgress->setValueInstant(0); m_mdlistProgress->show(); }
+        setMdlistStatus(QString("Looking for the MDList \"%1\"…").arg(name));
+        appendLog(QString("MDList sync: adding %1 title(s) to \"%2\"...").arg(ids.size()).arg(name));
+
+        mdlistResolvePage(0);
+    }
+
+    void setMdlistStatus(const QString& t) {
+        if (m_mdlistStatusLbl) m_mdlistStatusLbl->setText(t);
+    }
+
+    // Pages through GET /user/list looking for an existing list with this name.
+    void mdlistResolvePage(int offset) {
+        if (m_mdlistStop) { mdlistFinish(true); return; }
+        QUrl url(QString(API_BASE) + "/user/list");
+        QUrlQuery q;
+        q.addQueryItem("limit",  "100");
+        q.addQueryItem("offset", QString::number(offset));
+        url.setQuery(q);
+        auto* reply = apiGet(url);
+        connect(reply, &QNetworkReply::finished, this, [this, reply, offset] {
+            reply->deleteLater();
+            if (m_mdlistStop) { mdlistFinish(true); return; }
+            if (reply->error() != QNetworkReply::NoError) {
+                mdlistFailStart("Could not read your MDLists: " + reply->errorString());
+                return;
+            }
+            const auto doc  = QJsonDocument::fromJson(reply->readAll());
+            const auto data = doc["data"].toArray();
+            for (const auto& item : data) {
+                const auto obj = item.toObject();
+                if (obj["attributes"].toObject()["name"].toString()
+                        .compare(m_mdlistListName, Qt::CaseInsensitive) == 0) {
+                    m_mdlistListId = obj["id"].toString();
+                    appendLog(QString("MDList sync: reusing existing list \"%1\".").arg(m_mdlistListName));
+                    mdlistAddNext();
+                    return;
+                }
+            }
+            const int total = doc["total"].toInt();
+            if (offset + data.size() < total)
+                mdlistResolvePage(offset + data.size());
+            else
+                mdlistCreate();
+        });
+    }
+
+    void mdlistCreate() {
+        QJsonObject body;
+        body["name"]       = m_mdlistListName;
+        body["visibility"] = m_mdlistVisBox ? m_mdlistVisBox->currentData().toString()
+                                            : QStringLiteral("private");
+        auto* reply = apiPostJson(QUrl(QString(API_BASE) + "/list"), body);
+        connect(reply, &QNetworkReply::finished, this, [this, reply] {
+            reply->deleteLater();
+            if (m_mdlistStop) { mdlistFinish(true); return; }
+            if (reply->error() != QNetworkReply::NoError) {
+                mdlistFailStart("Could not create the MDList: " + reply->errorString());
+                return;
+            }
+            const auto doc = QJsonDocument::fromJson(reply->readAll());
+            m_mdlistListId = doc["data"].toObject()["id"].toString();
+            if (m_mdlistListId.isEmpty()) {
+                mdlistFailStart("MangaDex did not return an id for the new list.");
+                return;
+            }
+            appendLog(QString("MDList sync: created list \"%1\".").arg(m_mdlistListName));
+            mdlistAddNext();
+        });
+    }
+
+    void mdlistAddNext() {
+        if (m_mdlistStop) { mdlistFinish(true); return; }
+        if (m_mdlistCurrent >= m_mdlistQueue.size()) { mdlistFinish(false); return; }
+        const QString id    = m_mdlistQueue.at(m_mdlistCurrent);
+        const QString title = m_entries.contains(id) ? m_entries[id].title : id;
+
+        QNetworkRequest req{QUrl(QString(API_BASE) + "/manga/" + id + "/list/" + m_mdlistListId)};
+        req.setRawHeader("User-Agent", UA);
+        if (!m_accessToken.isEmpty())
+            req.setRawHeader("Authorization", ("Bearer " + m_accessToken).toUtf8());
+        auto* reply = m_nam->post(req, QByteArray());
+        connect(reply, &QNetworkReply::finished, this, [this, reply, id, title] {
+            reply->deleteLater();
+            const int http = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            if (reply->error() == QNetworkReply::NoError) {
+                ++m_mdlistAdded;
+                m_mdlistRateRetries = 0;
+            } else if (http == 429 && m_mdlistRateRetries < 3) {
+                // Rate limited — back off, then retry the same title.
+                ++m_mdlistRateRetries;
+                setMdlistStatus(QString("Rate limited - backing off… (%1 / %2)")
+                                    .arg(m_mdlistCurrent + 1).arg(m_mdlistQueue.size()));
+                QTimer::singleShot(2000, this, [this]{ if (m_mdlistRunning) mdlistAddNext(); });
+                return;
+            } else if (http == 401) {
+                if (!m_mdlistAuthRetried && !m_refreshToken.isEmpty()) {
+                    // Session expired mid-run — refresh the token once, retry the title.
+                    m_mdlistAuthRetried = true;
+                    appendLog("MDList sync: session expired - refreshing and retrying…");
+                    doRefresh();
+                    QTimer::singleShot(3000, this, [this]{ if (m_mdlistRunning) mdlistAddNext(); });
+                    return;
+                }
+                mdlistFailStart("Session expired - sign in again, then re-run the sync. "
+                                "Titles already added stay in the list.");
+                return;
+            } else if (http == 400) {
+                // MangaDex rejects duplicates — already in the list.
+                ++m_mdlistSkipped;
+                m_mdlistRateRetries = 0;
+            } else {
+                ++m_mdlistFailed;
+                m_mdlistRateRetries = 0;
+                appendLog(QString("MDList: %1 failed - %2").arg(title, reply->errorString()));
+            }
+
+            ++m_mdlistCurrent;
+            if (m_mdlistProgress)
+                m_mdlistProgress->setValue(m_mdlistCurrent * 100 / qMax(1, m_mdlistQueue.size()));
+            setMdlistStatus(QString("Adding to \"%1\"…  %2 / %3   ·   added %4 · skipped %5 · failed %6")
+                                .arg(m_mdlistListName).arg(m_mdlistCurrent).arg(m_mdlistQueue.size())
+                                .arg(m_mdlistAdded).arg(m_mdlistSkipped).arg(m_mdlistFailed));
+            // 350ms between requests — same gentle pacing as the bulk status editor.
+            QTimer::singleShot(350, this, [this]{ if (m_mdlistRunning) mdlistAddNext(); });
+        });
+    }
+
+    void onMdlistStopClicked() {
+        if (!m_mdlistRunning) return;
+        m_mdlistStop = true;
+        if (m_mdlistStopBtn) m_mdlistStopBtn->setEnabled(false);
+        setMdlistStatus("Stopping - finishing the current title…");
+        appendLog("MDList sync: stopping…");
+    }
+
+    void mdlistFailStart(const QString& msg) {
+        m_mdlistStartError = msg;
+        appendLog("MDList sync: " + msg);
+        mdlistFinish(true);
+    }
+
+    void mdlistFinish(bool stopped) {
+        const int processed = m_mdlistAdded + m_mdlistSkipped + m_mdlistFailed;
+        const bool partial  = stopped && processed < m_mdlistQueue.size();
+        m_mdlistRunning = false;
+        m_mdlistStop    = false;
+        if (m_mdlistAllBtn) m_mdlistAllBtn->setEnabled(true);
+        updateSelectionUi();   // restores the Selected button state/text
+        if (m_mdlistStopBtn) m_mdlistStopBtn->hide();
+        if (m_mdlistProgress) m_mdlistProgress->hide();
+
+        const QString summary = QString("Added %1 · already in list %2 · failed %3")
+                                    .arg(m_mdlistAdded).arg(m_mdlistSkipped).arg(m_mdlistFailed);
+        appendLog(QString("MDList sync: %1 (%2).")
+                      .arg(partial ? QString("stopped early after %1 of %2 titles").arg(processed).arg(m_mdlistQueue.size())
+                                   : QString("finished - %1 of your titles are in \"%2\"").arg(m_mdlistAdded + m_mdlistSkipped).arg(m_mdlistListName),
+                           summary));
+        setMdlistStatus(partial ? QString("Stopped - %1.").arg(summary) : QString("Done - %1.").arg(summary));
+
+        QMessageBox box(this);
+        box.setWindowTitle("MDList sync");
+        QPixmap px(":/icons/icon_64.png");
+        if (!px.isNull()) box.setIconPixmap(px.scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if (!m_mdlistStartError.isEmpty()) {
+            box.setIcon(QMessageBox::Warning);
+            box.setText(QString("%1\n\n%2").arg(m_mdlistStartError, summary));
+        } else if (partial) {
+            box.setText(QString("Stopped early — %1 of %2 titles were processed.\n\n%3")
+                            .arg(processed).arg(m_mdlistQueue.size()).arg(summary));
+        } else {
+            box.setText(QString("Done — %1 title(s) are now in the MDList \"%2\".\n\n%3")
+                            .arg(m_mdlistAdded + m_mdlistSkipped).arg(m_mdlistListName).arg(summary));
+        }
+        if (!m_mdlistListId.isEmpty()) {
+            box.setStandardButtons(QMessageBox::Ok | QMessageBox::Open);
+            box.setDefaultButton(QMessageBox::Ok);
+            if (box.exec() == QMessageBox::Open)
+                QDesktopServices::openUrl(QUrl("https://mangadex.org/list/" + m_mdlistListId));
+        } else {
+            box.setStandardButtons(QMessageBox::Ok);
+            box.exec();
+        }
+    }
+
     void onCardToggled(const QString& id, bool sel) {
         pushUndoSnapshot();
         if (sel) m_selected.insert(id); else m_selected.remove(id);
@@ -4094,6 +4431,16 @@ private:
             m_selInfo->setText(n == 0
                 ? "Nothing selected — pick titles in Library to enable Export Selected."
                 : QString("%1 title(s) selected. Use Library → Clear (or Undo) to change the selection.").arg(n));
+        }
+        if (m_mdlistAllBtn) {
+            const int total = m_libraryOrder.size();
+            m_mdlistAllBtn->setText(total > 0 ? QString("Sync Entire Library (%1)").arg(total)
+                                              : "Sync Entire Library");
+            m_mdlistAllBtn->setEnabled(!m_mdlistRunning);
+        }
+        if (m_mdlistSelBtn) {
+            m_mdlistSelBtn->setEnabled(n > 0 && !m_mdlistRunning);
+            m_mdlistSelBtn->setText(n > 0 ? QString("Sync Selected (%1)").arg(n) : "Sync Selected");
         }
         if (m_countLbl) {
             int shown = 0, totalMatched = 0;

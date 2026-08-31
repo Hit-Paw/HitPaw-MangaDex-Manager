@@ -7,11 +7,18 @@ outline: deep
 # Changelog
 
 <div class="badge-row">
-  <span class="badge badge--accent">Current: v3.4.6</span>
+  <span class="badge badge--accent">Current: v3.5.0</span>
   <span class="badge">MIT • Open Source</span>
 </div>
 
 For the full detailed changelog with commit-level changes, see **[CHANGELOG.md on GitHub](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/CHANGELOG.md)**.
+
+## v3.5.0 — September 1, 2026
+
+- **Sync to MDList**: push your bookmarks into a MangaDex custom list from the Export tab — entire library or just the selection
+- Reuses an existing list by name or creates one (Private/Public), skips duplicates, live progress + Stop button, never touches reading statuses
+
+## v3.4.6 — August 27, 2026
 
 ## v3.4.6 — August 27, 2026
 
