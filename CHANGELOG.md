@@ -2,6 +2,11 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.5.0] - 2026-09-01
+
+### Added
+- **Sync to MDList**: Export tab card that pushes your bookmarks into a MangaDex custom list ("MDList") directly from the app. Enter a list name (default `My Favorites`) + visibility (Private/Public, used only when creating), then **Sync Entire Library** or **Sync Selected**. Existing list with the same name is reused (case-insensitive, found via paginated `GET /user/list`) — otherwise created via `POST /list` (`main.cpp:4152` `onMdlistSync`, `main.cpp:4224` `mdlistResolvePage`, `main.cpp:4259` `mdlistCreate`). Titles are added one at a time via `POST /manga/{id}/list/{listId}` (`main.cpp:4283` `mdlistAddNext`) — the list-update endpoint replaces the whole `manga[]` array and caps bodies at 8KB, so per-title adds are the only safe way to move a 3000+ title library. Duplicates (HTTP 400) count as *already in list*, live progress bar + `added / skipped / failed` counter, 350 ms pacing + 429 back-off (2 s, up to 3 retries), one automatic token refresh on mid-run 401, **Stop** button finishes the in-flight title and reports partial progress, done dialog offers `Open` → `https://mangadex.org/list/{id}`. Reading statuses are never touched; logout mid-run flags the loop to stop. UI card at `main.cpp:2244`, selection-aware buttons wired through `updateSelectionUi()`.
+
 ## [3.4.6] - 2026-08-27
 
 ### Fixed

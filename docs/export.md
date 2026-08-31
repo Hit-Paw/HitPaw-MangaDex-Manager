@@ -43,6 +43,26 @@ One selection → five validated files. HitPaw checks headers, XML well-formedne
 They require the gzipped file specifically. HitPaw's `*_AP.xml.gz` has gzip magic + decompressed MAL XML inside.
 :::
 
+## Sync to MDList
+
+Beyond file exports, the Export tab can push your bookmarks **straight into a MangaDex custom list (MDList)** — no intermediate file, no manual re-adding on the site.
+
+1. **Load Library** in the Library tab (or select individual titles).
+2. In **Export → Sync to MDList**, enter a list name (default `My Favorites`) and pick a visibility.
+3. Click **Sync Entire Library** or **Sync Selected** and confirm.
+
+How it works:
+
+- An existing list with the same name (case-insensitive) is **reused**; otherwise a new one is **created** with the chosen visibility. Visibility only applies to newly created lists.
+- Titles are added **one per request** to `POST /manga/{id}/list/{listId}` with 350 ms pacing — safe for 3000+ title libraries and gentle on the API.
+- Titles already in the list are **skipped** (counted as *already in list*), rate limits back off automatically, and an expired session is refreshed once mid-run.
+- **Stop** finishes the current title and reports how far it got — already-added titles stay in the list, so you can simply run the sync again to resume.
+- Your **reading statuses are never modified** — MDList sync only touches list membership.
+
+::: tip
+The done dialog includes an **Open** button that takes you straight to the list on mangadex.org.
+:::
+
 ## File samples
 
 ::: code-group
