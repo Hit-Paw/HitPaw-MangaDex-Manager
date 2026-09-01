@@ -24,7 +24,7 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 
 - Sign in with your MangaDex account (username/password or personal API client) — credentials stored locally via `QSettings`, never hardcoded
 - Browse your full library as a cover grid (5 columns, 170×322 cards) with fast filtering/search by title, status, year, and tags
-- Pagination that scales: `Show more (60)` for incremental loading + `Show All (N)` to load your entire library at once — `3276 shown` in one click
+- Pagination that scales: `Show more (60)` for incremental loading + `Show All (N)` to load your entire library at once — `How many titles you have are shown` in one click
 - Manual update check: `Check for updates` → popup with HitPaw icon showing `You are on vX / Latest vY / You are outdated` and `Download Latest Version` → `https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest` (silent auto-check still runs at launch)
 - Bulk-select and export titles with undo/redo (`Ctrl+Z` / `Ctrl+Y`), and bulk status editor (`Reading/Completed/On Hold/Plan to Read/Dropped/Re-reading`)
 - **Sync to MDList**: push your whole library (or just the selected titles) into a MangaDex custom list — reuses an existing list by name or creates one, skips duplicates, live progress, never touches reading statuses
