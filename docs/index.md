@@ -64,7 +64,7 @@ features:
 ---
 
 <div class="badge-row">
-  <span class="badge badge--accent">v3.4.6 • Latest</span>
+  <span class="badge badge--accent">Latest</span>
   <span class="badge">Windows • macOS • Linux</span>
   <span class="badge">MIT • Open Source</span>
   <span class="badge">No install • Portable</span>

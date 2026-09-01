@@ -7,7 +7,7 @@ outline: deep
 # FAQ
 
 <div class="badge-row">
-  <span class="badge badge--accent">v3.4.6</span>
+  <span class="badge badge--accent">Latest</span>
   <a href="https://discord.gg/z6yYYpcYYc" class="badge badge--brand">Discord</a>
 </div>
 
