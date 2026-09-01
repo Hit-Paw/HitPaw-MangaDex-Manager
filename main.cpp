@@ -3147,7 +3147,7 @@ private:
         if (latest.startsWith('v')) latest = latest.mid(1);
         const QString current = QApplication::applicationVersion();
         if (current.isEmpty()) {
-            // Fallback if applicationVersion not set — use hardcoded 3.4.6 as baseline
+            // Fallback if applicationVersion not set — use hardcoded 3.5.0 as baseline
             const QVersionNumber vLatest = QVersionNumber::fromString(latest);
             if (!vLatest.isNull() && m_statsLbl) {
                 const QString msg = QString("Latest: v%1 - https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/tag/%2").arg(latest, tag);
@@ -4708,7 +4708,7 @@ int main(int argc, char* argv[]) {
 
     QApplication app(argc, argv);
     app.setApplicationName("HitPaw MangaDex Manager");
-    app.setApplicationVersion("3.4.6");
+    app.setApplicationVersion("3.5.0");
     app.setOrganizationName("SentinelFlow");
 
     // Single-instance guard — a second launch would point at the same
