@@ -13,7 +13,7 @@ jobs:
   scan-secrets:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Scan for hardcoded credentials
         run: |
           echo "Scanning for hardcoded secrets..."
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: scan-secrets
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install clang-format + shellcheck
         run: sudo apt-get update && sudo apt-get install -y clang-format shellcheck
       - name: clang-format check
@@ -67,7 +67,7 @@ jobs:
           #   qt_arch: 'win64_mingw'
           #   qt_tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Qt ${{ matrix.qt_version }}
         uses: jurplel/install-qt-action@v4
         with:
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [scan-secrets, lint]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Qt6 + deps
         run: |
           sudo apt-get update
@@ -113,7 +113,7 @@ jobs:
     runs-on: macos-latest
     needs: [scan-secrets, lint]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Qt6
         run: |
           brew update
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [scan-secrets, lint]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Qt6 + deps
         run: sudo apt-get update && sudo apt-get install -y qt6-base-dev zlib1g-dev
       - name: Build + run Qt Test (if present)
