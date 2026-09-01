@@ -7,14 +7,14 @@ outline: deep
 # Download
 
 <div class="badge-row">
-  <span class="badge badge--accent">Latest: v3.4.6</span>
+  <span class="badge badge--accent">Latest</span>
   <span class="badge">Windows 10/11 x64</span>
   <span class="badge">macOS 13+ • Apple/Intel</span>
   <span class="badge">Linux x64</span>
 </div>
 
 <div class="cta-banner">
-  <div class="cta-title">Get HitPaw v3.4.6</div>
+  <div class="cta-title">Get HitPaw MangaDex Manager</div>
   <div class="cta-sub">Portable • ~80 MB • MIT • No ads</div>
   <a class="cta-btn" href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank" rel="noreferrer">Go to Latest Release →</a>
   <div style="margin-top:10px; font-size:0.84rem; opacity:.88"><a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases" target="_blank" rel="noreferrer" style="color:white; text-decoration:underline; text-underline-offset:3px">All releases</a> • checksums + SBOM attached</div>
@@ -24,9 +24,9 @@ outline: deep
 
 | Platform | File | Size | Run |
 |----------|------|------|-----|
-| **Windows** | `HitPawMangaDexManager-v3.4.6-windows-x64.zip` | ~78 MB | Extract → `MangaDexExporter.exe` |
-| **macOS** | `HitPawMangaDexManager-v3.4.6-macOS.tar.gz` | ~65 MB | Extract → `MangaDexExporter.app` |
-| **Linux** | `HitPawMangaDexManager-v3.4.6-Linux.tar.gz` | ~62 MB | `tar xzf … && ./MangaDexExporter` |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | ~78 MB | Extract → `MangaDexExporter.exe` |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | ~65 MB | Extract → `MangaDexExporter.app` |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | ~62 MB | `tar xzf … && ./MangaDexExporter` |
 
 ## System requirements
 
@@ -43,14 +43,14 @@ Every release publishes a `.sha256`, SBOM, and build provenance.
 ::: code-group
 
 ```powershell [Windows]
-Get-FileHash .\HitPawMangaDexManager-v3.4.6-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\HitPawMangaDexManager-v*-windows-x64.zip -Algorithm SHA256
 # Compare to the .sha256 file on the release page
 ```
 
 ```bash [macOS / Linux]
-shasum -a 256 HitPawMangaDexManager-v3.4.6-macOS.tar.gz
+shasum -a 256 HitPawMangaDexManager-v*-macOS.tar.gz
 # or
-sha256sum HitPawMangaDexManager-v3.4.6-Linux.tar.gz
+sha256sum HitPawMangaDexManager-v*-Linux.tar.gz
 ```
 
 :::
