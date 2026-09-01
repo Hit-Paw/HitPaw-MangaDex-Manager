@@ -105,13 +105,6 @@ jobs:
           Write-Host "Created $zip ($( (Get-Item $zip).Length / 1MB ) MB, $((Get-ChildItem $stage -Recurse | Measure-Object).Count) files)"
           if (Test-Path $zip) { Write-Host "ZIP OK" } else { exit 1 }
 
-      - name: Generate SBOM (SPDX)
-        uses: anchore/sbom-action@v0
-        with:
-          path: ./HitPawMangaDexManager-*.zip
-          format: spdx-json
-          upload-artifact: false
-
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v2
         with:
@@ -159,13 +152,6 @@ jobs:
           tar -czf "$TAR" -C "$STAGE" .
           ls -lh "$TAR"
 
-      - name: Generate SBOM (SPDX)
-        uses: anchore/sbom-action@v0
-        with:
-          path: ./HitPawMangaDexManager-*.tar.gz
-          format: spdx-json
-          upload-artifact: false
-
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v2
         with:
@@ -212,13 +198,6 @@ jobs:
           TAR="HitPawMangaDexManager-v${VERSION}-macOS.tar.gz"
           tar -czf "$TAR" -C "$STAGE" .
           ls -lh "$TAR"
-
-      - name: Generate SBOM (SPDX)
-        uses: anchore/sbom-action@v0
-        with:
-          path: ./HitPawMangaDexManager-*.tar.gz
-          format: spdx-json
-          upload-artifact: false
 
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v2
