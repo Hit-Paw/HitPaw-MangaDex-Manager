@@ -249,7 +249,7 @@ jobs:
           echo "$NOTES"
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: HitPaw MangaDex Manager v${{ steps.version.outputs.VERSION }}
           body: |
