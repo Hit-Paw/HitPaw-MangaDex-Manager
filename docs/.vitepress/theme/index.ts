@@ -24,7 +24,7 @@ export default {
 
     const observe = () => {
       const els = document.querySelectorAll(
-        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
+        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
       )
       if (!els.length) return
       if (!('IntersectionObserver' in window)) {
@@ -125,7 +125,7 @@ export default {
       }
       document.addEventListener('keydown', onKey, { signal: ac() })
 
-      const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img')
+      const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img, .featured-shot img')
       previews.forEach((el) => {
         el.setAttribute('tabindex', '0')
         el.setAttribute('role', 'button')
