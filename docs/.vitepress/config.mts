@@ -7,6 +7,7 @@ export default defineConfig({
   lang: 'en-US',
   // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set to '/'
   base: '/HitPaw-MangaDex-Manager/',
+  // Brand is black + orange (AMOLED) - force dark, no toggle, no light-mode flash
   appearance: 'force-dark',
   sitemap: {
     // Include base in hostname — VitePress 1.6 does not auto-prefix base when hostname is apex
