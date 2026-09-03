@@ -7,6 +7,8 @@ export default defineConfig({
   lang: 'en-US',
   // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set to '/'
   base: '/HitPaw-MangaDex-Manager/',
+  // Brand is black + orange (AMOLED) — force dark, no toggle, no light-mode flash
+  appearance: 'force-dark',
   sitemap: {
     hostname: 'https://hit-paw.github.io'
   },
@@ -109,50 +111,4 @@ export default defineConfig({
       { text: 'Guide', link: '/getting-started' },
       { text: 'Building', link: '/building' },
       { text: 'Releases', link: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases' },
-      { text: 'Discord', link: 'https://discord.gg/z6yYYpcYYc' }
-    ],
-    sidebar: [
-      {
-        text: 'Introduction',
-        items: [
-          { text: 'What is HitPaw?', link: '/' },
-          { text: 'Getting Started', link: '/getting-started' },
-          { text: 'Download', link: '/download' }
-        ]
-      },
-      {
-        text: 'Guide',
-        items: [
-          { text: 'Building from Source', link: '/building' },
-          { text: 'Export Formats', link: '/export' },
-          { text: 'Security', link: '/security' },
-          { text: 'FAQ', link: '/faq' }
-        ]
-      },
-      {
-        text: 'Community',
-        items: [
-          { text: 'Contributing', link: '/contributing' },
-          { text: 'Changelog', link: '/changelog' },
-          { text: 'Code of Conduct', link: '/code-of-conduct' }
-        ]
-      }
-    ],
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager' },
-      { icon: 'discord', link: 'https://discord.gg/z6yYYpcYYc' }
-    ],
-    footer: {
-      message: 'Not affiliated with or endorsed by MangaDex. Released under <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE" target="_blank">MIT</a>.',
-      copyright: 'Copyright © 2026 Hit-Paw — Built with VitePress & Qt6'
-    },
-    search: { provider: 'local', options: { detailedView: true } },
-    editLink: {
-      pattern: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/edit/main/docs/:path',
-      text: 'Edit this page on GitHub'
-    }
-  },
-  vite: {
-    // perf: handled by VitePress defaults
-  }
-})
+      { text: 'Discord', link:
