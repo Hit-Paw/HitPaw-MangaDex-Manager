@@ -100,11 +100,30 @@ features:
 
 ## Quick Start
 
-1. Download the latest release from [GitHub Releases](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
-2. Extract and run — no installer needed
-3. Sign in with your MangaDex account and create a personal API client ([MangaDex → Settings → API Clients](https://mangadex.org/settings))
+<div class="quick-grid">
 
-## Community
+  <div class="quick-card" data-step="01">
+    <div class="icon-wrap"><img src="/icons/outline-download.svg" alt="" width="22" height="22" /></div>
+    <strong>Download</strong>
+    <p>Grab the latest release for your platform from <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank">GitHub Releases</a>.</p>
+  </div>
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
-[![Issues](https://img.shields.io/badge/GitHub-Issues-181717)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues)
+  <div class="quick-card" data-step="02">
+    <div class="icon-wrap"><img src="/icons/outline-layers.svg" alt="" width="22" height="22" /></div>
+    <strong>Extract & Run</strong>
+    <p>No installer — unzip and run <code>MangaDexExporter</code>. All Qt DLLs bundled.</p>
+  </div>
+
+  <div class="quick-card" data-step="03">
+    <div class="icon-wrap"><img src="/icons/outline-lock.svg" alt="" width="22" height="22" /></div>
+    <strong>Sign In</strong>
+    <p>Log in with MangaDex and create a personal API client at <a href="https://mangadex.org/settings" target="_blank">Settings → API Clients</a>.</p>
+  </div>
+
+</div>
+
+<div class="cta-banner">
+  <div class="cta-title">Ready to take control of your library?</div>
+  <div class="cta-sub">Export in one click — CSV, JSON, MAL, Anime-Planet, MangaBaka, or push to a MangaDex list.</div>
+  <a class="cta-btn" href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank" rel="noreferrer">Download Latest →</a>
+</div>
