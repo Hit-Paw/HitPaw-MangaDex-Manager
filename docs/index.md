@@ -73,8 +73,27 @@ features:
 > **Disclaimer:** HitPaw MangaDex Manager is not affiliated with or endorsed by MangaDex.
 
 <div class="featured-shot">
-  <img src="/preview-1.png" alt="HitPaw — Library Grid • 3276 titles • 5-column AMOLED grid" loading="eager" decoding="async" />
+  <img src="/preview-1.png" alt="HitPaw — Library Grid • 3276 titles • 5-column AMOLED grid" loading="eager" decoding="async" width="1477" height="1164" />
   <div class="featured-caption"><span>Library Grid — 3276 titles</span> <small>5 cols • search • filter • Show All (N) • HitPaw orange</small></div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-number">5</div>
+    <div class="stat-label">Export formats</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">100%</div>
+    <div class="stat-label">Local &amp; offline</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">3</div>
+    <div class="stat-label">Platforms supported</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number stat-number--small">Zero</div>
+    <div class="stat-label">Trackers or ads</div>
+  </div>
 </div>
 
 ## App Screenshots
@@ -82,34 +101,83 @@ features:
 <div class="preview-grid">
 
   <div class="preview-card">
-    <img src="/preview-1.png" alt="Library Grid — 3276 shown • 0 selected" loading="lazy" decoding="async" />
+    <img src="/preview-1.png" alt="Library Grid — 3276 shown • 0 selected" loading="lazy" decoding="async" width="1477" height="1164" />
     <div class="preview-caption"><span>Library</span> <small>3276 shown • filter • search</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="/preview-2.png" alt="Activity Log — Found saved session, Up to date v3.4.6" loading="lazy" decoding="async" />
+    <img src="/preview-2.png" alt="Activity Log — Found saved session, Up to date v3.4.6" loading="lazy" decoding="async" width="1200" height="800" />
     <div class="preview-caption"><span>Activity Log</span> <small>Session • update check</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="/preview-3.png" alt="Export — Output Folder & 5 formats CSV JSON MAL AP MB" loading="lazy" decoding="async" />
+    <img src="/preview-3.png" alt="Export — Output Folder & 5 formats CSV JSON MAL AP MB" loading="lazy" decoding="async" width="1200" height="800" />
     <div class="preview-caption"><span>Export</span> <small>CSV • JSON • MAL • AP • MB</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="/preview-4.png" alt="Download — Paste MangaDex URL or UUID • Look Up • chapters" loading="lazy" decoding="async" />
+    <img src="/preview-4.png" alt="Download — Paste MangaDex URL or UUID • Look Up • chapters" loading="lazy" decoding="async" width="1200" height="800" />
     <div class="preview-caption"><span>Download</span> <small>Paste URL • Look Up • queue</small></div>
+  </div>
+
+</div>
+
+## Why HitPaw?
+
+<div class="why-grid">
+
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-key.svg" alt="" width="22" height="22" /></div>
+    <strong>Your API client, your rules</strong>
+    <p>You bring your own MangaDex API client and credentials. Nothing routes through a third-party server — HitPaw talks to MangaDex directly, from your machine.</p>
+  </div>
+
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-zap.svg" alt="" width="22" height="22" /></div>
+    <strong>Built for big libraries</strong>
+    <p>The grid stays smooth at thousands of titles — no stutter, no pagination games, just fast local search and filtering.</p>
+  </div>
+
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-puzzle.svg" alt="" width="22" height="22" /></div>
+    <strong>Fits your workflow</strong>
+    <p>Exports drop straight into MyAnimeList, AniList, MangaBaka, or Kitsu — validated formats, no manual reformatting.</p>
+  </div>
+
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-package.svg" alt="" width="22" height="22" /></div>
+    <strong>Zero install friction</strong>
+    <p>One portable folder. No installer, no admin rights, no background services quietly running when you're not using it.</p>
   </div>
 
 </div>
 
 ## Quick Start
 
-1. Download the latest release from [GitHub Releases](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
-2. Extract and run — no installer needed
-3. Sign in with your MangaDex account and create a personal API client ([MangaDex → Settings → API Clients](https://mangadex.org/settings))
+<div class="quick-grid">
 
-## Community
+  <div class="quick-card">
+    <div class="icon-wrap"><img src="/icons/outline-download.svg" alt="" width="22" height="22" /></div>
+    <strong>Download</strong>
+    <p>Grab the latest release for your platform from <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank">GitHub Releases</a>.</p>
+  </div>
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
-[![Issues](https://img.shields.io/badge/GitHub-Issues-181717)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues)
+  <div class="quick-card">
+    <div class="icon-wrap"><img src="/icons/outline-layers.svg" alt="" width="22" height="22" /></div>
+    <strong>Extract &amp; Run</strong>
+    <p>No installer — unzip and run <code>MangaDexExporter</code>. All Qt DLLs bundled.</p>
+  </div>
+
+  <div class="quick-card">
+    <div class="icon-wrap"><img src="/icons/outline-lock.svg" alt="" width="22" height="22" /></div>
+    <strong>Sign In</strong>
+    <p>Log in with MangaDex and create a personal API client at <a href="https://mangadex.org/settings" target="_blank">Settings → API Clients</a>.</p>
+  </div>
+
+</div>
+
+<div class="cta-banner">
+  <div class="cta-title">Ready to take control of your library?</div>
+  <div class="cta-sub">Export in one click — CSV, JSON, MAL, Anime-Planet, or MangaBaka.</div>
+  <a class="cta-btn" href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank" rel="noreferrer">Download Latest →</a>
+</div>

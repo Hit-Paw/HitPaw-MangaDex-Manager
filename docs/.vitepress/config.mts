@@ -7,6 +7,7 @@ export default defineConfig({
   lang: 'en-US',
   // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set to '/'
   base: '/HitPaw-MangaDex-Manager/',
+  appearance: 'force-dark',
   sitemap: {
     hostname: 'https://hit-paw.github.io'
   },
@@ -80,7 +81,7 @@ export default defineConfig({
       downloadUrl: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest',
       author: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', availability: 'https://schema.org/InStock' },
-      softwareVersion: '3.4.6',
+      softwareVersion: '3.5.0',
       license: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE',
       screenshot: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/preview-1.png',
       aggregateRating: { '@type': 'AggregateRating', ratingValue: '5', ratingCount: '1' }

@@ -87,7 +87,7 @@ cmake -S tests -B build_tests && ctest --test-dir build_tests --output-on-failur
 |------|-------|
 | `main.cpp` | UI + API (splitting into `src/api`, `src/ui`, `src/models`) |
 | `domain.h` / `export.h` / `pal.h` / `secure_store.h` | Core headers |
-| `CMakeLists.txt` | `project(VERSION 3.4.6)` — must match changelog |
+| `CMakeLists.txt` | `project(VERSION 3.5.0)` — must match changelog |
 | `CMakePresets.json` | `windows-release` / `linux-release` / `macos-release` |
 | `tests/` | Qt Test suite (`ctest`) |
 | `docs/` | VitePress site — `npm run docs:dev` |
