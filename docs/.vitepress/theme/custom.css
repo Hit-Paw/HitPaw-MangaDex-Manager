@@ -1008,62 +1008,83 @@ a.badge:hover {
   margin: 0;
 }
 
-/* ── 18. COMPARISON TABLE ─────────────────────────────────── */
+/* ── 18. COMPARISON TABLE — polished HitPaw column, clean dividers ───── */
 .vs-table {
   max-width: 1152px;
   margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
   border: 1px solid var(--hp-line);
   border-radius: var(--hp-r-lg);
   overflow: hidden;
   background: rgba(255,255,255,.012);
+  box-shadow: var(--hp-shadow-1);
 }
 .vs-row {
   display: grid;
   grid-template-columns: 1.3fr 1.2fr 1fr 1fr;
-  align-items: center;
-  padding: 13px 20px;
+  align-items: stretch;
   border-bottom: 1px solid var(--hp-line);
   transition: background var(--hp-fast) var(--hp-ease);
 }
 .vs-row:last-child { border-bottom: none; }
-.vs-row:not(.vs-header):hover { background: rgba(255,255,255,.026); }
+.vs-row:not(.vs-header):hover { background: rgba(255,255,255,.022); }
 .vs-header {
-  background: var(--hp-bg-raise);
-  font-size: .8rem;
-  font-weight: 650;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+  font-size: .74rem;
+  font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--hp-text-mute);
-  padding: 12px 20px;
+  color: var(--hp-text-faint);
 }
-.vs-feature { color: var(--hp-text-hi); font-weight: 620; font-size: .94rem; }
-.vs-hitpaw {
-  color: var(--hp-orange-soft);
-  font-weight: 640;
-  font-size: .92rem;
-  background: linear-gradient(90deg, rgba(255,106,0,.12), rgba(255,106,0,.03));
-  align-self: stretch;
+.vs-header div { padding: 13px 18px; }
+.vs-header div:nth-child(2) { color: var(--hp-orange-soft); }
+.vs-feature, .vs-hitpaw, .vs-manual, .vs-bookmark {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 -20px;
-  padding: 13px 20px 13px 28px;
+  padding: 14px 18px;
+  min-height: 100%;
+}
+.vs-feature {
+  color: var(--hp-text-hi);
+  font-weight: 620;
+  font-size: .94rem;
+}
+.vs-header .vs-feature { color: var(--hp-text-mute); font-weight: 700; }
+.vs-hitpaw {
+  color: var(--hp-orange-soft);
+  font-weight: 700;
+  font-size: .92rem;
+  background: linear-gradient(180deg, rgba(255,106,0,.16), rgba(255,106,0,.07));
+  gap: 9px;
   position: relative;
+  border-left: 1px solid rgba(255,106,0,.10);
+  border-right: 1px solid rgba(255,106,0,.08);
 }
 .vs-hitpaw::before {
   content: '✓';
   font-weight: 800;
   color: var(--hp-orange);
   flex: 0 0 auto;
+  width: 18px; height: 18px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,106,0,.16);
+  border: 1px solid rgba(255,106,0,.22);
+  border-radius: var(--hp-r-full);
+  font-size: .70rem;
+  line-height: 1;
+}
+.vs-hitpaw code {
+  background: rgba(255,106,0,.14) !important;
+  border-color: rgba(255,106,0,.18) !important;
+  color: var(--hp-orange-soft) !important;
 }
 .vs-manual, .vs-bookmark {
   color: var(--hp-text-mute);
   font-size: .9rem;
+  justify-content: center;
+  text-align: center;
 }
+.vs-manual { border-right: 1px solid var(--hp-line); }
 .vs-bookmark { color: var(--hp-text-faint); }
 
 /* ── 19. QUICK START — connected steps ────────────────────── */
@@ -1076,17 +1097,20 @@ a.badge:hover {
   padding: 0 24px 8px;
   position: relative;
 }
-/* connector line behind step numbers */
+/* connector line behind step numbers — centered on 42px circles (22px card padding + 21px) */
 .quick-grid::before {
   content: '';
   position: absolute;
-  top: 21px;
+  top: 43px;
   left: calc(16.66% + 24px);
   right: calc(16.66% + 24px);
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--hp-line-brand) 18%, var(--hp-line-brand) 82%, transparent);
   opacity: .55;
+  z-index: 0;
+  pointer-events: none;
 }
+.quick-card { z-index: 1; }
 .quick-card {
   position: relative;
   border: 1px solid var(--hp-line);
@@ -1563,10 +1587,10 @@ html:not(.js) .vp-doc pre {
   .stat-card:nth-child(n+3) { border-top: 1px solid var(--hp-line); }
   .preview-grid { grid-template-columns: repeat(2, 1fr); }
   .community-grid { grid-template-columns: 1fr; max-width: 640px; }
-  .vs-row { grid-template-columns: 1.2fr 1.15fr 1fr 0.9fr; padding: 12px 14px; gap: 8px; }
-  .vs-feature, .vs-manual, .vs-bookmark { font-size: .84rem; }
-  .vs-hitpaw { font-size: .84rem; margin: 0 -14px; padding: 12px 14px 12px 20px; }
-  .vs-header { padding: 11px 14px; font-size: .72rem; }
+  .vs-row { grid-template-columns: 1.2fr 1.15fr 1fr 0.9fr; gap: 0; }
+  .vs-feature, .vs-hitpaw, .vs-manual, .vs-bookmark { padding: 12px 14px; font-size: .84rem; }
+  .vs-header div { padding: 11px 14px; }
+  .vs-header { font-size: .72rem; }
   .quick-grid { grid-template-columns: 1fr; max-width: 560px; }
   .quick-grid::before { display: none; }
 }
@@ -1600,10 +1624,12 @@ html:not(.js) .vp-doc pre {
   }
   .vs-hitpaw {
     margin: 0;
-    padding: 10px 12px 10px 12px;
+    padding: 10px 12px;
     border-radius: var(--hp-r-sm);
+    border-left: 1px solid rgba(255,106,0,.10);
+    border-right: 1px solid rgba(255,106,0,.08);
   }
-  .vs-feature { grid-column: 1 / -1; font-size: 1rem; border-bottom: 1px dashed var(--hp-line); padding-bottom: 8px; }
+  .vs-feature { grid-column: 1 / -1; font-size: 1rem; border-bottom: 1px dashed var(--hp-line); padding-bottom: 10px; }
   .vs-manual::before, .vs-bookmark::before, .vs-hitpaw::after {
     content: attr(data-label);
     display: block;
