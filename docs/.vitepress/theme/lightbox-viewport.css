@@ -1,20 +1,16 @@
-/* Preview lightbox: centered and sized as large as possible without clipping. */
+/* Lightbox viewport — centered, max-size, mobile-safe. Overrides custom.css for fixed viewport. */
 html.js .VPContent {
   animation: hitpawFadeIn 0.45s ease both !important;
 }
+@keyframes hitpawFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-
-@keyframes hitpawFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-
+/* Use flex centering relative to viewport — even when .VPContent has transforms */
 .lightbox {
   position: fixed !important;
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
+  height: 100dvh !important;
   margin: 0 !important;
   padding: 24px !important;
   box-sizing: border-box !important;
@@ -22,66 +18,52 @@ html.js .VPContent {
   align-items: center !important;
   justify-content: center !important;
   overflow: hidden !important;
+  overscroll-behavior: contain;
 }
-
-
 .lightbox img {
   display: block !important;
   width: min(92vw, 1280px) !important;
-  height: calc(100vh - 100px) !important;
+  height: auto !important;
   max-width: 92vw !important;
-  max-height: calc(100vh - 100px) !important;
+  max-height: min(86vh, 86dvh, 900px) !important;
   margin: 0 !important;
   flex: 0 1 auto !important;
   object-fit: contain !important;
   object-position: center center !important;
+  will-change: transform;
 }
-
-
 .lightbox .lightbox-close {
-  position: absolute !important;
-  top: 24px !important;
-  right: 24px !important;
+  position: fixed !important;
+  top: max(16px, env(safe-area-inset-top)) !important;
+  right: max(16px, env(safe-area-inset-right)) !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px; min-height: 44px;
 }
-
-
 .lightbox .lightbox-caption {
-  position: absolute !important;
+  position: fixed !important;
   left: 50% !important;
-  bottom: 18px !important;
+  bottom: max(18px, env(safe-area-inset-bottom)) !important;
   transform: translateX(-50%) !important;
-  max-width: calc(100vw - 48px) !important;
+  max-width: min(90vw, 720px) !important;
   margin: 0 !important;
   text-align: center !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   pointer-events: none !important;
+  line-height: 1.35;
 }
-
-
 @media (max-width: 640px) {
-  .lightbox {
-    padding: 16px !important;
-  }
-
-
+  .lightbox { padding: 16px !important; padding-bottom: max(16px, env(safe-area-inset-bottom)) !important; }
   .lightbox img {
     width: 94vw !important;
-    height: calc(100vh - 84px) !important;
     max-width: 94vw !important;
-    max-height: calc(100vh - 84px) !important;
+    max-height: min(80vh, 80dvh) !important;
   }
-
-
-  .lightbox .lightbox-close {
-    top: 16px !important;
-    right: 16px !important;
-  }
-
-
-  .lightbox .lightbox-caption {
-    bottom: 14px !important;
-    max-width: calc(100vw - 32px) !important;
-  }
+  .lightbox .lightbox-close { top: max(12px, env(safe-area-inset-top)) !important; right: max(12px, env(safe-area-inset-right)) !important; }
+  .lightbox .lightbox-caption { bottom: max(12px, env(safe-area-inset-bottom)) !important; max-width: calc(100vw - 24px) !important; font-size: 0.8rem !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox img { transition: none !important; }
 }
