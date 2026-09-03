@@ -1,74 +1,41 @@
 {
+  "id": "/HitPaw-MangaDex-Manager/",
   "name": "HitPaw MangaDex Manager",
   "short_name": "HitPaw",
-  "description": "Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.",
+  "description": "Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++. Fast AMOLED, offline, secure.",
   "start_url": "/HitPaw-MangaDex-Manager/",
   "scope": "/HitPaw-MangaDex-Manager/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#000000",
   "theme_color": "#ff6a00",
   "lang": "en-US",
   "dir": "ltr",
   "orientation": "any",
-  "categories": ["utilities", "books"],
+  "categories": ["utilities", "books", "productivity"],
   "icons": [
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_48.png",
-      "sizes": "48x48",
-      "type": "image/png"
-    },
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_64.png",
-      "sizes": "64x64",
-      "type": "image/png"
-    },
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_256.png",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/HitPaw-MangaDex-Manager/icon_512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "/HitPaw-MangaDex-Manager/icon_16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "/HitPaw-MangaDex-Manager/icon_32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/HitPaw-MangaDex-Manager/icon_48.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "/HitPaw-MangaDex-Manager/icon_64.png", "sizes": "64x64", "type": "image/png" },
+    { "src": "/HitPaw-MangaDex-Manager/icon_128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "/HitPaw-MangaDex-Manager/icon_256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "/HitPaw-MangaDex-Manager/icon_512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
-    {
-      "src": "/HitPaw-MangaDex-Manager/preview-1.png",
-      "sizes": "1477x1164",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "HitPaw Library Grid"
-    }
+    { "src": "/HitPaw-MangaDex-Manager/preview-1.png", "sizes": "1477x1164", "type": "image/png", "form_factor": "wide", "label": "Library Grid — 3276 titles" },
+    { "src": "/HitPaw-MangaDex-Manager/preview-2.png", "sizes": "1200x800", "type": "image/png", "form_factor": "wide", "label": "Activity Log" },
+    { "src": "/HitPaw-MangaDex-Manager/preview-3.png", "sizes": "1200x800", "type": "image/png", "form_factor": "wide", "label": "Export — 5 formats" },
+    { "src": "/HitPaw-MangaDex-Manager/preview-4.png", "sizes": "1200x800", "type": "image/png", "form_factor": "wide", "label": "Download" }
   ],
   "shortcuts": [
-    {
-      "name": "Download Latest",
-      "url": "https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest",
-      "description": "Download HitPaw MangaDex Manager"
-    },
-    {
-      "name": "Getting Started",
-      "url": "/HitPaw-MangaDex-Manager/getting-started.html",
-      "description": "Quick start guide"
-    }
-  ]
+    { "name": "Download Latest", "short_name": "Download", "url": "https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest", "description": "Download HitPaw latest release" },
+    { "name": "Getting Started", "url": "/HitPaw-MangaDex-Manager/getting-started.html", "description": "Quick start guide — 2 min setup" },
+    { "name": "Export Formats", "url": "/HitPaw-MangaDex-Manager/export.html", "description": "CSV JSON MAL AP MB • MDList sync" },
+    { "name": "Download", "url": "/HitPaw-MangaDex-Manager/download.html", "description": "System requirements & verifying SHA256" }
+  ],
+  "handle_links": "preferred",
+  "launch_handler": { "client_mode": "navigate-existing" },
+  "edge_side_panel": { "preferred_width": 400 },
+  "file_handlers": [{ "action": "/HitPaw-MangaDex-Manager/", "accept": { "text/csv": [".csv"], "application/json": [".json"], "application/xml": [".xml"] } }]
 }

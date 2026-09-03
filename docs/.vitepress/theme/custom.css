@@ -174,18 +174,21 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .stat-number--small { font-size: clamp(1.05rem, 2.2vw, 1.35rem); }
 .stat-label { font-size: 0.84rem; opacity: 0.72; margin-top: 4px; line-height: 1.4; }
 
-/* ── FEATURED SHOT — large hero preview ── */
-.featured-shot { margin: 20px 0 8px; border-radius: 16px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,106,0,0.18); box-shadow: 0 14px 36px rgba(0,0,0,0.22), 0 4px 14px rgba(0,0,0,0.12); }
+/* ── FEATURED SHOT — large hero preview (WebP + PNG fallback via <picture>) ── */
+.featured-shot { margin: 20px 0 8px; border-radius: 16px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,106,0,0.18); box-shadow: 0 14px 36px rgba(0,0,0,0.22), 0 4px 14px rgba(0,0,0,0.12); content-visibility: auto; contain-intrinsic-size: 600px; }
+.featured-shot picture { display: block; background: #0a0a0a; }
 .featured-shot img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; cursor: zoom-in; }
+.featured-shot picture img { width: 100%; }
 .featured-caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; font-size: 0.90rem; font-weight: 700; letter-spacing: -0.01em; background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,248,248,0.96)); border-top: 1px solid rgba(0,0,0,0.06); }
 .dark .featured-caption { background: linear-gradient(180deg, rgba(22,22,22,0.98), rgba(12,12,12,0.98)); color: #eee; border-top-color: rgba(255,255,255,0.06); }
 .featured-caption small { font-weight: 500; opacity: 0.62; font-size: 0.78rem; }
 @media (max-width: 640px) { .featured-shot img { aspect-ratio: 16 / 11; } }
 
-/* ── PREVIEW GRID — premium cards ── */
+/* ── PREVIEW GRID — premium cards (WebP via <picture> + fallback) ── */
 .preview-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 14px; margin: 18px 0; }
-.preview-grid picture, .preview-grid .preview-card { display: block; border-radius: 14px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.18); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease, border-color 0.3s ease, filter 0.3s ease; }
+.preview-grid picture, .preview-grid .preview-card { display: block; border-radius: 14px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.18); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease, border-color 0.3s ease, filter 0.3s ease; contain: layout paint; }
 .preview-grid .preview-card:hover { transform: translateY(-3px) scale(1.015); box-shadow: 0 18px 40px rgba(0,0,0,0.26); border-color: rgba(255,106,0,0.28); }
+.preview-grid picture { display: block; line-height: 0; }
 .preview-grid img { display: block; width: 100%; height: auto; aspect-ratio: 1.27; object-fit: cover; cursor: zoom-in; transition: filter 0.3s ease, transform 0.35s ease; }
 .preview-grid img:hover { filter: brightness(1.05) saturate(1.08); }
 .preview-caption { padding: 10px 12px; font-size: 0.84rem; font-weight: 600; letter-spacing: -0.01em; background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.94)); border-top: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -258,21 +261,30 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .vp-doc .custom-block.tip .custom-block-title { color: #cc5300; }
 .dark .vp-doc .custom-block.tip { background: rgba(255,106,0,0.08); }
 
-/* Badges / pills */
-.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
-.badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; letter-spacing: -0.01em; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.88); backdrop-filter: blur(8px); }
+/* Badges / pills — now support <a> as badge */
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; align-items: center; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; letter-spacing: -0.01em; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.88); backdrop-filter: blur(8px); text-decoration: none !important; min-height: 28px; transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease; }
+a.badge:hover { transform: translateY(-1px); text-decoration: none; }
 .dark .badge { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.10); color: #eee; }
-.badge--accent { background: linear-gradient(135deg, #ff6a00, #ff8c1a); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(255,106,0,0.22); }
-.badge--brand { background: #5865F2; color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(88,101,242,0.22); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.badge--accent { background: linear-gradient(135deg, #ff6a00, #ff8c1a); color: white !important; border-color: transparent; box-shadow: 0 4px 12px rgba(255,106,0,0.22); }
+a.badge--accent:hover { box-shadow: 0 6px 16px rgba(255,106,0,0.28); transform: translateY(-1px) scale(1.02); }
+.badge--brand { background: #5865F2; color: white !important; border-color: transparent; box-shadow: 0 4px 12px rgba(88,101,242,0.22); transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .badge--brand:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(88,101,242,0.3); color: white; }
 .badge--muted { opacity: 0.78; }
 
-/* Feature table pro */
-.vp-doc table { border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); }
+/* Feature table pro — responsive wrapper */
+.vp-doc table { border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); width: 100%; border-collapse: separate; border-spacing: 0; }
 .dark .vp-doc table { border-color: rgba(255,255,255,0.08); }
-.vp-doc th { background: rgba(255,106,0,0.06); font-weight: 750; letter-spacing: -0.01em; }
+.vp-doc th { background: rgba(255,106,0,0.06); font-weight: 750; letter-spacing: -0.01em; text-align: left; }
+.vp-doc td, .vp-doc th { padding: 10px 12px; font-size: 0.90rem; line-height: 1.45; }
 .vp-doc tr:nth-child(even) { background: rgba(0,0,0,0.015); }
 .dark .vp-doc tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+/* Make markdown tables horizontally scroll on small screens instead of breaking layout */
+.vp-doc table { display: table; max-width: 100%; }
+@media (max-width: 640px) {
+  .vp-doc div:has(> table) { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px -16px; padding: 0 16px; }
+  .vp-doc table { min-width: 520px; }
+}
 
 /* ── VS Table — premium comparison (replaces markdown table) ── */
 .vs-table { width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.22); margin: 18px 0; background: #0f0f0f; }
@@ -329,39 +341,70 @@ html.js .vp-doc div[class*='language-'].in-view, html.js .vp-doc pre.in-view { o
 .compare-grid > * { border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 16px; background: rgba(255,255,255,0.72); }
 .dark .compare-grid > * { background: rgba(18,18,18,0.9); border-color: rgba(255,255,255,0.08); }
 
-/* Responsive hero */
+/* Responsive hero — improved stacking + touch targets */
 @media (max-width: 960px) {
-  .VPHero .container { flex-direction: column; align-items: stretch; gap: 20px; }
+  .VPHero .container { flex-direction: column; align-items: stretch; gap: 20px; text-align: left; }
+  .VPHero .main { flex-basis: auto; }
   .VPHero .image { width: 100%; justify-content: center; order: -1; }
   .VPHero .image-container { max-width: 260px; margin: 0 auto; }
   .VPHero .image-src { width: clamp(180px, 42vw, 240px); max-width: 240px; }
   .stats-bar { grid-template-columns: repeat(2,1fr); }
   .preview-grid { grid-template-columns: repeat(2,1fr); }
+  .why-grid { grid-template-columns: repeat(2,1fr); }
 }
 @media (max-width: 640px) {
   .VPHero { padding-top: 18px; padding-bottom: 20px; }
-  .VPHero .container { gap: 16px; }
+  .VPHero .container { gap: 16px; text-align: center; }
   .VPHero .image { margin-left: 0; }
   .VPHero .image-container { max-width: 220px; }
-  .VPHero .tagline { font-size: 0.98rem; }
-  .VPHero .image-src { width: clamp(160px, 48vw, 220px); }
-  .VPHero .actions { gap: 8px; }
-  .VPHero .actions .VPButton { justify-content: center; min-height: 44px; }
+  .VPHero .tagline { font-size: 0.98rem; margin-inline: auto; }
+  .VPHero .actions { gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .VPHero .actions .VPButton { justify-content: center; min-height: 44px; min-width: 44px; flex: 1 1 auto; }
   .stats-bar { grid-template-columns: repeat(2,1fr); gap: 10px; }
   .preview-grid { grid-template-columns: 1fr; }
-  .preview-caption { align-items: flex-start; flex-direction: column; }
+  .preview-caption { align-items: flex-start; flex-direction: column; gap: 2px; }
   .why-grid { grid-template-columns: 1fr; }
   .quick-grid { grid-template-columns: 1fr; }
   .cta-banner { padding: 18px 14px; }
+  .cta-btn { width: 100%; justify-content: center; min-height: 44px; }
   .lightbox { padding: 12px; }
   .lightbox img { max-width: 100%; max-height: 80vh; border-radius: 10px; }
-  .lightbox-caption { bottom: 12px; font-size: 0.8rem; }
+  .lightbox-caption { bottom: 12px; font-size: 0.8rem; max-width: 94vw; }
   .lightbox-close { top: 10px; right: 10px; min-width: 44px; min-height: 44px; }
+  /* Ensure badge row is scrolled if overflow */
+  .badge-row { gap: 6px; }
+  .vp-doc h1 { font-size: 1.75rem; }
+  .vp-doc h2 { font-size: 1.35rem; }
 }
+/* Extra small: 320px */
+@media (max-width: 380px) {
+  .stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { padding: 14px 10px; }
+  .badge { font-size: 0.78rem; padding: 5px 8px; }
+}
+
+/* Performance polish — content-visibility for below-fold + font smoothing */
+html { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+img, picture { content-visibility: auto; }
+.VPFeatures, .stats-bar, .why-grid, .quick-grid, .preview-grid { content-visibility: auto; contain-intrinsic-size: auto 500px; }
+/* Ensure hero LCP is eager (no content-visibility) */
+.VPHero img, .featured-shot img { content-visibility: visible; }
 
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .VPHero .name { animation: none !important; }
+}
+
+/* High contrast / focus polish for a11y */
+@media (prefers-contrast: more) {
+  .VPFeature, .why-card, .stat-card { border-width: 2px; }
+  :focus-visible { outline-width: 3px; }
+}
+
+/* Print */
+@media print {
+  .VPNav, .VPSidebar, .cta-banner, .lightbox, .VPFeatures .item { display: none !important; }
+  .VPHero .image-src { filter: none !important; }
 }
 

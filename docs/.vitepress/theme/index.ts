@@ -23,6 +23,12 @@ export default {
     }
 
     const observe = () => {
+      // Respect reduced motion — reveal instantly
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre')
+          .forEach((el) => el.classList.add('in-view'))
+        return
+      }
       const els = document.querySelectorAll(
         '.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
       )
@@ -40,7 +46,7 @@ export default {
             }
           })
         },
-        { threshold: 0.14, rootMargin: '0px 0px -6% 0px' }
+        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
       )
       els.forEach((el) => io.observe(el))
     }
@@ -50,26 +56,43 @@ export default {
 
     const setupLightbox = () => {
       if (cleanupLightbox) { cleanupLightbox(); cleanupLightbox = null }
-      const lb = document.getElementById('lightbox') as HTMLElement | null
-      if (!lb) return
+      let lb = document.getElementById('lightbox') as HTMLElement | null
+      // Auto-create lightbox if not present (no markdown needed)
+      if (!lb) {
+        lb = document.createElement('div')
+        lb.id = 'lightbox'
+        lb.className = 'lightbox'
+        lb.setAttribute('aria-hidden', 'true')
+        const innerImg = document.createElement('img')
+        innerImg.alt = ''
+        innerImg.decoding = 'async'
+        lb.appendChild(innerImg)
+        const cap = document.createElement('div')
+        cap.className = 'lightbox-caption'
+        cap.setAttribute('aria-live', 'polite')
+        lb.appendChild(cap)
+        const btnEl = document.createElement('button')
+        btnEl.type = 'button'
+        btnEl.className = 'lightbox-close'
+        btnEl.setAttribute('aria-label', 'Close preview (Escape)')
+        btnEl.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>'
+        lb.appendChild(btnEl)
+        document.body.appendChild(lb)
+      }
 
-      // Keep the lightbox outside VitePress content so fixed positioning is relative
-      // to the actual browser viewport even when page content has transforms/animations.
+      // Ensure lightbox is direct child of body for fixed viewport positioning
       if (lb.parentElement !== document.body) {
         document.body.appendChild(lb)
       }
 
-      // Ensure a11y attributes on lightbox container
       lb.setAttribute('role', 'dialog')
       lb.setAttribute('aria-modal', 'true')
       lb.setAttribute('aria-label', 'Image preview — press Escape to close')
 
       let img = lb.querySelector('img') as HTMLImageElement | null
       let caption = lb.querySelector('.lightbox-caption') as HTMLElement | null
-      const closeBtn = lb.querySelector('.lightbox-close') as HTMLButtonElement | null
-
-      // Ensure close button exists
-      let btn = closeBtn
+      let btn = lb.querySelector('.lightbox-close') as HTMLButtonElement | null
+      // Safety: ensure essentials exist
       if (!btn) {
         btn = document.createElement('button')
         btn.type = 'button'
@@ -77,15 +100,15 @@ export default {
         btn.setAttribute('aria-label', 'Close preview')
         btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>'
         lb.appendChild(btn)
-        if (!caption) {
-          caption = document.createElement('div')
-          caption.className = 'lightbox-caption'
-          lb.appendChild(caption)
-        }
+      }
+      if (!caption) {
+        caption = document.createElement('div')
+        caption.className = 'lightbox-caption'
+        lb.appendChild(caption)
       }
       if (!img) {
-        img = lb.querySelector('img')
-        if (!img) return
+        img = document.createElement('img')
+        lb.prepend(img)
       }
 
       let lastFocus: HTMLElement | null = null
@@ -125,20 +148,48 @@ export default {
       }
       document.addEventListener('keydown', onKey, { signal: ac() })
 
+      // Support both plain <img> and <picture><img> with WebP
       const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img, .featured-shot img')
       previews.forEach((el) => {
+        // Prefer parent <picture> source if present
+        const picture = el.closest('picture')
+        const getBestSrc = () => {
+          // currentSrc already resolves <source> WebP when supported
+          try {
+            const cs = (el as any).currentSrc
+            if (cs) return cs as string
+          } catch {}
+          // Fallback: check <source srcset> manually
+          if (picture) {
+            const srcEl = picture.querySelector('source[type="image/webp"]') as HTMLSourceElement | null
+            if (srcEl && srcEl.srcset) return srcEl.srcset.split(',')[0].trim().split(' ')[0]
+          }
+          return el.src
+        }
         el.setAttribute('tabindex', '0')
         el.setAttribute('role', 'button')
         el.setAttribute('aria-label', `Enlarge preview: ${el.alt || 'screenshot'}`)
         el.style.cursor = 'zoom-in'
+        // Perf: eager featured, lazy grid already set via HTML; add loading hint if missing
+        if (!el.getAttribute('loading')) el.setAttribute('loading', 'lazy')
+        if (!el.getAttribute('decoding')) el.setAttribute('decoding', 'async')
         const handler = () => {
-          const src = (el as any).currentSrc || el.src
-          open(src, el.alt || '')
+          open(getBestSrc(), el.alt || '')
         }
         el.addEventListener('click', handler, { signal: ac() })
         el.addEventListener('keydown', (e: KeyboardEvent) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler() }
         }, { signal: ac() })
+        // Also make whole picture card clickable (better hit area on mobile)
+        const card = el.closest('.preview-card, .featured-shot') as HTMLElement | null
+        if (card && card !== el) {
+          // Ensure card does not trap inner img handler double-fire
+          card.style.cursor = 'zoom-in'
+          card.addEventListener('click', (e) => {
+            if (e.target === el) return
+            handler()
+          }, { signal: ac() })
+        }
       })
 
       cleanupLightbox = () => {

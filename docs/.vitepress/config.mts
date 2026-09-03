@@ -9,25 +9,63 @@ export default defineConfig({
   base: '/HitPaw-MangaDex-Manager/',
   appearance: 'force-dark',
   sitemap: {
-    hostname: 'https://hit-paw.github.io'
+    // Include base in hostname — VitePress 1.6 does not auto-prefix base when hostname is apex
+    hostname: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager'
   },
-  // Fix sitemap base — VitePress 1.6 does not auto-prefix base in sitemap when hostname is apex
+  // Robust sitemap base fix — VitePress 1.6 project-page quirk (polls until complete)
   async buildEnd(siteConfig) {
+    const { readFile, writeFile, access } = await import('node:fs/promises')
+    const { join } = await import('node:path')
+    const candidates = [
+      siteConfig?.outDir ? join(siteConfig.outDir, 'sitemap.xml') : null,
+      join(process.cwd(), 'docs', '.vitepress', 'dist', 'sitemap.xml'),
+      join(process.cwd(), 'docs', 'dist', 'sitemap.xml'),
+      join(process.cwd(), 'dist', 'sitemap.xml'),
+    ].filter(Boolean) as string[]
+    let p: string | null = null
+    for (const cand of candidates) {
+      try { await access(cand); p = cand; break } catch {}
+    }
+    if (!p) {
+      await new Promise(r => setTimeout(r, 500))
+      for (const cand of candidates) {
+        try { await access(cand); p = cand; break } catch {}
+      }
+    }
+    if (!p) return
     try {
-      const { readFile, writeFile } = await import('node:fs/promises')
-      const { join } = await import('node:path')
-      const p = join(siteConfig.outDir, 'sitemap.xml')
-      let xml = await readFile(p, 'utf-8')
+      let attempts = 0
+      let xmlPre = ''
+      while (attempts < 12) {
+        try {
+          xmlPre = await readFile(p, 'utf-8')
+          if (xmlPre.includes('</urlset>') && xmlPre.length > 900) break
+        } catch {}
+        await new Promise(r => setTimeout(r, 250))
+        attempts++
+      }
+      if (!xmlPre.includes('</urlset>')) return
+      let xml = xmlPre
       const before = xml
-      xml = xml.replaceAll('https://hit-paw.github.io/', 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/')
-      // homepage case without trailing slash already covered, but ensure single
+      const apex = 'https://hit-paw.github.io/'
+      const base = 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/'
+      const baseNoSlash = 'https://hit-paw.github.io/HitPaw-MangaDex-Manager'
+      const marker = '__HITPAW_BASE_SLASH__'
+      const markerNoSlash = '__HITPAW_BASE_NOSLASH__'
+      xml = xml.replaceAll(base, marker)
+      xml = xml.replaceAll(baseNoSlash, markerNoSlash)
+      xml = xml.replaceAll(apex, base)
+      xml = xml.replaceAll(marker, base)
+      xml = xml.replaceAll(markerNoSlash, base)
       xml = xml.replaceAll('HitPaw-MangaDex-Manager//', 'HitPaw-MangaDex-Manager/')
+      xml = xml.replaceAll('HitPaw-MangaDex-Manager/HitPaw-MangaDex-Manager', 'HitPaw-MangaDex-Manager')
+      xml = xml.replaceAll('https://hit-paw.github.io/HitPaw-MangaDex-Manager</loc>', 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/</loc>')
       if (xml !== before) await writeFile(p, xml, 'utf-8')
     } catch {}
   },
   cleanUrls: false,
   lastUpdated: true,
-  ignoreDeadLinks: [/^https:\/\/discord\.gg/, /^https:\/\/github\.com\/Hit-Paw\/HitPaw-MangaDex-Manager\/releases/],
+  ignoreDeadLinks: [/^https:\/\/discord\.gg/, /^https:\/\/github\.com\/Hit-Paw\/HitPaw-MangaDex-Manager\/releases/, /mermaid/, /^http:\/\/localhost:/, /^https:\/\/mangadex\.org/],
   markdown: {
     theme: { light: 'github-light', dark: 'github-dark' },
     lineNumbers: false,
@@ -45,10 +83,11 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#ff6a00', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#0a0a0a', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'dark light' }],
-    // SEO
+    ['meta', { name: 'format-detection', content: 'telephone=no' }],
+    // SEO — core
     ['meta', { name: 'author', content: 'Hit-Paw' }],
     ['meta', { name: 'keywords', content: 'MangaDex, manga manager, manga library, MAL, AniList, Kitsu, MangaBaka, Anime-Planet, Qt6, HitPaw' }],
-    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'HitPaw MangaDex Manager' }],
     ['meta', { property: 'og:title', content: 'HitPaw MangaDex Manager — Browse, filter, export your MangaDex library' }],
@@ -62,38 +101,102 @@ export default defineConfig({
     ['meta', { property: 'og:locale', content: 'en_US' }],
     // Twitter
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:site', content: '@HitPaw' }],
+    ['meta', { name: 'twitter:creator', content: '@HitPaw' }],
     ['meta', { name: 'twitter:title', content: 'HitPaw MangaDex Manager' }],
     ['meta', { name: 'twitter:description', content: 'Browse, filter, and export your MangaDex library. Built with Qt6/C++ — dark AMOLED, offline exports.' }],
     ['meta', { name: 'twitter:image', content: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/og-image.png' }],
     ['meta', { name: 'twitter:image:alt', content: 'HitPaw MangaDex Manager preview' }],
-    // Preconnects / perf
+    // Perf — critical preloads
+    ['link', { rel: 'preload', as: 'image', href: '/HitPaw-MangaDex-Manager/preview-1.webp', type: 'image/webp', fetchpriority: 'high' }],
+    ['link', { rel: 'preload', as: 'image', href: '/HitPaw-MangaDex-Manager/icon_256.png', type: 'image/png' }],
     ['link', { rel: 'preconnect', href: 'https://github.com' }],
     ['link', { rel: 'dns-prefetch', href: 'https://github.com' }],
-    // JSON-LD SoftwareApplication
+    ['link', { rel: 'preconnect', href: 'https://api.mangadex.org' }],
+    ['link', { rel: 'dns-prefetch', href: 'https://api.mangadex.org' }],
+    ['link', { rel: 'dns-prefetch', href: 'https://uploads.mangadex.org' }],
+    // JSON-LD SoftwareApplication + WebSite + Organization — primary graph
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'HitPaw MangaDex Manager',
-      applicationCategory: 'UtilitiesApplication',
-      operatingSystem: 'Windows, macOS, Linux',
-      description: 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.',
-      url: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/',
-      downloadUrl: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest',
-      author: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', availability: 'https://schema.org/InStock' },
-      softwareVersion: '3.5.0',
-      license: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE',
-      screenshot: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/preview-1.png',
-      aggregateRating: { '@type': 'AggregateRating', ratingValue: '5', ratingCount: '1' }
+      '@graph': [
+        {
+          '@type': 'SoftwareApplication',
+          name: 'HitPaw MangaDex Manager',
+          applicationCategory: 'UtilitiesApplication',
+          operatingSystem: 'Windows, macOS, Linux',
+          description: 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++. Fast AMOLED grid, Show All (N), offline exports to MAL/AniList/MangaBaka/Kitsu. 100% local & secure.',
+          url: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/',
+          downloadUrl: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest',
+          installUrl: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/download.html',
+          author: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
+          publisher: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', availability: 'https://schema.org/InStock' },
+          softwareVersion: '3.5.0',
+          releaseNotes: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/changelog.html',
+          license: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE',
+          screenshot: [
+            'https://hit-paw.github.io/HitPaw-MangaDex-Manager/preview-1.png',
+            'https://hit-paw.github.io/HitPaw-MangaDex-Manager/preview-2.png',
+            'https://hit-paw.github.io/HitPaw-MangaDex-Manager/preview-3.png',
+            'https://hit-paw.github.io/HitPaw-MangaDex-Manager/preview-4.png'
+          ],
+          featureList: 'Library grid, Cover cache, Export CSV/JSON/MAL/MB/AP, Sync to MDList, Update check, Secure local storage',
+          aggregateRating: { '@type': 'AggregateRating', ratingValue: '5', ratingCount: '1' }
+        },
+        {
+          '@type': 'WebSite',
+          name: 'HitPaw MangaDex Manager Docs',
+          url: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/',
+          publisher: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
+          inLanguage: 'en-US',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/?q={search_term_string}',
+            'query-input': 'required name=search_term_string'
+          }
+        },
+        {
+          '@type': 'Organization',
+          name: 'Hit-Paw',
+          url: 'https://github.com/Hit-Paw',
+          logo: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/icon_512.png',
+          sameAs: ['https://github.com/Hit-Paw/HitPaw-MangaDex-Manager', 'https://discord.gg/z6yYYpcYYc']
+        }
+      ]
     })]
   ],
   transformHead({ pageData }) {
-    const url = `https://hit-paw.github.io/HitPaw-MangaDex-Manager/${pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '.html')}`
-    const canonical = pageData.relativePath === 'index.md' ? 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/' : url
-    return [
+    const baseUrl = 'https://hit-paw.github.io/HitPaw-MangaDex-Manager'
+    const clean = pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '.html')
+    const url = clean ? `${baseUrl}/${clean}` : `${baseUrl}/`
+    const canonical = pageData.relativePath === 'index.md' ? `${baseUrl}/` : url
+    const title = (pageData.frontmatter as any)?.title || pageData.title || 'HitPaw MangaDex Manager'
+    const desc = (pageData.frontmatter as any)?.description || (pageData as any).description || 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.'
+    // Breadcrumb JSON-LD per page
+    const parts = clean.replace(/\.html$/, '').split('/').filter(Boolean)
+    const breadcrumb = parts.length ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${baseUrl}/` },
+        ...parts.map((p: string, i: number) => ({
+          '@type': 'ListItem',
+          position: i + 2,
+          name: p.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+          item: `${baseUrl}/${parts.slice(0, i + 1).join('/')}.html`
+        }))
+      ]
+    } : null
+    const heads: any[] = [
       ['link', { rel: 'canonical', href: canonical }],
-      ['meta', { property: 'og:url', content: canonical }]
+      ['meta', { property: 'og:url', content: canonical }],
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: desc }],
+      ['meta', { name: 'twitter:title', content: title }],
+      ['meta', { name: 'twitter:description', content: desc }]
     ]
+    if (breadcrumb) heads.push(['script', { type: 'application/ld+json' }, JSON.stringify(breadcrumb)])
+    return heads
   },
   themeConfig: {
     logo: '/icon_64.png',
@@ -154,6 +257,9 @@ export default defineConfig({
     }
   },
   vite: {
-    // perf: handled by VitePress defaults
+    // Perf: keep VitePress defaults + small tweaks — avoid aggressive manualChunks that breaks local search (mark.js)
+    build: {
+      chunkSizeWarningLimit: 800
+    }
   }
 })
