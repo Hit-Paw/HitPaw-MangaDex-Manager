@@ -1,5 +1,5 @@
 ---
-title: Changelog — HitPaw MangaDex Manager
+title: Changelog
 description: Version history and release notes for HitPaw MangaDex Manager — v3.5.0 MDList sync, v3.4.6 Show All, and earlier.
 outline: deep
 ---

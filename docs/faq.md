@@ -1,5 +1,5 @@
 ---
-title: FAQ — HitPaw MangaDex Manager
+title: FAQ
 description: Frequently asked questions — login, covers, export, performance, and troubleshooting for HitPaw.
 outline: deep
 ---
@@ -68,7 +68,7 @@ HitPaw checks headers, XML well-formedness, and node counts. Re-try with fewer t
 <details>
 <summary><strong>How does update check work?</strong></summary>
 
-Manual: `Check for updates` → popup with version info → one-click download. Silent: 3.5s after launch, queries GitHub API. If newer version exists, logs it in the stats label.
+Manual: `Check for updates` → popup with version info → one-click download. Silent: 3.5s after launch, queries GitHub API. If newer version exists, logs it in the Activity Log.
 </details>
 
 <details>

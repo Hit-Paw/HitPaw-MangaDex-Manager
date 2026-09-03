@@ -61,6 +61,8 @@ export default defineConfig({
       xml = xml.replaceAll('HitPaw-MangaDex-Manager//', 'HitPaw-MangaDex-Manager/')
       xml = xml.replaceAll('HitPaw-MangaDex-Manager/HitPaw-MangaDex-Manager', 'HitPaw-MangaDex-Manager')
       xml = xml.replaceAll('https://hit-paw.github.io/HitPaw-MangaDex-Manager</loc>', 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/</loc>')
+      // Fix: 404.html must not be indexed — drop it from the sitemap
+      xml = xml.replace(/<url><loc>[^<]*\/404\.html<\/loc>[\s\S]*?<\/url>/g, '')
       if (xml !== before) await writeFile(p, xml, 'utf-8')
     } catch {}
   },
@@ -71,7 +73,45 @@ export default defineConfig({
     theme: { light: 'github-light', dark: 'github-dark' },
     lineNumbers: false,
     image: { lazyLoading: true },
-    headers: { level: [2, 3] }
+    headers: { level: [2, 3] },
+    // Fix: VitePress rewrites markdown-syntax links with base + .html, and turns
+    // raw-HTML <img src>/<source srcset> into module imports (also base-prefixed).
+    // BUT raw-HTML <a href="/page"> is left as a literal string — no base prefix,
+    // no .html — so those links 404 on the GitHub Pages project site. Rewrite
+    // internal hrefs in html tokens here. Keep BASE in sync with `base` above.
+    // Only touch href — src/srcset must stay literal for Vite's import pipeline.
+    config(md) {
+      const BASE = '/HitPaw-MangaDex-Manager/'
+      const BASE_DIR = BASE.replace(/\/$/, '')
+      const rewriteUrl = (url: string): string => {
+        if (!url) return url
+        if (url.startsWith('#')) return url
+        if (/^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('//')) return url
+        if (url.startsWith(BASE)) return url
+        const parts = url.split(/([?#][\s\S]*)/, 2)
+        const pathPart = parts[0]
+        const suffix = parts[1] || ''
+        let out: string
+        if (pathPart === '/' || pathPart === '') out = BASE
+        else if (/\.[a-z0-9]+$/i.test(pathPart)) out = BASE_DIR + pathPart
+        else out = BASE_DIR + pathPart + '.html'
+        return out + suffix
+      }
+      md.core.ruler.after('inline', 'hitpaw-base-raw-html-hrefs', (state: any) => {
+        const visit = (tokens: any[]) => {
+          for (const tok of tokens) {
+            if (tok.type === 'html_block' || tok.type === 'html_inline') {
+              tok.content = tok.content.replace(
+                /(\shref=)"([^"]*)"/gi,
+                (_m: string, attr: string, val: string) => attr + '"' + rewriteUrl(val) + '"'
+              )
+            }
+            if (tok.children) visit(tok.children)
+          }
+        }
+        visit(state.tokens)
+      })
+    }
   },
   head: [
     // Favicon — base-prefixed for GitHub Pages project site
