@@ -1,12 +1,16 @@
 import DefaultTheme from 'vitepress/theme'
+import { h, onMounted, watch, nextTick } from 'vue'
+import { useRoute } from 'vitepress'
 import './custom.css'
 import './lightbox-viewport.css'
-
-import { onMounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vitepress'
+import NotFoundPage from './NotFoundPage.vue'
 
 export default {
   extends: DefaultTheme,
+  // Custom branded 404 — VitePress's router renders its own default NotFound
+  // component for unmatched routes (404.md content is never shown in the SPA),
+  // so we replace it through the layout's `not-found` slot.
+  Layout: () => h(DefaultTheme.Layout, null, { 'not-found': () => h(NotFoundPage) }),
   setup(props: any, ctx: any) {
     // Preserve DefaultTheme setup (search, etc.)
     let parentResult: any = undefined
@@ -17,38 +21,63 @@ export default {
 
     const route = useRoute()
 
+  // Shared reveal selector — must mirror the CSS reveal block in custom.css
+  const REVEAL_SELECTOR = [
+    '.VPFeatures .item',
+    '.stat-card',
+    '.why-card',
+    '.community-card',
+    '.quick-card',
+    '.faq-strip details',
+    '.featured-shot',
+    '.preview-grid .preview-card',
+    '.vp-doc h1',
+    '.vp-doc h2',
+    '.vp-doc h3',
+    '.vp-doc table',
+    '.vp-doc p',
+    '.vp-doc li',
+    '.vp-doc blockquote',
+    '.vp-doc div[class*="language-"]',
+    '.vp-doc pre'
+  ].join(', ')
+
     // Mark JS enabled for CSS no‑js fallback
     const markJS = () => {
       try { document.documentElement.classList.add('js') } catch {}
     }
 
+    // Single reusable observer — avoids leaking one IntersectionObserver per SPA
+    // navigation; also skips elements already revealed so re-runs are idempotent.
+    let revealIO: IntersectionObserver | null = null
+
     const observe = () => {
       // Respect reduced motion — reveal instantly
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelectorAll('.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre')
+        document.querySelectorAll(REVEAL_SELECTOR)
           .forEach((el) => el.classList.add('in-view'))
         return
       }
-      const els = document.querySelectorAll(
-        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
-      )
+      const els = Array.from(document.querySelectorAll(REVEAL_SELECTOR))
+        .filter((el) => !el.classList.contains('in-view'))
       if (!els.length) return
       if (!('IntersectionObserver' in window)) {
         els.forEach((el) => el.classList.add('in-view'))
         return
       }
-      const io = new IntersectionObserver(
+      if (revealIO) revealIO.disconnect()
+      revealIO = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
             if (e.isIntersecting) {
               e.target.classList.add('in-view')
-              io.unobserve(e.target)
+              revealIO?.unobserve(e.target)
             }
           })
         },
         { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
       )
-      els.forEach((el) => io.observe(el))
+      els.forEach((el) => revealIO?.observe(el))
     }
 
     // Lightbox — a11y dialog, focus trap, keyboard
@@ -142,8 +171,15 @@ export default {
       const onKey = (e: KeyboardEvent) => {
         if (!lb.classList.contains('open')) return
         if (e.key === 'Escape') { e.preventDefault(); close(); return }
-        if (e.key === 'Tab' && btn && img) {
-          if (e.shiftKey && document.activeElement === btn) { e.preventDefault(); btn.focus() }
+        // Complete focus trap: the close button is the only focusable element in
+        // the dialog, so keep focus on it for both Tab directions and refocus if
+        // focus somehow escapes the overlay.
+        if (e.key === 'Tab' && btn) {
+          const inside = lb.contains(document.activeElement)
+          if (!inside || document.activeElement === btn) {
+            e.preventDefault()
+            btn.focus()
+          }
         }
       }
       document.addEventListener('keydown', onKey, { signal: ac() })
@@ -194,6 +230,11 @@ export default {
 
       cleanupLightbox = () => {
         controllers.forEach((c) => c.abort())
+        // Fully reset overlay state (e.g. SPA navigation happened while open)
+        if (lb.classList.contains('open')) {
+          lb.classList.remove('open')
+          lb.setAttribute('aria-hidden', 'true')
+        }
         document.body.style.overflow = ''
       }
     }
@@ -208,11 +249,14 @@ export default {
           setTimeout(() => window.scrollTo(0, 0), 50)
         }
       } catch {}
-      nextTick(() => { observe(); setupLightbox() })
+      nextTick(() => { observe(); setupLightbox(); setTimeout(observe, 250) })
     })
     watch(() => route.path, () => nextTick(() => {
       try { if (!window.location.hash) window.scrollTo(0, 0) } catch {}
       observe(); setupLightbox()
+      // Safety net: re-scan shortly after navigation in case async page content
+      // (lazy chunks, dynamically mounted blocks) renders after nextTick.
+      setTimeout(observe, 250)
     }))
 
     return parentResult

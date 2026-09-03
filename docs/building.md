@@ -1,5 +1,5 @@
 ---
-title: Building from Source — HitPaw MangaDex Manager
+title: Building from Source
 description: Build HitPaw with pinned Qt 6.8.3 + MinGW 13.1 on Windows, Qt6 on Linux/macOS. CMake presets or qmake — verify before push.
 outline: deep
 ---

@@ -1,5 +1,5 @@
 ---
-title: Export Formats — HitPaw MangaDex Manager
+title: Export Formats
 description: Export your MangaDex library to CSV, JSON, MAL XML, MangaBaka JSON, Anime-Planet .gz — validated, import-ready. Also sync directly to MDList.
 outline: deep
 ---
@@ -141,31 +141,31 @@ CI also validates via `tests/test_export.cpp` (`ctest --output-on-failure`). See
   </div>
   <div class="vs-row" role="row">
     <div class="vs-feature" data-label="Goal">Spreadsheet / script</div>
-    <div class="vs-hitpaw" data-label="Use"><code>CSV</code> / <code>JSON</code></div>
+    <div class="vs-hitpaw" data-label="Use"><span><code>CSV</code> / <code>JSON</code></span></div>
     <div class="vs-manual" data-label="Upload to">Excel / Sheets / code</div>
     <div class="vs-bookmark" data-label="Note">Fullest data</div>
   </div>
   <div class="vs-row" role="row">
     <div class="vs-feature" data-label="Goal">MAL / AniList / Kitsu / Fire</div>
-    <div class="vs-hitpaw" data-label="Use"><code>MAL XML</code></div>
+    <div class="vs-hitpaw" data-label="Use"><span><code>MAL XML</code></span></div>
     <div class="vs-manual" data-label="Upload to">MAL import</div>
     <div class="vs-bookmark" data-label="Note">Most compatible</div>
   </div>
   <div class="vs-row" role="row">
     <div class="vs-feature" data-label="Goal">MangaBaka native</div>
-    <div class="vs-hitpaw" data-label="Use"><code>MB JSON</code></div>
+    <div class="vs-hitpaw" data-label="Use"><span><code>MB JSON</code></span></div>
     <div class="vs-manual" data-label="Upload to">MB import</div>
     <div class="vs-bookmark" data-label="Note">Or MAL XML</div>
   </div>
   <div class="vs-row" role="row">
     <div class="vs-feature" data-label="Goal">Anime-Planet</div>
-    <div class="vs-hitpaw" data-label="Use"><code>AP .gz</code></div>
+    <div class="vs-hitpaw" data-label="Use"><span><code>AP .gz</code></span></div>
     <div class="vs-manual" data-label="Upload to">AP list import</div>
     <div class="vs-bookmark" data-label="Note">Must be .gz</div>
   </div>
   <div class="vs-row" role="row">
     <div class="vs-feature" data-label="Goal">Stay on MangaDex</div>
-    <div class="vs-hitpaw" data-label="Use"><code>MDList sync</code></div>
+    <div class="vs-hitpaw" data-label="Use"><span><code>MDList sync</code></span></div>
     <div class="vs-manual" data-label="Upload to">MangaDex list</div>
     <div class="vs-bookmark" data-label="Note">No file</div>
   </div>

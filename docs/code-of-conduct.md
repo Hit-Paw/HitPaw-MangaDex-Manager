@@ -1,5 +1,5 @@
 ---
-title: Code of Conduct — HitPaw MangaDex Manager
+title: Code of Conduct
 description: Community standards for HitPaw — pledge, standards, enforcement, and attribution.
 outline: deep
 ---
