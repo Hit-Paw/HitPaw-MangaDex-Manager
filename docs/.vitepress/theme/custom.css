@@ -14,8 +14,8 @@
   --hp-ink: #211c15;
   --hp-ink-2: #5a5344;
   --hp-ink-3: #8a8271;
-  --hp-line: rgba(33, 28, 21, .16);
-  --hp-line-strong: rgba(33, 28, 21, .52);
+  --hp-line: rgba(255, 106, 0, .35);
+  --hp-line-strong: rgba(255, 106, 0, .65);
   --hp-wash: rgba(33, 28, 21, .045);
   --hp-shadow: rgba(33, 28, 21, .08);
 
@@ -132,8 +132,8 @@ html.dark {
   --hp-ink: #ece4d4;
   --hp-ink-2: #b0a794;
   --hp-ink-3: #7f776a;
-  --hp-line: rgba(236, 228, 212, .14);
-  --hp-line-strong: rgba(236, 228, 212, .42);
+  --hp-line: rgba(255, 154, 61, .3);
+  --hp-line-strong: rgba(255, 154, 61, .5);
   --hp-wash: rgba(236, 228, 212, .05);
   --hp-shadow: rgba(0, 0, 0, .35);
 
@@ -1526,7 +1526,252 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   .stat-card:first-child { border-top: none; }
 }
 
-/* ---------- 13. PRINT ---------- */
+/* ---------- 13. ANIMATIONS ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px 5px rgba(255, 106, 0, 0.15);
+  }
+}
+
+@keyframes lineGlow {
+  0%, 100% {
+    border-color: rgba(255, 106, 0, 0.35);
+  }
+  50% {
+    border-color: rgba(255, 106, 0, 0.65);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-5deg) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+/* Apply animations to key elements */
+.VPHero {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.feature-grid > div {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.feature-grid > div:nth-child(1) { animation-delay: 0.1s; }
+.feature-grid > div:nth-child(2) { animation-delay: 0.2s; }
+.feature-grid > div:nth-child(3) { animation-delay: 0.3s; }
+.feature-grid > div:nth-child(4) { animation-delay: 0.4s; }
+.feature-grid > div:nth-child(5) { animation-delay: 0.5s; }
+.feature-grid > div:nth-child(6) { animation-delay: 0.6s; }
+
+.stat-card {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+.why-card {
+  animation: slideInLeft 0.6s ease-out both;
+}
+
+.quick-card {
+  animation: slideInRight 0.6s ease-out both;
+}
+
+.community-card {
+  animation: fadeInScale 0.6s ease-out both;
+}
+
+.preview-card {
+  animation: fadeInScale 0.6s ease-out both;
+}
+
+.cta-banner {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.section-head {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+/* Animate header navigation */
+.VPNavBar {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Glow effect on hover for cards */
+.stat-card:hover,
+.why-card:hover,
+.quick-card:hover,
+.community-card:hover,
+.preview-card:hover {
+  animation: glowPulse 2s infinite;
+}
+
+/* Animate borders/lines */
+hr,
+.divider,
+.section-divider {
+  animation: lineGlow 3s ease-in-out infinite;
+}
+
+/* Float animation for icons */
+.feature-grid svg,
+.stat-card h3,
+.quick-card h3 {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Shimmer effect for important text */
+.VPHero .text h1 {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.VPButton {
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.VPButton:hover {
+  animation: bounce 0.6s ease-out;
+  transform: translateY(-3px);
+}
+
+/* Content animation on scroll */
+.vp-doc h2,
+.vp-doc h3 {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.vp-doc p {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Code blocks and blockquotes */
+.vp-doc div[class*='language-'] {
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.vp-doc blockquote {
+  animation: slideInLeft 0.6s ease-out;
+  border-left: 3px solid var(--hp-orange);
+  border-left-width: 3px;
+}
+
+.vp-doc blockquote:hover {
+  animation: glowPulse 2s infinite;
+}
+
+/* Table animations */
+.vp-doc table {
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.vp-doc table tr:hover {
+  animation: glowPulse 2s infinite;
+  background-color: var(--hp-accent-wash);
+}
+
+/* Details/accordion animations */
+.vp-doc details {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.vp-doc details[open] > summary {
+  animation: rotateIn 0.3s ease-out;
+}
+
+/* Custom block animations */
+.custom-block {
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.custom-block:hover {
+  animation: glowPulse 2s infinite;
+}
+
+/* ---------- 14. PRINT ---------- */
 @media print {
   .VPNavBar, .VPSidebar, .VPFooter, .VPDocAside, .pager-link, .cta-banner { display: none !important; }
   body { background: #fff; color: #000; }
