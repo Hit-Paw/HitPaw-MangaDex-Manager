@@ -22,8 +22,8 @@ export default {
     const route = useRoute()
 
   // Shared reveal selector — must mirror the CSS reveal block in custom.css
+  // (v4 "Editorial Ink": subtle 200ms fades on cards/rules/tables only)
   const REVEAL_SELECTOR = [
-    '.VPFeatures .item',
     '.stat-card',
     '.why-card',
     '.community-card',
@@ -31,18 +31,27 @@ export default {
     '.faq-strip details',
     '.featured-shot',
     '.preview-grid .preview-card',
-    '.vp-doc h1',
-    '.vp-doc h2',
-    '.vp-doc h3',
+    '.section-head',
+    '.vs-table',
+    '.cta-banner',
     '.vp-doc table',
-    '.vp-doc p',
-    '.vp-doc li',
     '.vp-doc blockquote',
     '.vp-doc div[class*="language-"]',
-    '.vp-doc pre'
+    '.vp-doc .custom-block',
+    '.vp-doc details'
   ].join(', ')
 
-    // Mark JS enabled for CSS no‑js fallback
+    const prefersReducedMotion = () =>
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    // v4: no cursor spotlight, no count-ups — motion is intentionally subtle.
+
+    const onReveal = (el: Element) => {
+      el.classList.add('in-view')
+    }
+
+    // Mark JS enabled for CSS no-js fallback
     const markJS = () => {
       try { document.documentElement.classList.add('js') } catch {}
     }
@@ -53,7 +62,7 @@ export default {
 
     const observe = () => {
       // Respect reduced motion — reveal instantly
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (prefersReducedMotion()) {
         document.querySelectorAll(REVEAL_SELECTOR)
           .forEach((el) => el.classList.add('in-view'))
         return
@@ -70,7 +79,7 @@ export default {
         (entries) => {
           entries.forEach((e) => {
             if (e.isIntersecting) {
-              e.target.classList.add('in-view')
+              onReveal(e.target)
               revealIO?.unobserve(e.target)
             }
           })

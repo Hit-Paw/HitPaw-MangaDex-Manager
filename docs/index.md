@@ -4,11 +4,8 @@ titleTemplate: false
 
 hero:
   name: HitPaw MangaDex Manager
-  text: Your entire library. Offline. Under your control.
+  text: Your library. <span class="hp-accent">Offline.</span> Under your control.
   tagline: Browse 3,000+ titles instantly, filter by status, year and tags, then export anywhere — no cloud, no tracking, no ads.
-  image:
-    src: /icon_256.png
-    alt: HitPaw MangaDex Manager — AMOLED library grid icon
   actions:
     - theme: brand
       text: Download Latest
@@ -31,16 +28,16 @@ hero:
 
 > **Disclaimer:** HitPaw MangaDex Manager is not affiliated with or endorsed by MangaDex. Built by the community, for the community.
 
-<div class="featured-shot" role="figure" aria-label="Library Grid preview">
+<div class="featured-shot" role="figure" aria-label="Library Grid preview with 3276 titles">
   <div class="shot-bar" aria-hidden="true">
     <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-    <span class="shot-url">HitPaw — Library Grid</span>
+    <span class="shot-url">HitPaw — Library Grid • 3,276 titles loaded</span>
   </div>
   <picture>
     <source srcset="/preview-1.webp" type="image/webp" />
-    <img src="/preview-1.png" alt="HitPaw — Library Grid • 5-column AMOLED grid with HitPaw orange accents" loading="eager" fetchpriority="high" decoding="async" width="1477" height="1164" sizes="(max-width: 960px) 100vw, 1080px" />
+    <img src="/preview-1.png" alt="HitPaw — Library Grid • 3276 titles • 5-column AMOLED grid with HitPaw orange accents" loading="eager" fetchpriority="high" decoding="async" width="1477" height="1164" sizes="(max-width: 960px) 100vw, 1080px" />
   </picture>
-  <div class="featured-caption"><span>Library Grid</span> <small>5 cols • instant search • Show All (N) • offline</small></div>
+  <div class="featured-caption"><span>Library Grid — 3,276 titles</span> <small>5 cols • instant search • Show All (N) • offline</small></div>
 </div>
 
 <div class="stats-bar" aria-label="Key stats">
@@ -65,7 +62,7 @@ hero:
 <div class="section-head">
   <span class="kicker">Features</span>
   <h2>Everything a library manager should be</h2>
-  <p>One portable app that respects your data, your eyes, and your time. Nothing more, nothing phoning home.</p>
+  <p>One portable app that respects your data, your eyes, and your time. Nothing more — and nothing phoning home.</p>
 </div>
 
 <div class="feature-grid">
@@ -121,7 +118,6 @@ hero:
 </div>
 
 <div class="preview-grid">
-
   <div class="preview-card">
     <picture>
       <source srcset="/preview-1.webp" type="image/webp" />
@@ -159,7 +155,7 @@ hero:
 <div class="section-head">
   <span class="kicker">Why HitPaw</span>
   <h2>Built for readers, not for clouds</h2>
-  <p>Most managers want your account, your data, or your attention. HitPaw wants none of that — it just manages your library.</p>
+  <p>Most managers want your account, your data, or your attention. HitPaw wants none of that — it just manages your library, beautifully.</p>
 </div>
 
 <div class="why-grid">
@@ -195,7 +191,7 @@ hero:
 <div class="vs-table" role="table" aria-label="Comparison">
   <div class="vs-row vs-header" role="row">
     <div role="columnheader">Feature</div>
-    <div role="columnheader">HitPaw</div>
+    <div role="columnheader" class="vs-hp-head">HitPaw</div>
     <div role="columnheader">Manual</div>
     <div role="columnheader">Bookmark</div>
   </div>
@@ -228,7 +224,7 @@ hero:
 <div class="section-head">
   <span class="kicker">Quick start</span>
   <h2>Three steps to your library</h2>
-  <p>No installer, no wizard, no account creation. From download to "Library loaded" in under two minutes.</p>
+  <p>No installer, no wizard, no account creation. From download to <em>Library loaded</em> in under two minutes.</p>
 </div>
 
 <div class="quick-grid">
@@ -330,8 +326,9 @@ hero:
   <div class="cta-title">Ready to take control of your library?</div>
   <div class="cta-sub">Export in one click — CSV, JSON, MAL, Anime-Planet, or MangaBaka. Private, portable, MIT.</div>
   <a class="cta-btn" href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank" rel="noreferrer" aria-label="Download HitPaw latest release on GitHub">Download Latest →</a>
-  <div style="margin-top:14px; font-size:.84rem; opacity:.85">or <a href="/getting-started" style="color:#ffb257; text-decoration:underline; text-underline-offset:3px">Getting Started guide</a> • <a href="/download" style="color:#ffb257; text-decoration:underline; text-underline-offset:3px">All platforms</a></div>
+  <div style="margin-top:14px; font-size:.84rem; opacity:.85">or <a href="/getting-started" style="color:var(--hp-plate-accent); text-decoration:underline; text-underline-offset:3px">Getting Started guide</a> • <a href="/download" style="color:var(--hp-plate-accent); text-decoration:underline; text-underline-offset:3px">All platforms</a></div>
 </div>
+
 
 <script setup>
 import { onMounted } from 'vue'

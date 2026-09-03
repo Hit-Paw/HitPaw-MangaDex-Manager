@@ -12,7 +12,7 @@ import { withBase } from 'vitepress'
         height="96"
         class="nf-icon"
       />
-      <p class="nf-code">404</p>
+      <p class="nf-code">Error 404</p>
       <h1 class="nf-title">That page doesn&rsquo;t exist</h1>
       <p class="nf-sub">
         You might have followed an old link — HitPaw moved fast.
@@ -44,48 +44,48 @@ import { withBase } from 'vitepress'
   max-width: 640px;
   width: 100%;
   text-align: center;
-  border: 1px solid var(--hp-line);
-  border-radius: var(--hp-r-xl);
-  background:
-    radial-gradient(32rem 16rem at 50% -20%, rgba(255, 106, 0, .12), transparent 62%),
-    var(--hp-surface);
+  border: 1px solid var(--hp-line-strong);
+  border-radius: var(--hp-r);
+  background: var(--hp-paper-2);
   padding: 44px 28px 36px;
+  outline: 1px solid var(--hp-line);
+  outline-offset: 8px;
 }
 .nf-icon {
   display: inline-block;
-  opacity: .92;
-  filter: drop-shadow(0 8px 20px rgba(255, 106, 0, .22));
+  opacity: .95;
 }
 .nf-code {
-  margin: 14px 0 0;
-  font-family: var(--vp-font-family-mono);
-  font-size: .8rem;
+  margin: 16px 0 0;
+  font-family: var(--hp-font-mono);
+  font-size: .72rem;
   font-weight: 700;
   letter-spacing: .3em;
-  color: var(--hp-orange);
+  text-transform: uppercase;
+  color: var(--hp-orange-text);
 }
 .nf-title {
-  margin: 8px 0 10px;
+  margin: 10px 0 10px;
   font-size: clamp(1.5rem, 4vw, 1.9rem);
   font-weight: 800;
-  letter-spacing: -.025em;
-  color: var(--hp-text-hi);
+  letter-spacing: -.03em;
+  color: var(--hp-ink);
   border: none;
   padding: 0;
+  line-height: 1.15;
 }
-.nf-title::before {
+.nf-title::after {
   content: '';
   display: block;
   width: 44px;
   height: 3px;
-  border-radius: var(--hp-r-full);
-  margin: 0 auto 14px;
-  background: linear-gradient(90deg, var(--hp-orange), var(--hp-orange-soft) 70%, transparent);
+  margin: 16px auto 0;
+  background: var(--hp-orange);
 }
 .nf-sub {
-  margin: 0 auto;
+  margin: 16px auto 0;
   max-width: 460px;
-  color: var(--hp-text-mute);
+  color: var(--hp-ink-2);
   line-height: 1.7;
   font-size: .96rem;
 }
@@ -93,12 +93,12 @@ import { withBase } from 'vitepress'
 .nf-tip kbd {
   display: inline-block;
   padding: 1px 7px;
-  border: 1px solid var(--hp-line-2);
+  border: 1px solid var(--hp-line);
   border-bottom-width: 2px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, .05);
-  color: var(--hp-orange-soft);
-  font-family: var(--vp-font-family-mono);
+  border-radius: 3px;
+  background: var(--hp-paper-3);
+  color: var(--hp-ink-2);
+  font-family: var(--hp-font-mono);
   font-size: .82em;
 }
 .nf-actions {
@@ -111,50 +111,54 @@ import { withBase } from 'vitepress'
 .nf-btn {
   display: inline-flex;
   align-items: center;
-  padding: 11px 18px;
-  border: 1px solid var(--hp-line-2);
-  border-radius: var(--hp-r-full);
+  padding: 12px 18px;
+  border: 1px solid var(--hp-line-strong);
+  border-radius: 2px;
   text-decoration: none;
-  font-weight: 600;
-  font-size: .92rem;
+  font-family: var(--hp-font-mono);
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
   min-height: 44px;
-  background: rgba(255, 255, 255, .04);
-  color: #ededf2;
-  transition: border-color var(--hp-fast) var(--hp-ease), transform var(--hp-fast) var(--hp-ease), box-shadow var(--hp-fast) var(--hp-ease);
+  background: transparent;
+  color: var(--hp-ink);
+  transition: border-color var(--hp-fast) ease, background var(--hp-fast) ease, color var(--hp-fast) ease;
 }
 .nf-btn:hover {
-  border-color: var(--hp-line-brand);
-  color: var(--hp-orange-soft);
-  transform: translateY(-1px);
-  box-shadow: var(--hp-glow);
+  border-color: var(--hp-ink);
+  background: var(--hp-wash);
+  color: var(--hp-ink);
 }
 .nf-btn--brand {
-  background: linear-gradient(135deg, var(--hp-orange), var(--hp-orange-hi));
-  border-color: transparent;
-  color: #140700;
-  box-shadow: 0 6px 24px rgba(255, 106, 0, .35);
+  background: var(--hp-orange);
+  border-color: var(--hp-orange);
+  color: var(--hp-btn-ink);
 }
 .nf-btn--brand:hover {
-  color: #140700;
-  filter: brightness(1.05);
+  background: var(--hp-orange-deep);
+  border-color: var(--hp-orange-deep);
+  color: var(--hp-btn-ink);
 }
 .nf-tip {
-  margin: 22px auto 0;
+  margin: 24px auto 0;
   max-width: 460px;
-  color: var(--hp-text-faint);
+  color: var(--hp-ink-3);
   font-size: .86rem;
   line-height: 1.7;
-  border-top: 1px dashed var(--hp-line);
+  border-top: 1px solid var(--hp-line);
   padding-top: 18px;
 }
+.nf-tip strong { color: var(--hp-ink-2); }
 .nf-tip a {
-  color: var(--hp-orange-soft);
-  text-decoration-color: rgba(255, 178, 87, .4);
+  color: var(--hp-orange-text);
+  text-decoration: underline;
   text-underline-offset: 3px;
 }
+.nf-tip a:hover { color: var(--hp-orange-head); }
 @media (max-width: 640px) {
   .nf-wrap { padding: 28px 16px 56px; }
-  .nf-card { padding: 32px 18px 28px; }
+  .nf-card { padding: 32px 18px 28px; outline-offset: 5px; }
   .nf-btn { width: 100%; justify-content: center; }
 }
 </style>

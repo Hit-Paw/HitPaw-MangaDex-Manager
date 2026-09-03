@@ -7,8 +7,9 @@ export default defineConfig({
   lang: 'en-US',
   // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set to '/'
   base: '/HitPaw-MangaDex-Manager/',
-  // Brand is black + orange (AMOLED) - force dark, no toggle, no light-mode flash
-  appearance: 'force-dark',
+  // Brand supports both themes — light (paper + orange) & dark (AMOLED).
+  // `true` = follow system preference, manual toggle in the navbar, persisted.
+  appearance: true,
   sitemap: {
     // Include base in hostname — VitePress 1.6 does not auto-prefix base when hostname is apex
     hostname: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager'
@@ -120,9 +121,9 @@ export default defineConfig({
     ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/HitPaw-MangaDex-Manager/icon_32.png' }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/HitPaw-MangaDex-Manager/icon_256.png' }],
     ['link', { rel: 'manifest', href: '/HitPaw-MangaDex-Manager/manifest.webmanifest' }],
-    // Theme
-    ['meta', { name: 'theme-color', content: '#ff6a00', media: '(prefers-color-scheme: light)' }],
-    ['meta', { name: 'theme-color', content: '#0a0a0a', media: '(prefers-color-scheme: dark)' }],
+    // Theme — matches page background per color mode
+    ['meta', { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' }],
+    ['meta', { name: 'theme-color', content: '#000000', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'dark light' }],
     ['meta', { name: 'format-detection', content: 'telephone=no' }],
     // SEO — core
