@@ -1,13 +1,18 @@
 {
   "name": "hitpaw-mangadex-manager-docs",
   "private": true,
+  "type": "module",
   "version": "3.5.0",
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "vitepress": "^1.6.3"
+    "vitepress": "^1.6.4",
+    "vue": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
