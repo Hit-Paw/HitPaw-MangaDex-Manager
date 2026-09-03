@@ -72,28 +72,33 @@ features:
 
 > **Disclaimer:** HitPaw MangaDex Manager is not affiliated with or endorsed by MangaDex.
 
-## Preview
+<div class="featured-shot">
+  <img src="/preview-1.png" alt="HitPaw — Library Grid • 3276 titles • 5-column AMOLED grid" loading="eager" decoding="async" />
+  <div class="featured-caption"><span>Library Grid — 3276 titles</span> <small>5 cols • search • filter • Show All (N) • HitPaw orange</small></div>
+</div>
+
+## App Screenshots
 
 <div class="preview-grid">
 
   <div class="preview-card">
-    <img src="/preview-1.png" alt="Library Grid — 3276 titles" loading="lazy" decoding="async" />
-    <div class="preview-caption"><span>Library Grid</span> <small>5 cols • filter • Show All (N)</small></div>
+    <img src="/preview-1.png" alt="Library Grid — 3276 shown • 0 selected" loading="lazy" decoding="async" />
+    <div class="preview-caption"><span>Library</span> <small>3276 shown • filter • search</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="/preview-2.png" alt="Activity Log & Update Check" loading="lazy" decoding="async" />
-    <div class="preview-caption"><span>Activity Log</span> <small>HitPaw icon • update check</small></div>
+    <img src="/preview-2.png" alt="Activity Log — Found saved session, Up to date v3.4.6" loading="lazy" decoding="async" />
+    <div class="preview-caption"><span>Activity Log</span> <small>Session • update check</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="/preview-3.png" alt="Export — Output Folder & validated formats" loading="lazy" decoding="async" />
-    <div class="preview-caption"><span>Export</span> <small>CSV / JSON / MAL / AP / MB</small></div>
+    <img src="/preview-3.png" alt="Export — Output Folder & 5 formats CSV JSON MAL AP MB" loading="lazy" decoding="async" />
+    <div class="preview-caption"><span>Export</span> <small>CSV • JSON • MAL • AP • MB</small></div>
   </div>
 
   <div class="preview-card">
-    <img src="/preview-4.png" alt="Download — Paste URL & chapter queue" loading="lazy" decoding="async" />
-    <div class="preview-caption"><span>Download</span> <small>Queue • retry/backoff</small></div>
+    <img src="/preview-4.png" alt="Download — Paste MangaDex URL or UUID • Look Up • chapters" loading="lazy" decoding="async" />
+    <div class="preview-caption"><span>Download</span> <small>Paste URL • Look Up • queue</small></div>
   </div>
 
 </div>
