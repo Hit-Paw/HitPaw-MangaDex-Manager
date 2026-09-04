@@ -637,7 +637,11 @@ hr {
   background-color: var(--hp-paper-2);
   background-image: var(--vp-icon-copied);
 }
-.vp-doc div[class*='language-'] .copy.copied::before { content: none; }
+/* Kill the "Copied!" chip in EVERY state — the :hover.copied variant (0,5,1)
+   resurrects the 40px chip while the mouse rests on the just-clicked button,
+   mismatched against this 34px chip. Both variants must be overridden. */
+.vp-doc div[class*='language-'] .copy.copied::before,
+.vp-doc div[class*='language-'] .copy:hover.copied::before { content: none; }
 
 /* Code line numbers off, but keep highlight lines visible */
 .vp-doc div[class*='language-'] .line { color: inherit; }
