@@ -322,7 +322,10 @@ hero:
 import { onMounted } from 'vue'
 onMounted(() => {
   try {
-    // OS hint on CTA — non-blocking polish
+    // OS hint on CTA — non-blocking polish. Reads the banner's own original
+    // text each time rather than checking for a previously-appended "Detected"
+    // marker, since VitePress SPA navigation remounts this component with a
+    // fresh textContent every time — the old marker-based guard never fired.
     const ua = navigator.userAgent || ''
     const banner = document.querySelector('.cta-sub')
     if (banner) {
@@ -330,7 +333,7 @@ onMounted(() => {
       if (/Windows/.test(ua)) hint = ' • Detected Windows • zip with bundled DLLs'
       else if (/Mac/.test(ua)) hint = ' • Detected macOS • tar.gz for Intel & Apple Silicon'
       else if (/Linux/.test(ua)) hint = ' • Detected Linux • tar.gz + zlib1g'
-      if (hint && !banner.textContent.includes('Detected')) banner.textContent += hint
+      if (hint) banner.textContent = banner.textContent.split(' • Detected')[0] + hint
     }
   } catch {}
 })

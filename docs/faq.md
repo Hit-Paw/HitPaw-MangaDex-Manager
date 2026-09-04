@@ -82,8 +82,10 @@ Filter first (status/year/tag/search) → `Show All (N)` on filtered subset is i
 
 ## Still stuck?
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
-[![Bug Report](https://img.shields.io/badge/GitHub-Issues-181717)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml)
+<p class="hp-badge-row">
+  <a href="https://discord.gg/z6yYYpcYYc" target="_blank" rel="noreferrer" class="badge badge--brand">Discord — join server</a>
+  <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml" target="_blank" rel="noreferrer" class="badge">GitHub — report an issue</a>
+</p>
 
 ::: tip Edit this page
 Every docs page has **Edit this page on GitHub** — add your question via PR (see [Contributing](/contributing)).

@@ -77,7 +77,7 @@ cmake -S tests -B build_tests && ctest --test-dir build_tests --output-on-failur
 
 ## Community
 
-- [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
+- Questions → ask on [Discord](https://discord.gg/z6yYYpcYYc)
 - Be respectful — see [Code of Conduct](/code-of-conduct)
 - Security issues → private advisory — see [Security](/security)
 
