@@ -121,9 +121,9 @@ export default defineConfig({
     ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/HitPaw-MangaDex-Manager/icon_32.png' }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/HitPaw-MangaDex-Manager/icon_256.png' }],
     ['link', { rel: 'manifest', href: '/HitPaw-MangaDex-Manager/manifest.webmanifest' }],
-    // Theme — matches page background per color mode
-    ['meta', { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' }],
-    ['meta', { name: 'theme-color', content: '#000000', media: '(prefers-color-scheme: dark)' }],
+    // Theme — matches page background per color mode (Editorial Ink paper/charcoal)
+    ['meta', { name: 'theme-color', content: '#f6f2e9', media: '(prefers-color-scheme: light)' }],
+    ['meta', { name: 'theme-color', content: '#151310', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'dark light' }],
     ['meta', { name: 'format-detection', content: 'telephone=no' }],
     // SEO — core
