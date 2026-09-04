@@ -1,9 +1,3 @@
-/* ─────────────────────────────────────────────
-   HitPaw — Premium VitePress Theme
-   Brand: #ff6a00 → #ff8c1a on #000 AMOLED
-   ───────────────────────────────────────────── */
-
-/* Brand tokens */
 :root {
   --vp-c-brand-1: #ff6a00;
   --vp-c-brand-2: #e55e00;
@@ -33,7 +27,6 @@
   --vp-c-bg-soft: #111;
 }
 
-/* Global polish */
 html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 * { scrollbar-width: thin; scrollbar-color: rgba(255,106,0,0.35) transparent; }
 *::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -43,11 +36,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 :focus-visible { outline: 2px solid #ff6a00; outline-offset: 2px; border-radius: 4px; }
 :where(a, button):focus-visible { box-shadow: 0 0 0 4px rgba(255,106,0,0.18); }
 
-/* Smooth page enter — only when JS ready to avoid FOUC */
 html.js .VPContent { animation: fadeIn 0.45s ease both; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ── No-JS fallback: reveal everything if JS disabled or Observer unsupported ── */
 html:not(.js) .VPFeatures .item,
 html:not(.js) .stat-card,
 html:not(.js) .why-card,
@@ -62,7 +53,6 @@ html:not(.js) .vp-doc table,
 html:not(.js) .vp-doc div[class*='language-'],
 html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 
-/* Nav */
 .VPNavBar { backdrop-filter: saturate(1.2) blur(12px); }
 .VPNavBar .container { align-items: center; }
 .VPNavBar .container .title { flex: 0 0 auto; }
@@ -75,7 +65,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .VPSidebarItem.is-active > .item { animation: sidebarPulse 0.4s ease; }
 @keyframes sidebarPulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-/* ── HERO — fixed layout, no cutoff, clean glow ── */
 .VPHero { position: relative; overflow: visible; padding-top: 32px; padding-bottom: 32px; }
 .VPHero::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 420px;
@@ -97,8 +86,7 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
   transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease;
   object-fit: contain;
 }
-/* VitePress positions the home-image for its desktop layout. Reset those
-   offsets because this theme uses a normal flex-based hero at every width. */
+
 .VPHero .image-src { inset: auto !important; }
 .VPHero .image-src:hover { transform: scale(1.03) rotate(1deg); filter: drop-shadow(0 18px 36px rgba(0,0,0,0.32)) drop-shadow(0 4px 16px rgba(255,106,0,0.22)); }
 .VPHero .name {
@@ -117,7 +105,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .VPHero .VPButton.alt { backdrop-filter: blur(8px); }
 .VPHero .VPButton.alt:hover { transform: translateY(-2px); border-color: rgba(255,106,0,0.32); }
 
-/* Buttons — white CTA */
 .cta-banner { margin: 28px 0; padding: 22px 20px; border-radius: var(--hitpaw-radius); background: linear-gradient(135deg,#ff6a00 0%,#ff8c1a 100%); color: white; text-align: center; position: relative; overflow: hidden; box-shadow: var(--hitpaw-shadow); }
 .cta-banner::before { content:""; position:absolute; inset:0; background: radial-gradient(520px 200px at 20% 0%, rgba(255,255,255,0.16), transparent 60%), radial-gradient(400px 200px at 90% 100%, rgba(0,0,0,0.12), transparent 60%); pointer-events:none; }
 .cta-banner > * { position: relative; z-index: 1; }
@@ -127,7 +114,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .cta-btn:hover { transform: scale(1.04) translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,0.22); color: #a84300; }
 .cta-btn:active { transform: scale(0.98); }
 
-/* ── FEATURES — glass premium ── */
 .VPFeatures { padding-top: 10px; }
 .VPFeatures .item { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .VPFeatures .item.in-view { opacity: 1; transform: translateY(0); }
@@ -155,7 +141,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .VPFeature:hover .icon img { animation: iconPulse 0.6s ease; }
 @keyframes iconPulse { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
 
-/* ── STATS BAR — inline glass ── */
 .stats-bar { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 14px; margin: 28px 0; }
 .stat-card {
   background: linear-gradient(135deg, rgba(255,106,0,0.08), rgba(255,140,26,0.04));
@@ -174,7 +159,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .stat-number--small { font-size: clamp(1.05rem, 2.2vw, 1.35rem); }
 .stat-label { font-size: 0.84rem; opacity: 0.72; margin-top: 4px; line-height: 1.4; }
 
-/* ── FEATURED SHOT — large hero preview (WebP + PNG fallback via <picture>) ── */
 .featured-shot { margin: 20px 0 8px; border-radius: 16px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,106,0,0.18); box-shadow: 0 14px 36px rgba(0,0,0,0.22), 0 4px 14px rgba(0,0,0,0.12); content-visibility: auto; contain-intrinsic-size: 600px; }
 .featured-shot picture { display: block; background: #0a0a0a; }
 .featured-shot img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; cursor: zoom-in; }
@@ -184,7 +168,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .featured-caption small { font-weight: 500; opacity: 0.62; font-size: 0.78rem; }
 @media (max-width: 640px) { .featured-shot img { aspect-ratio: 16 / 11; } }
 
-/* ── PREVIEW GRID — premium cards (WebP via <picture> + fallback) ── */
 .preview-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 14px; margin: 18px 0; }
 .preview-grid picture, .preview-grid .preview-card { display: block; border-radius: 14px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.18); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease, border-color 0.3s ease, filter 0.3s ease; contain: layout paint; }
 .preview-grid .preview-card:hover { transform: translateY(-3px) scale(1.015); box-shadow: 0 18px 40px rgba(0,0,0,0.26); border-color: rgba(255,106,0,0.28); }
@@ -196,7 +179,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .preview-caption small { font-weight: 500; opacity: 0.62; font-size: 0.78rem; }
 .lightbox-hint { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; opacity: 0.58; font-weight: 500; }
 
-/* ── LIGHTBOX — backdrop blur + a11y — always centered ── */
 .lightbox {
   position: fixed; inset: 0;
   display: grid; place-items: center; align-content: center;
@@ -212,7 +194,7 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
   max-width: min(92vw, 1280px);
   max-height: min(86vh, 900px);
   width: auto; height: auto;
-  /* Reset VitePress image offsets so the preview stays centered in the overlay. */
+  
   position: static !important;
   inset: auto !important;
   justify-self: center;
@@ -233,7 +215,6 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .lightbox-close:hover { background: rgba(255,255,255,0.16); transform: scale(1.06); border-color: rgba(255,255,255,0.22); }
 .lightbox-close:active { transform: scale(0.96); }
 
-/* ── WHY + QUICK — glass cards ── */
 .why-grid, .quick-grid { display: grid; gap: 16px; margin: 22px 0; }
 .why-grid { grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); }
 .quick-grid { grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); }
@@ -255,13 +236,11 @@ html:not(.js) .vp-doc pre { opacity: 1 !important; transform: none !important; }
 .why-card .icon-wrap img, .quick-card .icon-wrap img { width: 22px; height: 22px; }
 .why-card strong, .quick-card strong { letter-spacing: -0.01em; }
 
-/* ── CUSTOM CONTAINERS inside docs ── */
 .vp-doc .custom-block { border-radius: 12px; }
 .vp-doc .custom-block.tip { border-color: rgba(255,106,0,0.22); }
 .vp-doc .custom-block.tip .custom-block-title { color: #cc5300; }
 .dark .vp-doc .custom-block.tip { background: rgba(255,106,0,0.08); }
 
-/* Badges / pills — now support <a> as badge */
 .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; align-items: center; }
 .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; letter-spacing: -0.01em; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.88); backdrop-filter: blur(8px); text-decoration: none !important; min-height: 28px; transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease; }
 a.badge:hover { transform: translateY(-1px); text-decoration: none; }
@@ -272,21 +251,19 @@ a.badge--accent:hover { box-shadow: 0 6px 16px rgba(255,106,0,0.28); transform: 
 .badge--brand:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(88,101,242,0.3); color: white; }
 .badge--muted { opacity: 0.78; }
 
-/* Feature table pro — responsive wrapper */
 .vp-doc table { border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); width: 100%; border-collapse: separate; border-spacing: 0; }
 .dark .vp-doc table { border-color: rgba(255,255,255,0.08); }
 .vp-doc th { background: rgba(255,106,0,0.06); font-weight: 750; letter-spacing: -0.01em; text-align: left; }
 .vp-doc td, .vp-doc th { padding: 10px 12px; font-size: 0.90rem; line-height: 1.45; }
 .vp-doc tr:nth-child(even) { background: rgba(0,0,0,0.015); }
 .dark .vp-doc tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-/* Make markdown tables horizontally scroll on small screens instead of breaking layout */
+
 .vp-doc table { display: table; max-width: 100%; }
 @media (max-width: 640px) {
   .vp-doc div:has(> table) { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px -16px; padding: 0 16px; }
   .vp-doc table { min-width: 520px; }
 }
 
-/* ── VS Table — premium comparison (replaces markdown table) ── */
 .vs-table { width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,106,0,0.16); box-shadow: 0 10px 28px rgba(0,0,0,0.22); margin: 18px 0; background: #0f0f0f; }
 .vs-row { display: grid; grid-template-columns: 1.2fr 1.3fr 0.9fr 0.65fr; gap: 0; }
 .vs-header { background: linear-gradient(135deg, rgba(255,106,0,0.22), rgba(255,140,26,0.14)); border-bottom: 1px solid rgba(255,106,0,0.22); }
@@ -302,12 +279,12 @@ a.badge--accent:hover { box-shadow: 0 6px 16px rgba(255,106,0,0.28); transform: 
 .vs-hitpaw code { background: rgba(255,106,0,0.16) !important; border-color: rgba(255,106,0,0.22) !important; color: #ff8c1a !important; font-size: 0.82rem; padding: 2px 6px; border-radius: 6px; }
 .vs-manual, .vs-bookmark { color: #b8b8b8; }
 .vs-bookmark { color: #888; justify-content: center; }
-/* Tablet: horizontal scroll, tighter */
+
 @media (max-width: 860px) {
   .vs-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .vs-row { min-width: 560px; }
 }
-/* Mobile: card view — no horizontal scroll, Bookmark not far */
+
 @media (max-width: 640px) {
   .vs-table { border: none; background: transparent; box-shadow: none; overflow: visible; border-radius: 0; }
   .vs-header { display: none; }
@@ -322,7 +299,6 @@ a.badge--accent:hover { box-shadow: 0 6px 16px rgba(255,106,0,0.28); transform: 
   .vs-bookmark::before { color: #888; }
 }
 
-/* ── Doc page reveal (only when JS) ── */
 html.js .vp-doc h1, html.js .vp-doc h2, html.js .vp-doc h3 { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
 html.js .vp-doc h1.in-view, html.js .vp-doc h2.in-view, html.js .vp-doc h3.in-view { opacity: 1; transform: translateY(0); }
 html.js .vp-doc p, html.js .vp-doc li, html.js .vp-doc blockquote { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
@@ -332,16 +308,13 @@ html.js .vp-doc table.in-view { opacity: 1; transform: translateY(0); }
 html.js .vp-doc div[class*='language-'], html.js .vp-doc pre { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
 html.js .vp-doc div[class*='language-'].in-view, html.js .vp-doc pre.in-view { opacity: 1; transform: translateY(0); }
 
-/* Inline code */
 .vp-doc :not(pre) > code { background: rgba(255,106,0,0.08); border: 1px solid rgba(255,106,0,0.14); color: #b84a00; padding: 2px 6px; border-radius: 6px; font-weight: 600; }
 .dark .vp-doc :not(pre) > code { background: rgba(255,106,0,0.14); border-color: rgba(255,106,0,0.18); color: #ff9a4a; }
 
-/* Hero stats in docs (reuse) */
 .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 14px; margin: 18px 0; }
 .compare-grid > * { border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 16px; background: rgba(255,255,255,0.72); }
 .dark .compare-grid > * { background: rgba(18,18,18,0.9); border-color: rgba(255,255,255,0.08); }
 
-/* Responsive hero — improved stacking + touch targets */
 @media (max-width: 960px) {
   .VPHero .container { flex-direction: column; align-items: stretch; gap: 20px; text-align: left; }
   .VPHero .main { flex-basis: auto; }
@@ -371,38 +344,34 @@ html.js .vp-doc div[class*='language-'].in-view, html.js .vp-doc pre.in-view { o
   .lightbox img { max-width: 100%; max-height: 80vh; border-radius: 10px; }
   .lightbox-caption { bottom: 12px; font-size: 0.8rem; max-width: 94vw; }
   .lightbox-close { top: 10px; right: 10px; min-width: 44px; min-height: 44px; }
-  /* Ensure badge row is scrolled if overflow */
+  
   .badge-row { gap: 6px; }
   .vp-doc h1 { font-size: 1.75rem; }
   .vp-doc h2 { font-size: 1.35rem; }
 }
-/* Extra small: 320px */
+
 @media (max-width: 380px) {
   .stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
   .stat-card { padding: 14px 10px; }
   .badge { font-size: 0.78rem; padding: 5px 8px; }
 }
 
-/* Performance polish — content-visibility for below-fold + font smoothing */
 html { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 img, picture { content-visibility: auto; }
 .VPFeatures, .stats-bar, .why-grid, .quick-grid, .preview-grid { content-visibility: auto; contain-intrinsic-size: auto 500px; }
-/* Ensure hero LCP is eager (no content-visibility) */
+
 .VPHero img, .featured-shot img { content-visibility: visible; }
 
-/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .VPHero .name { animation: none !important; }
 }
 
-/* High contrast / focus polish for a11y */
 @media (prefers-contrast: more) {
   .VPFeature, .why-card, .stat-card { border-width: 2px; }
   :focus-visible { outline-width: 3px; }
 }
 
-/* Print */
 @media print {
   .VPNav, .VPSidebar, .cta-banner, .lightbox, .VPFeatures .item { display: none !important; }
   .VPHero .image-src { filter: none !important; }

@@ -5,15 +5,12 @@ export default defineConfig({
   titleTemplate: ':title — HitPaw MangaDex Manager',
   description: 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++. Fast, AMOLED, 100% local.',
   lang: 'en-US',
-  // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set to '/'
   base: '/HitPaw-MangaDex-Manager/',
   // Brand is black + orange (AMOLED) - force dark, no toggle, no light-mode flash
   appearance: 'force-dark',
   sitemap: {
-    // Include base in hostname — VitePress 1.6 does not auto-prefix base when hostname is apex
     hostname: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager'
   },
-  // Robust sitemap base fix — VitePress 1.6 project-page quirk (polls until complete)
   async buildEnd(siteConfig) {
     const { readFile, writeFile, access } = await import('node:fs/promises')
     const { join } = await import('node:path')
@@ -74,18 +71,15 @@ export default defineConfig({
     headers: { level: [2, 3] }
   },
   head: [
-    // Favicon — base-prefixed for GitHub Pages project site
     ['link', { rel: 'icon', type: 'image/x-icon', href: '/HitPaw-MangaDex-Manager/hitpaw.ico' }],
     ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/HitPaw-MangaDex-Manager/icon_16.png' }],
     ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/HitPaw-MangaDex-Manager/icon_32.png' }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/HitPaw-MangaDex-Manager/icon_256.png' }],
     ['link', { rel: 'manifest', href: '/HitPaw-MangaDex-Manager/manifest.webmanifest' }],
-    // Theme
     ['meta', { name: 'theme-color', content: '#ff6a00', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#0a0a0a', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'dark light' }],
     ['meta', { name: 'format-detection', content: 'telephone=no' }],
-    // SEO — core
     ['meta', { name: 'author', content: 'Hit-Paw' }],
     ['meta', { name: 'keywords', content: 'MangaDex, manga manager, manga library, MAL, AniList, Kitsu, MangaBaka, Anime-Planet, Qt6, HitPaw' }],
     ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large' }],
@@ -100,7 +94,6 @@ export default defineConfig({
     ['meta', { property: 'og:image:alt', content: 'HitPaw MangaDex Manager — Desktop app preview' }],
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
-    // Twitter
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:site', content: '@HitPaw' }],
     ['meta', { name: 'twitter:creator', content: '@HitPaw' }],
@@ -108,7 +101,6 @@ export default defineConfig({
     ['meta', { name: 'twitter:description', content: 'Browse, filter, and export your MangaDex library. Built with Qt6/C++ — dark AMOLED, offline exports.' }],
     ['meta', { name: 'twitter:image', content: 'https://hit-paw.github.io/HitPaw-MangaDex-Manager/og-image.png' }],
     ['meta', { name: 'twitter:image:alt', content: 'HitPaw MangaDex Manager preview' }],
-    // Perf — critical preloads
     ['link', { rel: 'preload', as: 'image', href: '/HitPaw-MangaDex-Manager/preview-1.webp', type: 'image/webp', fetchpriority: 'high' }],
     ['link', { rel: 'preload', as: 'image', href: '/HitPaw-MangaDex-Manager/icon_256.png', type: 'image/png' }],
     ['link', { rel: 'preconnect', href: 'https://github.com' }],
@@ -116,7 +108,6 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://api.mangadex.org' }],
     ['link', { rel: 'dns-prefetch', href: 'https://api.mangadex.org' }],
     ['link', { rel: 'dns-prefetch', href: 'https://uploads.mangadex.org' }],
-    // JSON-LD SoftwareApplication + WebSite + Organization — primary graph
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
       '@graph': [
@@ -173,7 +164,6 @@ export default defineConfig({
     const canonical = pageData.relativePath === 'index.md' ? `${baseUrl}/` : url
     const title = (pageData.frontmatter as any)?.title || pageData.title || 'HitPaw MangaDex Manager'
     const desc = (pageData.frontmatter as any)?.description || (pageData as any).description || 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.'
-    // Breadcrumb JSON-LD per page
     const parts = clean.replace(/\.html$/, '').split('/').filter(Boolean)
     const breadcrumb = parts.length ? {
       '@context': 'https://schema.org',
@@ -258,7 +248,6 @@ export default defineConfig({
     }
   },
   vite: {
-    // Perf: keep VitePress defaults + small tweaks — avoid aggressive manualChunks that breaks local search (mark.js)
     build: {
       chunkSizeWarningLimit: 800
     }

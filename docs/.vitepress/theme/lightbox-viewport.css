@@ -1,10 +1,8 @@
-/* Lightbox viewport — centered, max-size, mobile-safe. Overrides custom.css for fixed viewport. */
 html.js .VPContent {
   animation: hitpawFadeIn 0.45s ease both !important;
 }
 @keyframes hitpawFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* Use flex centering relative to viewport — even when .VPContent has transforms */
 .lightbox {
   position: fixed !important;
   inset: 0 !important;
