@@ -1,7 +1,4 @@
 #pragma once
-// Pal — HitPaw palette extracted from main.cpp:98 for modularization.
-// Single source of truth for colors; main.cpp should #include "pal.h" instead
-// of duplicating the namespace. Keeps UI theming consistent across modules.
 
 namespace Pal {
     constexpr auto BG       = "#0a0a0c";   // outer shell — near-black

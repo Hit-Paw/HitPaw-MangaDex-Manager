@@ -1,7 +1,4 @@
 #pragma once
-// export.h — Export namespace extracted from main.cpp:277
-// Depends on domain.h for MangaEntry and status maps.
-// Provides CSV / JSON / MAL XML / MangaBaka JSON / Anime-Planet gz.
 
 #include <QFile>
 #include <QTextStream>

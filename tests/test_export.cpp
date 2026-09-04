@@ -10,9 +10,6 @@ private slots:
 
 void TestExport::csv_header_contains_expected_columns()
 {
-    // Minimal smoke test — export.h is header-only, validates that
-    // generated artifacts contain required columns without hardcoding secrets.
-    // This test intentionally does not touch QSettings / network.
     const QString header = QStringLiteral("title,status,year,tags");
     QVERIFY(header.contains("title"));
     QVERIFY(header.contains("status"));
