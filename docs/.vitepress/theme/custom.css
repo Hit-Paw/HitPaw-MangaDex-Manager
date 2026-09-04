@@ -1003,13 +1003,25 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   text-decoration: none;
   transition: border-color var(--hp-fast), color var(--hp-fast), background var(--hp-fast);
 }
+/* Badge rows — e.g. faq "Still stuck?" call-to-action pair */
+.hp-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
 .vp-doc a.badge:hover,
 a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); background: var(--hp-wash); }
+/* Modifiers need the .vp-doc-prefixed twin too — inside prose, `.vp-doc a.badge`
+   (0,2,0) would out-rank a bare `.badge--brand` (0,1,0) and flatten the color */
+.vp-doc a.badge--accent,
 .badge--accent {
   color: var(--hp-orange-text);
   border-color: color-mix(in srgb, var(--hp-orange) 50%, transparent);
 }
+.vp-doc a.badge--brand,
 .badge--brand { color: var(--hp-orange-text); }
+.vp-doc a.badge--brand:hover,
 .badge--brand:hover { border-color: var(--hp-orange); }
 
 /* Stats — ruled stat strip */
