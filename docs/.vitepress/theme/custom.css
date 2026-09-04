@@ -1,13 +1,5 @@
-/* ============================================================
-   HitPaw MangaDex Manager — v4 "EDITORIAL INK"
-   Ink-on-paper magazine design: cream paper, warm ink, hairline
-   rules, numbered sections, mono labels. Orange = purposeful.
-   Flat surfaces. No glass. No blur. No orbs. Subtle motion only.
-   ============================================================ */
-
-/* ---------- 1. TOKENS ---------- */
 :root {
-  /* Paper & ink (light) */
+  
   --hp-paper: #f6f2e9;
   --hp-paper-2: #fcfaf4;
   --hp-paper-3: #eee8da;
@@ -19,7 +11,6 @@
   --hp-wash: rgba(33, 28, 21, .045);
   --hp-shadow: rgba(33, 28, 21, .08);
 
-  /* Brand */
   --hp-orange: #ff6a00;
   --hp-orange-deep: #e85f00;
   --hp-orange-text: #a54100;
@@ -28,21 +19,17 @@
   --hp-plate-accent: #ff8a3d;
   --hp-btn-ink: #1c0d00;
 
-  /* Type */
   --hp-font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --hp-font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, 'Liberation Mono', monospace;
 
-  /* Geometry */
   --hp-r: 3px;
   --hp-r-lg: 4px;
 
-  /* Motion */
   --hp-fast: .15s ease;
   --hp-med: .2s ease;
 
   color-scheme: light;
 
-  /* ---- VitePress variable mapping ---- */
   --vp-c-bg: var(--hp-paper);
   --vp-c-bg-soft: var(--hp-paper-3);
   --vp-c-bg-alt: var(--hp-paper-3);
@@ -63,7 +50,6 @@
   --vp-sidebar-bg-color: transparent;
   --vp-font-family-base: var(--hp-font-display);
 
-  /* Buttons */
   --vp-button-brand-bg: var(--hp-orange);
   --vp-button-brand-text: var(--hp-btn-ink);
   --vp-button-brand-hover-bg: var(--hp-orange-deep);
@@ -77,7 +63,6 @@
   --vp-button-alt-border: var(--hp-line-strong);
   --vp-button-alt-hover-border: var(--hp-ink);
 
-  /* Code */
   --vp-code-block-bg: var(--hp-paper-3);
   --vp-code-tab-bg: var(--hp-paper-3);
   --vp-code-tab-divider: var(--hp-line);
@@ -93,14 +78,10 @@
   --vp-code-copy-code-border-color: var(--hp-line);
   --vp-code-copy-code-hover-border-color: var(--hp-line-strong);
   --vp-code-copy-code-active-text: var(--hp-orange-text);
-  /* Copy-button glyphs — VitePress hardcodes mid-gray strokes; re-drawn here
-     in the Editorial Ink palette (light: warm ink / copied: deep orange).
-     These are background-image data URIs: never touch them with a CSS
-     `background:` shorthand, which would erase the glyph. */
+  
   --vp-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%237d7462' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E");
   --vp-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23a54100' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' viewBox='0 0 24 24'%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
 
-  /* Custom containers */
   --vp-custom-block-tip-bg: var(--hp-accent-wash);
   --vp-custom-block-tip-text: var(--hp-ink);
   --vp-custom-block-tip-border: transparent;
@@ -122,7 +103,6 @@
   --vp-custom-block-details-border: transparent;
   --vp-custom-block-details-code-bg: var(--hp-paper-3);
 
-  /* Local search */
   --vp-local-search-bg: var(--hp-paper-2);
   --vp-local-search-fg: var(--hp-ink);
   --vp-local-search-muted: var(--hp-ink-3);
@@ -133,7 +113,7 @@
 }
 
 html.dark {
-  /* Midnight ink — warm charcoal, paper-toned text */
+  
   --hp-paper: #151310;
   --hp-paper-2: #1c1915;
   --hp-paper-3: #262119;
@@ -176,12 +156,10 @@ html.dark {
   --vp-code-color: var(--hp-orange-text);
   --vp-code-bg: var(--hp-paper-3);
 
-  /* Dark copy-button glyphs — paper-toned ink / bright orange for copied */
   --vp-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23b0a794' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E");
   --vp-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23ffa257' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' viewBox='0 0 24 24'%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
 }
 
-/* ---------- 2. BASE ---------- */
 * { min-width: 0; }
 
 html { scroll-behavior: smooth; }
@@ -207,7 +185,6 @@ body {
   border-radius: 2px;
 }
 
-/* Headings — tight geometric display */
 .VPContent, .VPDoc, .VPHome,
 .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6 {
   font-family: var(--hp-font-display);
@@ -218,7 +195,6 @@ body {
   letter-spacing: -.03em;
 }
 
-/* Links — editorial: orange text, restrained underline */
 .vp-doc a {
   color: var(--hp-orange-text);
   text-decoration: underline;
@@ -238,7 +214,6 @@ body {
 }
 .vp-doc a.header-anchor:hover { color: var(--hp-orange-text); }
 
-/* kbd — print keycap */
 kbd {
   display: inline-block;
   padding: 2px 7px;
@@ -258,16 +233,10 @@ hr {
   margin: 40px 0;
 }
 
-/* ---------- 3. NAVBAR — flat paper bar with hairline ---------- */
 .VPNavBar {
   background: var(--hp-paper) !important;
 }
-/* Continuous bottom hairline — painted as a navbar-level overlay.
-   A plain border-bottom gets covered mid-bar by the opaque navbar
-   .content-body background, which visually breaks the rule into
-   disconnected segments (title column | gap | right edge). The ::after
-   overlay stacks above all navbar children, so the rule stays unbroken
-   edge-to-edge and the sidebar rule plugs into it cleanly. */
+
 .VPNavBar::after {
   content: '';
   position: absolute;
@@ -282,15 +251,6 @@ hr {
 .VPNavBar .wrapper { background: transparent; }
 .VPNavBar .divider, .VPNavBar .curtain { display: none; }
 
-/* Unified masthead geometry — the navbar must occupy the exact same
-   position on every page (home, docs, 404). VitePress's has-sidebar
-   variant stretches the navbar full-bleed (wrapper padding 0, container
-   max-width 100%) and re-anchors the title over the sidebar column, so
-   on docs pages the title/search/menu land at different x positions
-   than on the home page (the "stretched" masthead). Force docs pages
-   into the same centered container the home page uses. The .Layout
-   prefix out-ranks VitePress's scoped [data-v] attribute specificity,
-   so one >=960 block also beats their >=1440 padding rules. */
 @media (min-width: 960px) {
   .Layout .VPNavBar.has-sidebar .wrapper { padding: 0 32px; }
   .Layout .VPNavBar.has-sidebar .container {
@@ -331,8 +291,7 @@ hr {
   color: var(--hp-ink);
   border-bottom-color: transparent;
 }
-/* Tab indicator — 2px orange bar sitting flush ON the navbar hairline
-   (link box protrudes 1px below the navbar, hence bottom: 1px) */
+
 .VPNavBarMenuLink.active::after {
   content: '';
   position: absolute;
@@ -343,7 +302,6 @@ hr {
   background: var(--hp-orange);
 }
 
-/* Search trigger — mono field */
 .VPNavBarSearch button {
   height: 40px;
   border: 1px solid var(--hp-line);
@@ -359,7 +317,6 @@ hr {
 }
 .VPNavBarSearch button:hover { border-color: var(--hp-line-strong); color: var(--hp-ink-2); }
 
-/* Appearance toggle — square hairline */
 .VPNavBarAppearance button {
   border: 1px solid var(--hp-line);
   border-radius: 3px;
@@ -369,7 +326,6 @@ hr {
 }
 .VPNavBarAppearance button:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); }
 
-/* Mobile menu screen */
 .VPNavScreen {
   background: var(--hp-paper);
   border-bottom: 1px solid var(--hp-line);
@@ -390,14 +346,11 @@ hr {
   color: var(--hp-ink-3);
 }
 
-/* Keep the 768–959 band on the hamburger (matches VitePress default,
-   forced explicitly for safety) */
 @media (min-width: 768px) and (max-width: 959px) {
   .VPNavBarMenu, .VPNavBarAppearance { display: none; }
   .VPNavBarHamburger { display: flex; }
 }
 
-/* ---------- 4. SIDEBAR — ruled index column ---------- */
 .VPSidebar {
   background: var(--hp-paper);
   border-right: 1px solid var(--hp-line);
@@ -411,7 +364,6 @@ hr {
 .VPSidebar .group { padding-top: 18px; }
 .VPSidebar .group + .group { border-top: 1px solid var(--hp-line); }
 
-/* Section labels — mono index headers */
 .VPSidebar .VPSidebarItem.level-0 > .item > .text {
   font-family: var(--hp-font-mono);
   font-size: 11px;
@@ -422,7 +374,6 @@ hr {
 }
 .VPSidebar .VPSidebarItem.level-0 > .item > .caret { color: var(--hp-ink-3); }
 
-/* Child items — ruled list */
 .VPSidebar .group .items {
   border-left: 1px solid var(--hp-line);
   margin-left: 8px;
@@ -450,14 +401,11 @@ hr {
 .VPSidebar .VPSidebarItem.level-1 .item:hover .text { color: var(--hp-ink); }
 .VPSidebar .caret { color: var(--hp-ink-3); }
 
-/* ---------- 5. DOC LAYOUT ---------- */
 .VPDoc .container { max-width: 1280px; }
 .VPDoc .content-container { padding-top: 40px; }
 
-/* Page shell backgrounds stay paper */
 .VPContent, .VPPage, .VPDoc { background: transparent; }
 
-/* ---------- 6. DOC PROSE — the editorial article ---------- */
 .vp-doc { color: var(--hp-ink); }
 
 .vp-doc h1 {
@@ -469,7 +417,6 @@ hr {
   border-bottom: 1px solid var(--hp-line);
 }
 
-/* Section openers: hairline rule above, generous rhythm */
 .vp-doc h2 {
   font-size: clamp(1.45rem, 2.6vw, 1.7rem);
   font-weight: 800;
@@ -494,7 +441,6 @@ hr {
 .vp-doc li::marker { color: var(--hp-ink-3); }
 .vp-doc ul li::marker { color: var(--hp-orange-text); }
 
-/* First paragraph after H1 — standfirst (slightly larger, muted) */
 .vp-doc h1 + p {
   font-size: 1.06rem;
   color: var(--hp-ink-2);
@@ -502,11 +448,6 @@ hr {
   margin-top: 20px;
 }
 
-/* ---------- Tables: ruled editorial columns ----------
-   display:block + overflow-x keeps a too-wide table INSIDE the text
-   column (scrolls in place) instead of protruding under the right TOC.
-   Code chips inside cells may wrap (overflow-wrap) so long filenames
-   don't force the table wider than the column at common widths. */
 .vp-doc table {
   width: 100%;
   border-collapse: collapse;
@@ -529,10 +470,7 @@ hr {
   background: transparent;
   white-space: nowrap;
 }
-/* Width hint: the trailing column (usually prose notes) yields its spare
-   space to the middle columns, so long filename chips get room to wrap at
-   their natural hyphen breaks instead of mid-token. Min-content floors it,
-   so the column can never actually starve. */
+
 .vp-doc table th:last-child { width: 16%; }
 .vp-doc table td {
   padding: 12px;
@@ -544,10 +482,7 @@ hr {
 .vp-doc table tr { background: transparent; }
 .vp-doc table tr:hover td { background: var(--hp-wash); }
 .vp-doc table th code, .vp-doc table td code {
-  /* Atomic unit: fits → whole chip on one line (no mid-token orphan);
-     too long → the BOX wraps to its own line and only then breaks inside
-     itself at natural points (hyphens). Auto table-layout can no longer
-     create "…ex / e" splits. */
+  
   display: inline-block;
   max-width: 24ch;
   white-space: normal;
@@ -555,7 +490,6 @@ hr {
   font-size: 11.5px;
 }
 
-/* ---------- Blockquote: pull-note with orange spine ---------- */
 .vp-doc blockquote {
   margin: 22px 0;
   padding: 14px 20px;
@@ -568,7 +502,6 @@ hr {
 .vp-doc blockquote p { margin: 6px 0; }
 .vp-doc blockquote strong { color: var(--hp-ink); }
 
-/* ---------- Inline code — quiet chip ---------- */
 .vp-doc :not(pre, h1, h2, h3, h4, h5, h6) > code {
   font-family: var(--hp-font-mono);
   font-size: .855em;
@@ -581,7 +514,6 @@ hr {
   -webkit-box-decoration-break: clone;
 }
 
-/* ---------- Code blocks: flat ruled panels ---------- */
 .vp-doc div[class*='language-'] {
   margin: 22px 0;
   border: 1px solid var(--hp-line);
@@ -606,12 +538,7 @@ hr {
   top: 8px;
   right: 12px;
 }
-/* Copy button — bordered ink chip. The glyph is painted by VitePress via
-   background-image (see --vp-icon-* tokens): only longhand background-*
-   properties may be used here, a `background:` shorthand erases the icon
-   and leaves an empty box. The VitePress "Copied!" ::before chip is killed
-   — it is sized for the stock 40px button and renders detached from this
-   34px chip; the orange border + swapped glyph is feedback enough. */
+
 .vp-doc div[class*='language-'] .copy {
   width: 34px;
   height: 34px;
@@ -637,16 +564,12 @@ hr {
   background-color: var(--hp-paper-2);
   background-image: var(--vp-icon-copied);
 }
-/* Kill the "Copied!" chip in EVERY state — the :hover.copied variant (0,5,1)
-   resurrects the 40px chip while the mouse rests on the just-clicked button,
-   mismatched against this 34px chip. Both variants must be overridden. */
+
 .vp-doc div[class*='language-'] .copy.copied::before,
 .vp-doc div[class*='language-'] .copy:hover.copied::before { content: none; }
 
-/* Code line numbers off, but keep highlight lines visible */
 .vp-doc div[class*='language-'] .line { color: inherit; }
 
-/* ---------- Code groups: mono tabs ---------- */
 .vp-code-group .tabs {
   display: flex;
   gap: 2px;
@@ -679,7 +602,6 @@ hr {
 .vp-code-group .tabs::after { display: none; }
 .vp-code-group div[class*='language-'] { margin-top: 0; border-top: none; border-radius: 0 0 var(--hp-r) var(--hp-r); }
 
-/* ---------- Custom containers: flat, spine-labeled ---------- */
 .vp-doc .custom-block {
   border: 1px solid var(--hp-line);
   border-left: 3px solid var(--hp-ink-3);
@@ -714,7 +636,6 @@ hr {
 html.dark .vp-doc .custom-block.warning .custom-block-title { color: #e0a63a; }
 html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 
-/* ---------- Details: ruled disclosure rows ---------- */
 .vp-doc details,
 .faq-strip details {
   border-top: 1px solid var(--hp-line);
@@ -763,7 +684,7 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 }
 .vp-doc details { border-bottom: 1px solid var(--hp-line); }
 .vp-doc details[open] { padding-bottom: 4px; }
-/* custom-block details (::: details) keeps its tint */
+
 .vp-doc .custom-block.details {
   border-left: 3px solid var(--hp-ink-3);
   border-radius: 0 var(--hp-r) var(--hp-r) 0;
@@ -773,7 +694,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 .vp-doc .custom-block.details summary { padding: 6px 0; }
 .vp-doc .custom-block.details { border-bottom: 1px solid var(--hp-line); }
 
-/* VitePress <Badge> — flat mono tag */
 .vp-doc .VPBadge,
 .vp-badge {
   display: inline-block;
@@ -795,7 +715,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   border-color: color-mix(in srgb, var(--hp-orange) 45%, transparent);
 }
 
-/* ---------- TOC (aside) ---------- */
 .VPDocAsideOutline .outline-title {
   font-family: var(--hp-font-mono);
   font-size: 11px;
@@ -822,7 +741,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 
 .vp-doc .doc-meta, .VPDocAside .outline-actions { display: none; }
 
-/* Last updated — mono colophon */
 .VPDocFooter .last-updated {
   font-family: var(--hp-font-mono);
   font-size: 11.5px;
@@ -836,7 +754,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 }
 .VPDocFooter .edit-link a:hover { color: var(--hp-orange-text); }
 
-/* ---------- Pager: ruled prev/next ---------- */
 .vp-doc .pager-link {
   border: 1px solid var(--hp-line);
   border-radius: var(--hp-r);
@@ -858,7 +775,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 .vp-doc .pager-link .title { font-size: .95rem; font-weight: 600; color: var(--hp-ink); }
 .vp-doc .pager-link:hover .title { color: var(--hp-orange-text); }
 
-/* ---------- Footer: colophon ---------- */
 .VPFooter {
   background: transparent !important;
   border-top: 1px solid var(--hp-line) !important;
@@ -873,7 +789,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 .VPFooter .message a { color: var(--hp-orange-text); text-decoration: underline; text-underline-offset: 3px; }
 .VPFooter .message a:hover { color: var(--hp-orange-head); }
 
-/* ---------- 7. HOME — big-type editorial hero ---------- */
 .VPHero {
   margin-top: 0;
   padding-top: calc(var(--vp-nav-height) + 56px);
@@ -887,7 +802,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   margin: 0;
 }
 
-/* Kicker: brand name as print slug with orange square */
 .VPHero .name {
   display: flex;
   align-items: center;
@@ -909,7 +823,7 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   height: 10px;
   background: var(--hp-orange);
 }
-/* kill VitePress gradient on .clip */
+
 .VPHero .name .clip {
   background: none !important;
   -webkit-background-clip: initial !important;
@@ -921,7 +835,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   width: auto;
 }
 
-/* The statement — oversized display type */
 .VPHero .text {
   font-size: clamp(2.7rem, 7vw, 5.2rem);
   font-weight: 800;
@@ -937,7 +850,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   font-style: normal;
 }
 
-/* One subtitle */
 .VPHero .tagline {
   font-size: 1.13rem;
   line-height: 1.65;
@@ -946,7 +858,6 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   max-width: 56ch;
 }
 
-/* Actions — editorial buttons: mono caps, square */
 .VPHero .actions {
   justify-content: flex-start;
   margin-top: 34px;
@@ -975,10 +886,8 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 }
 .VPButton.alt:hover { border-color: var(--hp-ink); background: var(--hp-wash) !important; transform: translateY(-1px); }
 
-/* ---------- 8. HOME COMPONENTS ---------- */
 .VPHome { padding-bottom: 24px; }
 
-/* Badge rows — meta strip (all pages) */
 .badge-row {
   display: flex;
   flex-wrap: wrap;
@@ -1003,7 +912,7 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
   text-decoration: none;
   transition: border-color var(--hp-fast), color var(--hp-fast), background var(--hp-fast);
 }
-/* Badge rows — e.g. faq "Still stuck?" call-to-action pair */
+
 .hp-badge-row {
   display: flex;
   flex-wrap: wrap;
@@ -1012,8 +921,7 @@ html.dark .vp-doc .custom-block.danger .custom-block-title { color: #ff7a72; }
 }
 .vp-doc a.badge:hover,
 a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); background: var(--hp-wash); }
-/* Modifiers need the .vp-doc-prefixed twin too — inside prose, `.vp-doc a.badge`
-   (0,2,0) would out-rank a bare `.badge--brand` (0,1,0) and flatten the color */
+
 .vp-doc a.badge--accent,
 .badge--accent {
   color: var(--hp-orange-text);
@@ -1024,7 +932,6 @@ a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); backg
 .vp-doc a.badge--brand:hover,
 .badge--brand:hover { border-color: var(--hp-orange); }
 
-/* Stats — ruled stat strip */
 .stats-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1057,7 +964,6 @@ a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); backg
   color: var(--hp-ink-3);
 }
 
-/* Numbered section heads */
 .VPHome .vp-doc { counter-reset: hp-sec 0; }
 .section-head {
   counter-increment: hp-sec;
@@ -1103,7 +1009,6 @@ a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); backg
   margin: 0;
 }
 
-/* Standalone h3 (comparison opener) */
 .VPHome .vp-doc > h3 {
   margin: 64px 0 20px;
   padding-top: 18px;
@@ -1114,7 +1019,6 @@ a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); backg
   border-bottom: none;
 }
 
-/* Card grids */
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1141,7 +1045,6 @@ a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); backg
   gap: 0 28px;
 }
 
-/* Cards — flat paper plates with hairlines */
 .why-card, .community-card, .quick-card, .preview-card {
   background: var(--hp-paper-2);
   border: 1px solid var(--hp-line);
@@ -1222,7 +1125,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   color: var(--hp-orange-text);
 }
 
-/* Preview cards */
 .preview-card { padding: 0; overflow: hidden; }
 .preview-card img { display: block; width: 100%; height: auto; }
 .preview-card .preview-caption {
@@ -1238,7 +1140,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 .preview-card .preview-caption span { color: var(--hp-ink); font-weight: 700; }
 .preview-card .preview-caption small { color: var(--hp-ink-3); }
 
-/* Quick steps — big outlined numerals */
 .quick-card {
   background: transparent;
   border: none;
@@ -1266,7 +1167,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 .quick-card p a, .quick-card p em { font-style: normal; }
 .quick-card p em { color: var(--hp-orange-text); }
 
-/* vs-table — ruled comparison matrix */
 .vs-table {
   display: grid;
   border: 1px solid var(--hp-line-strong);
@@ -1324,12 +1224,10 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 }
 .vs-row:hover .vs-manual, .vs-row:hover .vs-bookmark { background: var(--hp-wash); }
 
-/* faq-strip — ruled list */
 .faq-strip { margin: 0 0 28px; border-bottom: 1px solid var(--hp-line); }
 .faq-strip .faq-body strong { color: var(--hp-ink); }
 .faq-strip .faq-body a { color: var(--hp-orange-text); }
 
-/* cta-banner — inverted ink plate */
 .cta-banner {
   position: relative;
   background: var(--hp-ink);
@@ -1374,7 +1272,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 .cta-btn:hover { background: var(--hp-orange-deep); transform: translateY(-1px); }
 .cta-banner a:not(.cta-btn) { color: var(--hp-plate-accent); }
 
-/* ---------- 9. LOCAL SEARCH — flat paper sheet ---------- */
 .VPLocalSearchBox .backdrop {
   background: rgba(14, 12, 9, .55);
   backdrop-filter: none;
@@ -1422,7 +1319,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   color: var(--hp-ink-2);
 }
 
-/* ---------- 10. LIGHTBOX — dark viewer ---------- */
 .lightbox {
   background: rgba(14, 12, 9, .95) !important;
   z-index: 999 !important;
@@ -1459,9 +1355,8 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 }
 .lightbox .lightbox-close:hover { border-color: #ff6a00; color: #ff6a00; }
 
-/* ---------- 11. MOTION — subtle only (200ms fades) ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  /* Hero entrance — one-time, CSS only */
+  
   html.js .VPHero .name,
   html.js .VPHero .text,
   html.js .VPHero .tagline,
@@ -1478,7 +1373,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
     to { opacity: 1; transform: none; }
   }
 
-  /* Scroll reveals — small fade, 200ms (JS adds .in-view) */
   html.js .stat-card,
   html.js .why-card,
   html.js .community-card,
@@ -1528,7 +1422,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   }
 }
 
-/* ---------- 12. RESPONSIVE ---------- */
 @media (max-width: 960px) {
   .VPHero { padding-top: calc(var(--vp-nav-height) + 36px); }
   .VPHero .text { max-width: 100%; }
@@ -1596,7 +1489,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   .stat-card:first-child { border-top: none; }
 }
 
-/* ---------- 13. PRINT ---------- */
 @media print {
   .VPNavBar, .VPSidebar, .VPFooter, .VPDocAside, .pager-link, .cta-banner { display: none !important; }
   body { background: #fff; color: #000; }
@@ -1604,15 +1496,8 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   .faq-filter, .VPDocFooter .edit-link { display: none !important; }
 }
 
-/* ============================================================
-   14. PRO LAYER — professional docs features
-   Announcement bar · version chip · doc meta row · copy page ·
-   page feedback · reading progress · back-to-top · FAQ filter
-   (Same ink-on-paper language: hairlines, mono labels, one orange)
-   ============================================================ */
-
 :root {
-  /* Announcement bar surfaces — ink plate in light, charcoal in dark */
+  
   --hp-ann-bg: #211c15;
   --hp-ann-fg: #ece4d4;
   --hp-ann-fg-2: rgba(236, 228, 212, .62);
@@ -1627,7 +1512,6 @@ html.dark {
   --hp-ann-accent: #ffa257;
 }
 
-/* ----- Announcement bar (fixed, layout shifts via --vp-layout-top-height) ----- */
 .hp-announce {
   position: fixed;
   top: 0;
@@ -1714,7 +1598,6 @@ html.dark {
   .hp-announce-link { margin-left: auto; }
 }
 
-/* ----- Doc meta row (section · reading time · updated · copy page) ----- */
 .hp-docmeta {
   display: flex;
   align-items: center;
@@ -1783,7 +1666,6 @@ html.dark {
   .hp-docmeta-updated { display: none; }
 }
 
-/* ----- Page feedback ("Was this helpful?") ----- */
 .hp-feedback {
   display: flex;
   align-items: center;
@@ -1844,7 +1726,6 @@ html.dark {
 }
 .hp-feedback-done a:hover { text-decoration-color: currentColor; }
 
-/* ----- Reading progress bar ----- */
 #hp-progress {
   position: fixed;
   top: 0;
@@ -1865,7 +1746,6 @@ html.dark {
   transform-origin: 0 50%;
 }
 
-/* ----- Back to top ----- */
 .hp-top {
   position: fixed;
   right: 26px;
@@ -1907,7 +1787,6 @@ html.dark {
   .hp-top { right: 14px; bottom: 14px; width: 36px; height: 36px; }
 }
 
-/* ----- FAQ live filter ----- */
 #faq-filter-root { margin: 18px 0 26px; }
 .faq-filter {
   position: relative;
@@ -1981,7 +1860,6 @@ html.dark {
   .faq-filter-count { display: none; }
 }
 
-/* ----- Design polish: thin ink scrollbars ----- */
 * { scrollbar-width: thin; scrollbar-color: var(--hp-line-strong) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }

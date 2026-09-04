@@ -1,6 +1,4 @@
 #pragma once
-// domain.h — core types extracted from main.cpp:120 for modularization.
-// No credentials here. Pure data structures. Include pal.h for statusColor.
 
 #include <QString>
 #include <QMap>

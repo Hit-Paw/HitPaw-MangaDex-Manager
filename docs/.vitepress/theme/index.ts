@@ -10,11 +10,6 @@ import DocFeedback from './components/DocFeedback.vue'
 
 export default {
   extends: DefaultTheme,
-  // Custom branded 404 — VitePress's router renders its own default NotFound
-  // component for unmatched routes (404.md content is never shown in the SPA),
-  // so we replace it through the layout's `not-found` slot.
-  // Pro layer slots: announcement bar, doc meta row
-  // (section · reading time · updated · copy page), page feedback widget.
   Layout: () => h(DefaultTheme.Layout, null, {
     'not-found': () => h(NotFoundPage),
     'layout-top': () => h(AnnounceBar),
@@ -22,7 +17,6 @@ export default {
     'doc-after': () => h(DocFeedback)
   }),
   setup(props: any, ctx: any) {
-    // Preserve DefaultTheme setup (search, etc.)
     let parentResult: any = undefined
     try {
       const maybeSetup = (DefaultTheme as any).setup
@@ -31,8 +25,6 @@ export default {
 
     const route = useRoute()
 
-  // Shared reveal selector — must mirror the CSS reveal block in custom.css
-  // (v4 "Editorial Ink": subtle 200ms fades on cards/rules/tables only)
   const REVEAL_SELECTOR = [
     '.stat-card',
     '.why-card',
@@ -53,16 +45,6 @@ export default {
     const prefersReducedMotion = () =>
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    // v4: no cursor spotlight, no count-ups — motion is intentionally subtle.
-
-    // ============================================================
-    // PRO LAYER — global one-time features
-    //   1. Reading progress bar (docs pages only)
-    //   2. Back-to-top button
-    //   3. "/" keyboard shortcut → local search
-    //   4. FAQ live filter (mounts into #faq-filter-root on faq.md)
-    // ============================================================
 
     const isEditable = (el: EventTarget | null) => {
       if (!(el instanceof HTMLElement)) return false
@@ -117,7 +99,6 @@ export default {
       if (!btn) return
       const show = window.scrollY > 560
       btn.classList.toggle('show', show)
-      // Keep clear of the lightbox when it is open
       const lbOpen = document.getElementById('lightbox')?.classList.contains('open')
       if (lbOpen) btn.classList.remove('show')
     }
@@ -144,7 +125,6 @@ export default {
     const onSearchKey = (e: KeyboardEvent) => {
       if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return
       if (isEditable(e.target)) return
-      // Don't hijack when an overlay is open
       if (document.getElementById('lightbox')?.classList.contains('open')) return
       if (document.querySelector('.VPLocalSearchBox')) return
       const btn = document.querySelector('.VPNavBarSearch button') as HTMLElement | null
@@ -154,7 +134,6 @@ export default {
       }
     }
 
-    // ---------------- FAQ live filter ----------------
     const setupFaqFilter = () => {
       const root = document.getElementById('faq-filter-root')
       if (!root || root.dataset.init === '1') return
@@ -208,7 +187,6 @@ export default {
           d.classList.toggle('faq-hidden', !match)
           if (match) shown++
         })
-        // Hide section headings whose rows are all filtered out
         sections.forEach((h) => {
           let any = false
           let node: Element | null = h.nextElementSibling
@@ -226,12 +204,6 @@ export default {
       apply()
     }
 
-    // ---------------- Code copy button: strip native tooltip ----------------
-    // VitePress bakes `title="Copy Code"` into every fence button at build
-    // time (config fallback re-adds it if set falsy), which pops the ugly
-    // OS-native tooltip on hover. Remove it client-side; `aria-label` keeps
-    // the button accessible. A MutationObserver covers SPA re-renders and
-    // VitePress's own attribute writes; rAF-debounced.
     const stripCopyTooltips = () => {
       document
         .querySelectorAll('div[class*="language-"] > button.copy[title]')
@@ -270,18 +242,14 @@ export default {
       el.classList.add('in-view')
     }
 
-    // Mark JS enabled for CSS no-js fallback
     const markJS = () => {
       try { document.documentElement.classList.add('js') } catch {}
     }
 
-    // Single reusable observer — avoids leaking one IntersectionObserver per SPA
-    // navigation; also skips elements already revealed so re-runs are idempotent.
     let revealIO: IntersectionObserver | null = null
     let copyTitleMO: MutationObserver | null = null
 
     const observe = () => {
-      // Respect reduced motion — reveal instantly
       if (prefersReducedMotion()) {
         document.querySelectorAll(REVEAL_SELECTOR)
           .forEach((el) => el.classList.add('in-view'))
@@ -309,13 +277,11 @@ export default {
       els.forEach((el) => revealIO?.observe(el))
     }
 
-    // Lightbox — a11y dialog, focus trap, keyboard
     let cleanupLightbox: (() => void) | null = null
 
     const setupLightbox = () => {
       if (cleanupLightbox) { cleanupLightbox(); cleanupLightbox = null }
       let lb = document.getElementById('lightbox') as HTMLElement | null
-      // Auto-create lightbox if not present (no markdown needed)
       if (!lb) {
         lb = document.createElement('div')
         lb.id = 'lightbox'
@@ -338,7 +304,6 @@ export default {
         document.body.appendChild(lb)
       }
 
-      // Ensure lightbox is direct child of body for fixed viewport positioning
       if (lb.parentElement !== document.body) {
         document.body.appendChild(lb)
       }
@@ -350,7 +315,6 @@ export default {
       let img = lb.querySelector('img') as HTMLImageElement | null
       let caption = lb.querySelector('.lightbox-caption') as HTMLElement | null
       let btn = lb.querySelector('.lightbox-close') as HTMLButtonElement | null
-      // Safety: ensure essentials exist
       if (!btn) {
         btn = document.createElement('button')
         btn.type = 'button'
@@ -400,9 +364,6 @@ export default {
       const onKey = (e: KeyboardEvent) => {
         if (!lb.classList.contains('open')) return
         if (e.key === 'Escape') { e.preventDefault(); close(); return }
-        // Complete focus trap: the close button is the only focusable element in
-        // the dialog, so keep focus on it for both Tab directions and refocus if
-        // focus somehow escapes the overlay.
         if (e.key === 'Tab' && btn) {
           const inside = lb.contains(document.activeElement)
           if (!inside || document.activeElement === btn) {
@@ -413,18 +374,14 @@ export default {
       }
       document.addEventListener('keydown', onKey, { signal: ac() })
 
-      // Support both plain <img> and <picture><img> with WebP
       const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img')
       previews.forEach((el) => {
-        // Prefer parent <picture> source if present
         const picture = el.closest('picture')
         const getBestSrc = () => {
-          // currentSrc already resolves <source> WebP when supported
           try {
             const cs = (el as any).currentSrc
             if (cs) return cs as string
           } catch {}
-          // Fallback: check <source srcset> manually
           if (picture) {
             const srcEl = picture.querySelector('source[type="image/webp"]') as HTMLSourceElement | null
             if (srcEl && srcEl.srcset) return srcEl.srcset.split(',')[0].trim().split(' ')[0]
@@ -435,7 +392,6 @@ export default {
         el.setAttribute('role', 'button')
         el.setAttribute('aria-label', `Enlarge preview: ${el.alt || 'screenshot'}`)
         el.style.cursor = 'zoom-in'
-        // Perf: eager featured, lazy grid already set via HTML; add loading hint if missing
         if (!el.getAttribute('loading')) el.setAttribute('loading', 'lazy')
         if (!el.getAttribute('decoding')) el.setAttribute('decoding', 'async')
         const handler = () => {
@@ -445,10 +401,8 @@ export default {
         el.addEventListener('keydown', (e: KeyboardEvent) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler() }
         }, { signal: ac() })
-        // Also make whole picture card clickable (better hit area on mobile)
         const card = el.closest('.preview-card') as HTMLElement | null
         if (card && card !== el) {
-          // Ensure card does not trap inner img handler double-fire
           card.style.cursor = 'zoom-in'
           card.addEventListener('click', (e) => {
             if (e.target === el) return
@@ -459,7 +413,6 @@ export default {
 
       cleanupLightbox = () => {
         controllers.forEach((c) => c.abort())
-        // Fully reset overlay state (e.g. SPA navigation happened while open)
         if (lb.classList.contains('open')) {
           lb.classList.remove('open')
           lb.setAttribute('aria-hidden', 'true')
@@ -479,14 +432,11 @@ export default {
         }
       } catch {}
       nextTick(() => { observe(); setupLightbox(); setupProFeatures(); setTimeout(observe, 250) })
-      // "/" focuses search (document-level, wired once)
       document.addEventListener('keydown', onSearchKey)
     })
     watch(() => route.path, () => nextTick(() => {
       try { if (!window.location.hash) window.scrollTo(0, 0) } catch {}
       observe(); setupLightbox(); setupProFeatures()
-      // Safety net: re-scan shortly after navigation in case async page content
-      // (lazy chunks, dynamically mounted blocks) renders after nextTick.
       setTimeout(observe, 250)
     }))
 

@@ -1,8 +1,4 @@
-/*
- * HitPaw — MangaDex Manager
- * C++ / Qt6 — refreshed orange "HitPaw" theme (matches app icon),
- *             gradient accents, pill tabs, layered surfaces, cover grid, persistent login
- */
+
 
 #include <QApplication>
 #include <QMainWindow>
@@ -85,23 +81,12 @@
 #include "export.h"
 #include "secure_store.h"
 
-// ── Constants ─────────────────────────────────────────────────────────────────
-
 static const char UA[] = "HitPawMangaDexExporter/3.0";
 
 static const char API_BASE[]   = "https://api.mangadex.org";
 static const char TOKEN_URL[]  = "https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token";
 static const char COVER_BASE[] = "https://uploads.mangadex.org/covers";
 
-// No app-wide default client ID/secret — every user provides their own via
-// Settings (see m_clientId/m_clientSecret, stored per-user in QSettings).
-// A public GitHub repo can't ship a personal MangaDex API credential in
-// source — anyone who cloned it would be using it as your app identity.
-
-// ── Palette & Domain extracted to pal.h / domain.h for modularization ────────
-// See pal.h (Pal namespace), domain.h (MangaEntry, STATUS_LABELS, MAL_STATUS, MB_STATUS, statusColor)
-
-// Parse one /manga item (with includes[] author + cover_art) into a MangaEntry.
 static MangaEntry parseManga(const QJsonObject& obj, const QString& status) {
     const auto attrs = obj["attributes"].toObject();
 
@@ -125,7 +110,6 @@ static MangaEntry parseManga(const QJsonObject& obj, const QString& status) {
             coverFile = r["attributes"].toObject()["fileName"].toString();
     }
 
-    // Deduplicate artists that are also listed as authors
     QStringList artistsOnly;
     for (const auto& a : artists)
         if (!authors.contains(a)) artistsOnly << a;
@@ -134,7 +118,6 @@ static MangaEntry parseManga(const QJsonObject& obj, const QString& status) {
     for (const auto& l : attrs["availableTranslatedLanguages"].toArray())
         langs << l.toString();
 
-    // Tags → genres (group "genre" and "theme"), demographic from publicationDemographic
     QStringList genreList;
     for (const auto& tagVal : attrs["tags"].toArray()) {
         const auto tag   = tagVal.toObject();
@@ -168,8 +151,6 @@ static MangaEntry parseManga(const QJsonObject& obj, const QString& status) {
     return e;
 }
 
-// ── Download domain ───────────────────────────────────────────────────────────
-
 struct ChapterInfo {
     QString id;
     QString volume;
@@ -181,7 +162,6 @@ struct ChapterInfo {
 };
 
 static QString sanitizeName(const QString& name) {
-    // Strip characters illegal in Windows/macOS/Linux filenames
     QString s = name;
     static const QRegularExpression illegal("[\\\\/:*?\"<>|]");
     s.replace(illegal, "_");
@@ -200,20 +180,6 @@ static QString chapterFolderName(const ChapterInfo& c) {
     return sanitizeName(label);
 }
 
-// ── Exporters moved to export.h for modularization ────────────────────────────
-// See export.h (Export::toCSV / toJSON / toMALXML / toMangaBakaJSON / toAnimeplanetGZ)
-
-// ── Cover loader (shared cache, async, rate-limited drip queue) ───────────────
-//
-// Design: one QTimer ticks every SLOT_MS and releases one pending download
-// per tick, up to MAX_CONCURRENT in-flight at once.  This is a true drip
-// queue — it doesn't matter how many load() calls arrive simultaneously; they
-// all go into m_queue and the timer drains them one at a time.  The old
-// m_dispatched stagger was broken: it gave the first slot a 0ms delay
-// (singleShot(0*120, …)), which is functionally synchronous, and the per-wave
-// accumulated counter didn't survive inter-wave gaps correctly, letting bursts
-// through whenever m_dispatched was reset after a drain.
-
 class CoverLoader : public QObject {
     Q_OBJECT
 public:
@@ -226,7 +192,6 @@ public:
         if (url.isEmpty() || !label) return;
         if (m_cache.contains(url)) { apply(label, m_cache.value(url), size); return; }
 
-        // Disk cache — covers persist between runs so relaunches are instant.
         const QString diskPath = cachePath(url);
         if (QFile::exists(diskPath)) {
             QPixmap px(diskPath);
@@ -235,10 +200,8 @@ public:
                 enforceMemCacheLimit();
                 apply(label, px, size);
                 ++m_cacheHits;
-                // Touch file to update LRU timestamp
                 QFile f(diskPath);
                 if (f.open(QIODevice::ReadOnly)) { f.close(); }
-                // Update modified time to now (Qt 6.5+ supports setFileTime, fallback to touch via QDateTime)
                 QFile::setPermissions(diskPath, QFile::permissions(diskPath));
                 return;
             }
@@ -252,10 +215,6 @@ public:
     }
 
 private:
-    // One request leaves the queue every SLOT_MS; at most MAX_CONCURRENT
-    // are in-flight at once.  SLOT_MS = 750ms means ≤1.3 req/s to the CDN.
-    // With lazy loading only visible cards ever queue covers, so the queue
-    // stays small and the lower rate is imperceptible in practice.
     static constexpr int MAX_CONCURRENT = 2;
     static constexpr int SLOT_MS        = 750;   // inter-request gap
     static constexpr int MAX_MEM_CACHE  = 200;   // max pixmaps in RAM (LRU evict)
@@ -264,11 +223,8 @@ private:
     CoverLoader() {
         m_cacheDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/covers";
         QDir().mkpath(m_cacheDir);
-        // Same reasoning as MainWindow's manager — a hung cover download used
-        // to just sit in m_active forever with nothing to time it out.
         m_nam.setTransferTimeout(15000);
 
-        // Drip timer — single-shot so it goes idle when the queue empties.
         m_dripTimer = new QTimer(this);
         m_dripTimer->setSingleShot(false);
         m_dripTimer->setInterval(SLOT_MS);
@@ -289,7 +245,6 @@ private:
             m_dripTimer->start();
     }
 
-    // Called every SLOT_MS — dispatch one pending URL if under the concurrency cap.
     void drip() {
         if (m_queue.isEmpty()) {
             m_dripTimer->stop();
@@ -329,7 +284,6 @@ private:
                 if (f.open(QIODevice::WriteOnly)) {
                     f.write(raw);
                     ++m_cacheWrites;
-                    // Enforce disk cap after each write (cheap for 200MB cap, scan ~60 files)
                     if (m_cacheWrites % 10 == 0) enforceDiskCacheLimit();
                 } else if (m_log) {
                     m_log(QString("Could not write cover cache: %1").arg(f.errorString()));
@@ -339,18 +293,14 @@ private:
             for (const auto& w : waiters)
                 if (w.first) apply(w.first, px, w.second);
             --m_active;
-            // drip() handles scheduling the next slot via the timer.
-            // No manual pump() call needed — the timer is already running.
         });
     }
 
     void apply(QLabel* l, const QPixmap& px, QSize s) {
         if (px.isNull()) return;
         l->setText("");
-        // HiDPI-aware smooth scaling
         l->setPixmap(px.scaled(s, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-        // Fade-in: start at 0 opacity, animate to 1 over 300ms with OutCubic easing
         auto* eff = new QGraphicsOpacityEffect(l);
         eff->setOpacity(0.0);
         l->setGraphicsEffect(eff);
@@ -368,9 +318,6 @@ private:
 
     void enforceMemCacheLimit() {
         if ((int)m_cache.size() <= MAX_MEM_CACHE) return;
-        // Simple LRU: evict oldest inserted (QHash iteration is pseudo-random but good enough
-        // for 200-item cap; for true LRU we track insertion order via m_queue history)
-        // Remove 20% when over limit to avoid thrashing.
         int toRemove = m_cache.size() - MAX_MEM_CACHE + 20;
         auto it = m_cache.begin();
         while (toRemove-- > 0 && it != m_cache.end()) it = m_cache.erase(it);
@@ -389,7 +336,6 @@ private:
             total += fi.size();
         }
         if (total <= MAX_DISK_CACHE_BYTES) return;
-        // Sort oldest first (LRU) and delete until under cap
         std::sort(files.begin(), files.end(), [](const QFileInfo &a, const QFileInfo &b){
             return a.lastModified() < b.lastModified();
         });
@@ -414,8 +360,6 @@ private:
     LogFn   m_log;
 };
 
-// ── Styled widgets ────────────────────────────────────────────────────────────
-
 class Card : public QFrame {
 public:
     explicit Card(QWidget* parent = nullptr) : QFrame(parent) {
@@ -430,9 +374,6 @@ public:
     }
 };
 
-// ── Animated AccentButton ─────────────────────────────────────────────────────
-// Hover: orange outer glow fades in (painted in paintEvent, 180ms ease-out)
-// Press: quick scale-down pop (0.93×) that springs back (120ms + 100ms)
 class AccentButton : public QPushButton {
     Q_OBJECT
     Q_PROPERTY(qreal glowOpacity READ glowOpacity WRITE setGlowOpacity)
@@ -444,7 +385,6 @@ public:
         setCursor(Qt::PointingHandCursor);
         setFixedHeight(36);
         setAttribute(Qt::WA_Hover);
-        // Base style — no :hover/:pressed rules; we paint the glow manually
         setStyleSheet(
             "QPushButton {"
             "  background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 " + QString(Pal::ACCENT_H) + ",stop:1 " + QString(Pal::ACCENT) + ");"
@@ -454,23 +394,16 @@ public:
             "QPushButton:disabled { background: transparent; color: #8a6a4d;"
             " border: 1px solid #8a6a4d; }"
         );
-        // This button paints its own background with QPainter instead of a flat
-        // QSS background-color, so Qt can't calibrate ClearType's subpixel color
-        // correction against what's actually behind the glyphs — the result is
-        // a red/blue fringe around the text (worst on hover/disabled states).
-        // Forcing plain grayscale antialiasing removes the fringe entirely.
         {
             QFont f = font();
             f.setStyleStrategy(QFont::StyleStrategy(QFont::PreferAntialias | QFont::NoSubpixelAntialias));
             setFont(f);
         }
 
-        // Glow animator
         m_glowAnim = new QPropertyAnimation(this, "glowOpacity", this);
         m_glowAnim->setDuration(180);
         m_glowAnim->setEasingCurve(QEasingCurve::OutCubic);
 
-        // Scale pop animator (press down then spring back)
         m_scaleAnim = new QPropertyAnimation(this, "scaleF", this);
     }
 
@@ -499,13 +432,6 @@ protected:
     }
 
     void paintEvent(QPaintEvent* e) override {
-        // Scale transform from centre — draw bg + text directly via the style
-        // under a transformed painter. (Previously this called
-        // QPushButton::render() into an offscreen QPixmap, but that's a
-        // re-entrant render of the widget from inside its own paintEvent —
-        // Qt can grab a stale/incomplete backing store from that, which is
-        // why the label text would vanish on press while still showing the
-        // background fill.)
         if (!qFuzzyCompare(m_scaleF, 1.0)) {
             QPainter p(this);
             p.setRenderHint(QPainter::Antialiasing);
@@ -519,7 +445,6 @@ protected:
         } else {
             QPushButton::paintEvent(e);
         }
-        // Glow ring removed per design change — hover now shows no outline.
     }
 
 private:
@@ -544,9 +469,6 @@ private:
     QPropertyAnimation* m_scaleAnim   = nullptr;
 };
 
-// ── Animated GhostButton ──────────────────────────────────────────────────────
-// Hover: border fades from grey → orange, text shifts to ACCENT_H (180ms)
-// Press: scale-down pop same as AccentButton
 class GhostButton : public QPushButton {
     Q_OBJECT
     Q_PROPERTY(qreal hoverT READ hoverT WRITE setHoverT)
@@ -558,7 +480,6 @@ public:
         setCursor(Qt::PointingHandCursor);
         setFixedHeight(36);
         setAttribute(Qt::WA_Hover);
-        // Static base — no hover rules, we paint the border manually
         setStyleSheet(
             "QPushButton {"
             "  background: transparent; color: " + QString(Pal::TEXT) + ";"
@@ -566,10 +487,6 @@ public:
             "  padding: 0 14px; font-size: 13px;"
             "}"
         );
-        // Same ClearType-fringe fix as AccentButton — this button's fills and
-        // border are hand-painted (see paintEvent below), so Qt has no flat
-        // background color to calibrate subpixel text AA against. Plain
-        // grayscale AA sidesteps the color fringe on the label entirely.
         {
             QFont f = font();
             f.setStyleStrategy(QFont::StyleStrategy(QFont::PreferAntialias | QFont::NoSubpixelAntialias));
@@ -602,12 +519,7 @@ protected:
     }
 
     void paintEvent(QPaintEvent* e) override {
-        // All background fills happen BEFORE the icon/text render, so nothing
-        // ever paints a translucent rect on top of the icon (that was the
-        // bug: the old hover tint was drawn after QPushButton::paintEvent
-        // and washed the icon out on hover).
 
-        // Subtle idle fill so the pill reads as a distinct control at rest.
         {
             QPainter p(this);
             p.setRenderHint(QPainter::Antialiasing);
@@ -615,7 +527,6 @@ protected:
             p.setBrush(QColor(Pal::ELEV));
             p.drawRoundedRect(rect(), 11, 11);
         }
-        // Tint bg on hover — drawn under the icon/text, not over it.
         if (m_hoverT > 0.01) {
             QPainter p(this);
             p.setRenderHint(QPainter::Antialiasing);
@@ -626,11 +537,6 @@ protected:
             p.drawRoundedRect(rect(), 11, 11);
         }
 
-        // Icon + text on top of the fills.
-        // Drawn directly via the style under the transformed painter — not
-        // via QPushButton::render(), which re-enters the widget's own
-        // paintEvent and can grab a stale/incomplete backing store, dropping
-        // the label text while the fills above still show.
         if (!qFuzzyCompare(m_scaleF, 1.0)) {
             QPainter p(this);
             p.setRenderHint(QPainter::Antialiasing);
@@ -646,8 +552,6 @@ protected:
             QPushButton::paintEvent(e);
         }
 
-        // No border on hover — removed per design change. Only the fill tint
-        // (painted above, before the text) signals hover state now.
     }
 
 private:
@@ -697,8 +601,6 @@ private:
     }
 };
 
-// ── Manga cover card ──────────────────────────────────────────────────────────
-
 class MangaCard : public QFrame {
     Q_OBJECT
     Q_PROPERTY(qreal hoverT READ hoverT WRITE setHoverT)
@@ -739,7 +641,6 @@ public:
             "QLabel { background: transparent; border: none; color: %1;"
             " font-size: %2px; font-weight: 600; }")
             .arg(Pal::TEXT).arg(small ? 10 : 11));
-        // Fit everything: no fixed height, let wordWrap + sizeHint determine height so crazy long titles wrap to as many lines as needed and the card expands
         m_title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         lay->addWidget(m_title);
 
@@ -759,7 +660,6 @@ public:
                    + "\n\nClick: select / deselect for export"
                    + "\nRight-click: open on MangaDex");
 
-        // Selection check badge (top-left overlay)
         m_check = new QLabel("✓", this);
         m_check->setFixedSize(22, 22);
         m_check->move(10, 10);
@@ -769,13 +669,10 @@ public:
             " font-size: 13px; font-weight: 800; }").arg(Pal::ACCENT));
         m_check->hide();
 
-        // Hover animator — purple glow ring fades in on hover (executor card vibe)
         m_hoverAnim = new QPropertyAnimation(this, "hoverT", this);
         m_hoverAnim->setDuration(180);
         m_hoverAnim->setEasingCurve(QEasingCurve::OutCubic);
 
-        // Cover load is deferred to showEvent — no download happens until
-        // the card is actually made visible, so hidden cards never hit the network.
     }
 
     const MangaEntry& entry() const { return m_entry; }
@@ -793,10 +690,6 @@ signals:
     void toggled(const QString& id, bool selected);
 
 protected:
-    // Fires when the card transitions from hidden → visible.
-    // Only the first call does anything — m_coverLoaded is a one-shot guard.
-    // This means covers only download for cards the user can actually see,
-    // instead of every card in the library regardless of scroll position.
     void enterEvent(QEnterEvent* e) override { QFrame::enterEvent(e); animateHover(1.0); }
     void leaveEvent(QEvent* e)      override { QFrame::leaveEvent(e);  animateHover(0.0); }
 
@@ -835,7 +728,6 @@ protected:
 
 private:
     void updateStyle() {
-        // No CSS hover rule — hover glow is painted manually in paintEvent
         setStyleSheet(QString(
             "QFrame#mcard {"
             "  background: %1;"
@@ -867,10 +759,6 @@ private:
     QPropertyAnimation* m_hoverAnim = nullptr;
 };
 
-// ── OutlineBoxIcon — line-art package glyph for empty states ───────────────────
-// Single-stroke hexagon + seam lines (no fill), matching the muted icon language
-// used everywhere else in the app instead of a color emoji glyph.
-
 class OutlineBoxIcon : public QWidget {
 public:
     explicit OutlineBoxIcon(QWidget* parent = nullptr) : QWidget(parent) {
@@ -893,13 +781,11 @@ protected:
         const qreal cx = w / 2.0, top = h * 0.14, mid = h * 0.42, bot = h * 0.88;
         const qreal lx = w * 0.14, rx = w * 0.86;
 
-        // Hexagon outline — open box silhouette
         QPolygonF hex;
         hex << QPointF(cx, top) << QPointF(rx, mid * 0.72) << QPointF(rx, bot - (bot - mid) * 0.3)
             << QPointF(cx, bot) << QPointF(lx, bot - (bot - mid) * 0.3) << QPointF(lx, mid * 0.72);
         p.drawPolygon(hex);
 
-        // Seam lines meeting at the box's center — the classic "package" Y
         p.drawLine(QPointF(cx, top), QPointF(cx, mid));
         p.drawLine(QPointF(lx, mid * 0.72), QPointF(cx, mid));
         p.drawLine(QPointF(rx, mid * 0.72), QPointF(cx, mid));
@@ -907,23 +793,11 @@ protected:
     }
 };
 
-// ── SmoothScrollArea — QScrollArea with real momentum-based wheel scroll ───────
-// A fixed-duration animation per wheel notch (the old approach) always takes
-// the same time no matter how hard you scroll, which reads as mechanical.
-// This instead runs a proper physics model: each notch adds velocity, a
-// 60fps timer integrates position from that velocity every frame, and
-// friction bleeds the velocity off — so a light nudge stops quickly and a
-// hard flick glides and decelerates, the way trackpad/phone scrolling does.
-// Rapid notches keep adding to the same in-flight velocity instead of
-// restarting anything, so fast continuous scrolling stays fluid.
-
 class SmoothScrollArea : public QScrollArea {
     Q_OBJECT
 public:
     explicit SmoothScrollArea(QWidget* parent = nullptr) : QScrollArea(parent) {
         m_timer.setInterval(8);   // ~120hz integration — finer steps than the
-                                   // display refresh so motion reads as continuous
-                                   // rather than tickable, even on 60Hz screens.
         connect(&m_timer, &QTimer::timeout, this, &SmoothScrollArea::tick);
     }
 
@@ -936,18 +810,10 @@ protected:
             return;
         }
 
-        // Re-sync our tracked float position to the scrollbar if nothing was
-        // in motion (covers the user dragging the scrollbar by hand between
-        // wheel gestures — otherwise we'd snap back to a stale position).
         if (!m_timer.isActive())
             m_pos = bar->value();
 
-        // Total distance this notch should ultimately travel — same feel as
-        // before (3 lines/notch, scaled for high-res wheels/trackpads).
         const qreal distance = bar->singleStep() * 3.0 * (delta / 120.0);
-        // Geometric decay means an impulse of distance*(1-friction) sums to
-        // `distance` total travel once it fully decelerates — so multiple
-        // quick notches add up to their combined natural travel distance.
         m_velocity -= distance * (1.0 - kFriction);
 
         if (!m_timer.isActive()) m_timer.start();
@@ -989,11 +855,6 @@ public:
     QSize minimumSizeHint() const override { return currentWidget() ? currentWidget()->minimumSizeHint() : QStackedWidget::minimumSizeHint(); }
 };
 
-// ── SmoothProgressBar — QProgressBar that eases toward its target value ────────
-// setValue() no longer jumps the chunk; it animates from the current displayed
-// value to the target over ~260ms with an OutCubic ease, retargeting cleanly if
-// a new value lands mid-animation. Rounded pill track/chunk come from the QSS.
-
 class SmoothProgressBar : public QProgressBar {
     Q_OBJECT
 public:
@@ -1003,7 +864,6 @@ public:
         m_anim->setEasingCurve(QEasingCurve::OutCubic);
     }
 
-    // Jump instantly, no animation (e.g. resetting to 0 on a new run).
     void setValueInstant(int v) {
         m_anim->stop();
         QProgressBar::setValue(v);
@@ -1022,8 +882,6 @@ private:
     QPropertyAnimation* m_anim = nullptr;
 };
 
-// ── Main window ───────────────────────────────────────────────────────────────
-
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -1040,22 +898,15 @@ public:
         setWindowIcon(appIcon);
         qApp->setWindowIcon(appIcon);
 
-        // Fixed width — only height is resizable
         setFixedWidth(1180);
         setMinimumHeight(640);
 
         m_nam = new QNetworkAccessManager(this);
-        // Without this, a stalled connection (dead wifi, MangaDex hiccup) hangs
-        // the request forever with no error ever reaching the UI/log — every
-        // request through m_nam now fails cleanly after 15s instead.
         m_nam->setTransferTimeout(15000);
         m_refreshTimer = new QTimer(this);
         m_refreshTimer->setSingleShot(true);
         connect(m_refreshTimer, &QTimer::timeout, this, &MainWindow::doRefresh);
 
-        // API credentials — via SecureStore abstraction (no hardcoded secrets)
-        // All values are user-supplied via Settings UI and stored per-user in QSettings.
-        // See secure_store.h and .github/workflows/release.yml scan-secrets.
         m_rememberCreds = m_secure.rememberCreds();
         m_clientId     = m_secure.clientId();
         m_clientSecret = m_secure.clientSecret();
@@ -1065,9 +916,6 @@ public:
         CoverLoader::inst().setLogger([this](const QString& msg) { appendLog(msg); });
         resize(1180, 900);
 
-        // Keyboard shortcuts — window-wide (WidgetWithChildrenShortcut would
-        // limit these to whichever widget has focus, which isn't what you
-        // want for global actions like "focus the search box").
         auto* focusFilterShortcut = new QShortcut(QKeySequence::Find, this);   // Ctrl+F
         connect(focusFilterShortcut, &QShortcut::activated, this, [this] {
             if (m_filterEdit) { m_filterEdit->setFocus(); m_filterEdit->selectAll(); }
@@ -1083,9 +931,7 @@ public:
         auto* refreshShortcut2 = new QShortcut(QKeySequence("Ctrl+R"), this);
         connect(refreshShortcut2, &QShortcut::activated, this, &MainWindow::refreshLibrary);
 
-        // Auto-reconnect from saved session
         QTimer::singleShot(150, this, &MainWindow::tryAutoConnect);
-        // Non-blocking update check (silent on failure, never crashes)
         QTimer::singleShot(3500, this, &MainWindow::checkForUpdates);
         QTimer::singleShot(800, this, &MainWindow::loadDownloadState);
     }
@@ -1093,7 +939,6 @@ public:
 private:
     static constexpr int GRID_COLS = 5;
 
-    // ── State ─────────────────────────────────────────────────────────────────
     QSettings                 m_settings;
     SecureStore               m_secure; // credential abstraction — no hardcoded secrets, see secure_store.h
     QNetworkAccessManager*    m_nam = nullptr;
@@ -1120,8 +965,6 @@ private:
     QList<MangaCard*>         m_libCards;
     int                       m_gridPlaced = 0;   // count of cards currently laid out in the grid (see appendCardsToGrid)
 
-
-    // ── Widgets ───────────────────────────────────────────────────────────────
     StatusBadge*    m_authBadge      = nullptr;
     Card*           m_authCard       = nullptr;
     ShrinkableStack* m_authStack      = nullptr;
@@ -1142,7 +985,6 @@ private:
     QTabWidget*     m_tabs           = nullptr;
     QButtonGroup*   m_navGroup       = nullptr;
 
-    // Library tab
     QComboBox*      m_filterStatus   = nullptr;
     QComboBox*      m_sortBox        = nullptr;
     QLineEdit*      m_filterEdit     = nullptr;
@@ -1175,14 +1017,10 @@ private:
     int             m_paginationLimit = 60;
     static constexpr int PAGINATION_STEP = 60;
 
-    // Undo/Redo history for manual export-selection changes.
     QList<QSet<QString>> m_selectionUndo;
     QList<QSet<QString>> m_selectionRedo;
     bool                 m_bulkRunning = false;
 
-
-
-    // Export tab
     QLineEdit*      m_outEdit        = nullptr;
     QCheckBox*      m_chkCSV         = nullptr;
     QCheckBox*      m_chkJSON        = nullptr;
@@ -1195,7 +1033,6 @@ private:
     QTextEdit*      m_log            = nullptr;
     QPropertyAnimation* m_logScrollAnim = nullptr;
 
-    // MDList sync (Export tab) — pushes bookmarks into a MangaDex custom list
     QLineEdit*      m_mdlistNameEdit = nullptr;
     QComboBox*      m_mdlistVisBox   = nullptr;
     AccentButton*   m_mdlistAllBtn   = nullptr;
@@ -1216,7 +1053,6 @@ private:
     bool            m_mdlistAuthRetried = false;
     QString         m_mdlistStartError;    // why the run aborted before/while adding
 
-    // Download tab
     QLineEdit*      m_dlUrlEdit      = nullptr;
     AccentButton*   m_dlLookupBtn    = nullptr;
     QLabel*         m_dlMangaTitle   = nullptr;
@@ -1236,7 +1072,6 @@ private:
     SmoothProgressBar* m_dlProgress  = nullptr;
     QLabel*         m_dlStatusLbl    = nullptr;
 
-    // Download state
     QString                 m_dlMangaId;
     QString                 m_dlMangaTitleStr;
     QVector<ChapterInfo>    m_dlChapters;
@@ -1247,11 +1082,9 @@ private:
     QStringList             m_dlQueue;      // chapter ids to download
     QMap<QString,int>       m_dlTotalPages; // chapter id → page count
 
-    // Update checker (non-blocking, never crashes - failures are silent)
     QNetworkAccessManager*  m_updateNam = nullptr;
     bool                    m_manualUpdateCheck = false;
 
-    // ── Style ─────────────────────────────────────────────────────────────────
     void applyGlobalStyle() {
         setStyleSheet(QString(
             "QMainWindow, QWidget { background: %1; color: %2; font-family: 'Segoe UI Variable','Segoe UI',Arial,sans-serif; font-size: 13px; }"
@@ -1322,7 +1155,6 @@ private:
          .arg(Pal::ACCENT2, Pal::ACCENT_H));
     }
 
-    // ── Sidebar navigation rail ──────────────────────────────────────────
     static QString navBtnQss() {
         return QString(
             "QPushButton{ border:none; border-radius:10px; background:transparent; }"
@@ -1350,8 +1182,6 @@ private:
             b->setToolTip(items[i]);
             b->setStyleSheet(navBtnQss());
 
-            // Icon swaps color automatically with the checked (On/Off) state —
-            // muted grey when unselected, dark-on-orange when the pill is active.
             QIcon icon;
             icon.addPixmap(QPixmap(QString(":/icons/nav/icons8-%1-48-muted.png").arg(iconBase[i])),
                             QIcon::Normal, QIcon::Off);
@@ -1367,14 +1197,12 @@ private:
         v->addStretch(1);
         if (auto* first = m_navGroup->button(0)) first->setChecked(true);
 
-        // Keep the sidebar highlight synced with programmatic tab changes
         connect(m_tabs, &QTabWidget::currentChanged, this, [this](int idx){
             if (auto* b = m_navGroup->button(idx)) b->setChecked(true);
         });
         return rail;
     }
 
-    // ── UI construction ───────────────────────────────────────────────────────
     void buildUI() {
         auto* root = new QWidget(this);
         setCentralWidget(root);
@@ -1395,19 +1223,16 @@ private:
         m_tabs->tabBar()->hide();              // native tab bar hidden — sidebar drives it
         m_tabs->setEnabled(false);
 
-        // New layout: left sidebar navigation rail + stacked content on the right
         auto* content = new QHBoxLayout;
         content->setSpacing(16);
         content->addWidget(buildNavRail());
         content->addWidget(m_tabs, 1);
         lay->addLayout(content, 1);
 
-        // ── Tab-switch animation: fade + 18px upward slide ────────────────────
         connect(m_tabs, &QTabWidget::currentChanged, this, [this](int idx) {
             QWidget* page = m_tabs->widget(idx);
             if (!page) return;
 
-            // Opacity fade-in
             auto* eff = new QGraphicsOpacityEffect(page);
             eff->setOpacity(0.0);
             page->setGraphicsEffect(eff);
@@ -1421,7 +1246,6 @@ private:
                 page->setGraphicsEffect(nullptr);
             });
 
-            // Slide-up: animate pos from +18px below to natural position
             const QPoint natural = page->pos();
             const QPoint start   = natural + QPoint(0, 18);
             page->move(start);
@@ -1443,8 +1267,6 @@ private:
         lay->setContentsMargins(0, 0, 0, 2);
         lay->setSpacing(10);
 
-        // HitPaw mascot mark — smaller now that the header is a slim single row,
-        // not a standalone block competing with the auth card below it.
         auto* icon = new QLabel(w);
         QPixmap px(":/icons/icon_64.png");
         if (!px.isNull())
@@ -1455,7 +1277,6 @@ private:
         icon->setFixedSize(34, 34);
 
         auto* col = new QVBoxLayout;
-        // "Hit" white / "Paw" orange — brand wordmark
         auto* h1 = new QLabel(QString(
             "<span style='color:%1'>Hit</span><span style='color:%2'>Paw</span>")
             .arg(Pal::TEXT, Pal::ACCENT), w);
@@ -1472,9 +1293,6 @@ private:
 
         m_authBadge = new StatusBadge(w);
 
-        // Signed-in account chip — lives inline in the top bar instead of a
-        // separate full-width row. Only m_connectedBar's visibility toggles
-        // (see onLoginOk / onLogout); the chip itself never leaves the layout.
         m_connectedBar = new QWidget(w);
         auto* cbLay = new QHBoxLayout(m_connectedBar);
         cbLay->setContentsMargins(0, 0, 0, 0);
@@ -1489,9 +1307,6 @@ private:
         cbLay->addWidget(signOutBtn);
         m_connectedBar->hide();
 
-        // About button — always visible regardless of sign-in state, unlike
-        // the sign-out chip. Small ghost pill so it doesn't compete visually
-        // with the brand mark or the auth chip.
         auto* aboutBtn = new GhostButton("About", w);
         aboutBtn->setFixedHeight(26);
         connect(aboutBtn, &QPushButton::clicked, this, &MainWindow::showAboutDialog);
@@ -1514,13 +1329,8 @@ private:
 
         m_authStack = new ShrinkableStack(card);
         m_authStack->setStyleSheet("QStackedWidget { background: transparent; }");
-        // Size the stack to the *current* page, not the tallest page.
-        // Without this the login page inherits the token page's tutorial height,
-        // leaving a blank void above the form fields and making it look like the
-        // wrong page is showing.
         m_authStack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        // ── Page 0: username / password login ──
         auto* loginPage = new QWidget;
         loginPage->setStyleSheet("background: transparent;");
         {
@@ -1532,7 +1342,6 @@ private:
             t->setStyleSheet(QString("QLabel { background: transparent; color: %1; font-size: 13px; font-weight: 700; }").arg(Pal::TEXT));
             v->addWidget(t);
 
-            // ── API credentials (personal API client) ──
             auto* credRow = new QHBoxLayout;
             m_clientIdEdit = new QLineEdit(loginPage);
             m_clientIdEdit->setPlaceholderText("API Client ID (personal-client-…)");
@@ -1600,7 +1409,6 @@ private:
             connect(m_passEdit, &QLineEdit::returnPressed, this, &MainWindow::onLogin);
         }
 
-        // ── Page 1: raw access token ──
         auto* tokenPage = new QWidget;
         tokenPage->setStyleSheet("background: transparent;");
         {
@@ -1632,7 +1440,6 @@ private:
             connect(back, &QPushButton::clicked, [this]{ m_authStack->setCurrentIndex(0); });
             v->addWidget(back, 0, Qt::AlignLeft);
 
-            // ── Token tutorial ──
             auto* tutFrame = new QFrame(tokenPage);
             tutFrame->setFrameShape(QFrame::StyledPanel);
             tutFrame->setStyleSheet(QString(
@@ -1646,9 +1453,6 @@ private:
             tutTitle->setStyleSheet(QString("QLabel { background: transparent; color: %1; font-size: 11px; font-weight: 700; }").arg(Pal::ACCENT));
             tutLay->addWidget(tutTitle);
 
-            // Steps 1-3 first, then the command row, then steps 4-5.
-            // Built in order — no insertWidget/removeWidget/reparenting tricks
-            // that corrupt the layout and blow out the card height.
             auto addStep = [&](const QString& html) {
                 auto* lbl = new QLabel(html, tutFrame);
                 lbl->setWordWrap(true);
@@ -1661,7 +1465,6 @@ private:
             addStep("2.  Press <b>F12</b> to open DevTools, then click the <b>Console</b> tab.");
             addStep("3.  Paste this command and press <b>Enter</b>:");
 
-            // Command row — built directly in order, no layout surgery
             auto* cmdBox = new QLineEdit(tutFrame);
             cmdBox->setReadOnly(true);
             cmdBox->setText("Object.values(localStorage).map(v=>{try{return JSON.parse(v).access_token}catch{}}).find(t=>t)");
@@ -1722,8 +1525,6 @@ private:
         v->setContentsMargins(0, 10, 0, 0);
         v->setSpacing(10);
 
-        // ── Toolbar — search, filter, and actions in one slim row. Page identity
-        //    comes from the active rail icon now, so no repeated "Library" title. ──
         auto* toolbar = new QHBoxLayout;
         toolbar->setSpacing(8);
 
@@ -1759,8 +1560,6 @@ private:
         m_sortBox->setToolTip("Sort library");
         connect(m_sortBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this]{ sortLibrary(); });
 
-        // Compact icon-only utility actions — tooltip carries the label instead
-        // of a permanent text column, so the toolbar doesn't fight the search box.
         auto makeIconBtn = [&](const QString& iconFile, const QString& tip) {
             auto* b = new GhostButton(QString(), page);
             b->setFixedSize(34, 34);
@@ -1773,7 +1572,6 @@ private:
         m_clearSelBtn = makeIconBtn(":/icons/nav/icons8-clear-48-text.png",      "Clear selection");
         m_undoBtn     = makeIconBtn(":/icons/nav/icons8-undo-48-text.png",       "Undo the last manual selection change");
         m_undoBtn->setEnabled(false);
-        // Redo: mirrored undo icon (arrow points right)
         m_redoBtn     = makeIconBtn(":/icons/nav/icons8-undo-48-text.png",       "Redo the last undone selection change");
         {
             QPixmap pm(":/icons/nav/icons8-undo-48-text.png");
@@ -1818,7 +1616,6 @@ private:
         toolbar->addWidget(m_stopBtn);
         v->addLayout(toolbar);
 
-        // ── Update banner (hidden by default, shown when checkForUpdates finds newer version)
         m_updateBanner = new QWidget(page);
         m_updateBanner->setObjectName("updateBanner");
         m_updateBanner->setStyleSheet(QString("QWidget#updateBanner { background: %1; border: 1px solid %2; border-radius: 8px; }").arg(Pal::ELEV, Pal::BORDER));
@@ -1844,7 +1641,6 @@ private:
         bannerLay->addWidget(bannerDismissBtn);
         v->addWidget(m_updateBanner);
 
-        // ── Second filter row — year + tag/genre (Medium UX)
         auto* filterRow2 = new QHBoxLayout;
         filterRow2->setSpacing(8);
         m_filterYear = new QComboBox(page);
@@ -1884,7 +1680,6 @@ private:
         filterRow2->addWidget(clearFiltersBtn);
         v->addLayout(filterRow2);
 
-        // Escape clears filters
         auto* escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), page);
         connect(escShortcut, &QShortcut::activated, [this, clearFiltersBtn]{
             if (m_filterEdit && m_filterEdit->hasFocus()) m_filterEdit->clear();
@@ -1899,7 +1694,6 @@ private:
         connect(m_filterTag, &QLineEdit::textChanged, [this]{ updateFilterChip(); });
         updateFilterChip();
 
-        // ── Bulk status editor — move selected titles to another category
         auto* bulkRow = new QHBoxLayout;
         bulkRow->setSpacing(8);
         auto* bulkLabel = new QLabel("Bulk move selected to:", page);
@@ -1932,7 +1726,6 @@ private:
         connect(m_bulkApplyBtn, &QPushButton::clicked, this, &MainWindow::onBulkStatusApply);
         v->addLayout(bulkRow);
 
-        // ── Cover cache manager — size + clear
         auto* cacheRow = new QHBoxLayout;
         cacheRow->setSpacing(8);
         m_cacheSizeLbl = new QLabel(page);
@@ -1955,7 +1748,6 @@ private:
         cacheRow->addStretch();
         v->addLayout(cacheRow);
 
-        // ── Statistics dashboard — status breakdown
         auto* dashRow = new QHBoxLayout;
         dashRow->setSpacing(8);
         m_statsDashLbl = new QLabel(page);
@@ -1965,8 +1757,6 @@ private:
         dashRow->addStretch();
         v->addLayout(dashRow);
 
-        // ── Stats strip — one thin line: live status text, selection count,
-        //    and the fetch progress bar, only ever a few px tall. ──
         auto* statsRow = new QHBoxLayout;
         statsRow->setSpacing(10);
 
@@ -1988,7 +1778,6 @@ private:
         statsRow->addWidget(m_countLbl);
         v->addLayout(statsRow);
 
-        // ── Body stack: dashed empty-state placeholder  ⇄  cover grid ──
         m_libraryStack = new ShrinkableStack(page);
 
         auto* emptyState = new QFrame(page);
@@ -2020,7 +1809,6 @@ private:
         esLay->addWidget(esSub, 0, Qt::AlignHCenter);
         emptyState->setMinimumHeight(260);
 
-        // Cover grid
         auto* scroll = new SmoothScrollArea(page);
         scroll->setWidgetResizable(true);
         scroll->setFrameShape(QFrame::NoFrame);
@@ -2030,9 +1818,6 @@ private:
         auto* hostLay  = new QVBoxLayout(gridHost);
         hostLay->setContentsMargins(0, 0, 6, 0);
 
-        // Shown instead of a blank grid when the library has titles but the
-        // current filter/search matches none of them — previously the grid
-        // just went empty with zero explanation of why.
         m_noResultsLbl = new QLabel("No titles match your filter.", gridHost);
         m_noResultsLbl->setAlignment(Qt::AlignCenter);
         m_noResultsLbl->setStyleSheet(QString(
@@ -2082,7 +1867,6 @@ private:
         return page;
     }
 
-    // Swap between the dashed empty-state placeholder and the cover grid.
     void updateLibraryStackVisibility() {
         if (!m_libraryStack) return;
         m_libraryStack->setCurrentIndex(m_libraryOrder.isEmpty() ? 0 : 1);
@@ -2141,7 +1925,6 @@ private:
         int removed = 0;
         QDirIterator it(dir, QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) { it.next(); QFile::remove(it.filePath()); ++removed; }
-        // Remove empty subdirs
         QDirIterator it2(dir, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
         QStringList dirs; while (it2.hasNext()) { it2.next(); dirs << it2.filePath(); }
         std::sort(dirs.begin(), dirs.end(), [](const QString& a, const QString& b){ return a.length() > b.length(); });
@@ -2156,7 +1939,6 @@ private:
         v->setContentsMargins(0, 10, 0, 0);
         v->setSpacing(10);
 
-        // Output folder + formats
         auto* card = new Card(page);
         auto* lay  = new QVBoxLayout(card);
         lay->setContentsMargins(16, 14, 16, 14);
@@ -2215,16 +1997,15 @@ private:
         lay->addLayout(fmtRow);
         v->addWidget(card);
 
-        // Action row — two explicit, independent export actions
         auto* aRow = new QHBoxLayout;
         m_exportAllBtn = new AccentButton("Export Entire Library", page);
         m_exportAllBtn->setFixedWidth(200);
-        connect(m_exportAllBtn, &QPushButton::clicked, this, [this]{ onExport(/*selectedOnly*/false); });
+        connect(m_exportAllBtn, &QPushButton::clicked, this, [this]{ onExport(false); });
 
         m_exportSelBtn = new GhostButton("Export Selected", page);
         m_exportSelBtn->setFixedWidth(200);
         m_exportSelBtn->setEnabled(false);
-        connect(m_exportSelBtn, &QPushButton::clicked, this, [this]{ onExport(/*selectedOnly*/true); });
+        connect(m_exportSelBtn, &QPushButton::clicked, this, [this]{ onExport(true); });
 
         aRow->addWidget(m_exportAllBtn);
         aRow->addWidget(m_exportSelBtn);
@@ -2235,7 +2016,6 @@ private:
         m_selInfo->setStyleSheet(QString("QLabel { color: %1; font-size: 12px; background: transparent; }").arg(Pal::MUTED));
         v->addWidget(m_selInfo);
 
-        // ── MDList sync — push bookmarks into a MangaDex custom list ────────
         auto* mdCard = new Card(page);
         auto* ml     = new QVBoxLayout(mdCard);
         ml->setContentsMargins(16, 14, 16, 14);
@@ -2265,12 +2045,12 @@ private:
         m_mdlistAllBtn = new AccentButton("Sync Entire Library", mdCard);
         m_mdlistAllBtn->setFixedWidth(210);
         m_mdlistAllBtn->setToolTip("Add every bookmarked title in your library to this MDList on MangaDex");
-        connect(m_mdlistAllBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(/*selectedOnly*/false); });
+        connect(m_mdlistAllBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(false); });
         m_mdlistSelBtn = new GhostButton("Sync Selected", mdCard);
         m_mdlistSelBtn->setFixedWidth(210);
         m_mdlistSelBtn->setEnabled(false);
         m_mdlistSelBtn->setToolTip("Add only the titles selected in Library to this MDList on MangaDex");
-        connect(m_mdlistSelBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(/*selectedOnly*/true); });
+        connect(m_mdlistSelBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(true); });
         m_mdlistStopBtn = new GhostButton("Stop", mdCard);
         m_mdlistStopBtn->setFixedWidth(80);
         m_mdlistStopBtn->hide();
@@ -2301,7 +2081,6 @@ private:
         sep2->setStyleSheet(QString("QFrame { color: %1; }").arg(Pal::BORDER));
         v->addWidget(sep2);
 
-        // Import guide
         auto* guide = new QLabel(
             "MAL XML → MyAnimeList · AniList (Settings→Import) · MangaBaka (Settings→Import→MAL) · Kitsu (Settings→Import) · MangaFire (Profile→Import/Export)\nAP .gz → Anime-Planet (your list → Import it now)    |    MangaUpdates & comix.to have no list import.", page);
         guide->setStyleSheet(QString("QLabel { color: %1; font-size: 11px; background: transparent; }").arg(Pal::MUTED));
@@ -2317,7 +2096,6 @@ private:
         v->setContentsMargins(0, 10, 0, 0);
         v->setSpacing(10);
 
-        // ── URL input card ────────────────────────────────────────────────────
         auto* urlCard = new Card(page);
         auto* ulLay   = new QVBoxLayout(urlCard);
         ulLay->setContentsMargins(16, 14, 16, 14);
@@ -2338,7 +2116,6 @@ private:
         urlRow->addWidget(m_dlLookupBtn);
         ulLay->addLayout(urlRow);
 
-        // hint
         auto* hint = new QLabel("You can also right-click any manga card in Library → Open on MangaDex, then copy the URL here.", urlCard);
         hint->setStyleSheet(QString("QLabel{background:transparent;color:%1;font-size:10px;}").arg(Pal::MUTED));
         hint->setWordWrap(true);
@@ -2346,11 +2123,9 @@ private:
 
         v->addWidget(urlCard);
 
-        // ── Manga info + chapter list ─────────────────────────────────────────
         auto* midRow = new QHBoxLayout;
         midRow->setSpacing(10);
 
-        // Cover + info panel (left)
         auto* infoCard = new Card(page);
         infoCard->setFixedWidth(200);
         auto* infoLay = new QVBoxLayout(infoCard);
@@ -2367,13 +2142,9 @@ private:
         m_dlMangaCover->setText("🐾");
         infoLay->addWidget(m_dlMangaCover, 0, Qt::AlignHCenter);
 
-        // m_dlMangaTitle kept as a hidden no-op so onDlLookup setText calls don't crash
         m_dlMangaTitle = new QLabel(page);
         m_dlMangaTitle->hide();
 
-        // ── Author / Artist / Genres / Demographic ────────────────────────────
-        // Both the heading and the "—" placeholder are collected so the whole
-        // section can be hidden while signed out (see setDownloadInfoVisible).
         auto makeInfoSection = [&](const QString& heading) -> QLabel* {
             infoLay->addSpacing(6);
             auto* hdr = new QLabel(heading, infoCard);
@@ -2399,13 +2170,11 @@ private:
         infoLay->addStretch();
         midRow->addWidget(infoCard, 0);
 
-        // Chapter list (right)
         auto* chCard = new Card(page);
         auto* chLay  = new QVBoxLayout(chCard);
         chLay->setContentsMargins(12, 12, 12, 12);
         chLay->setSpacing(8);
 
-        // Chapter controls row
         auto* chCtrl = new QHBoxLayout;
         auto* chHdr  = new QLabel("Chapters", chCard);
         chHdr->setStyleSheet(QString("QLabel{background:transparent;color:%1;font-size:13px;font-weight:700;}").arg(Pal::TEXT));
@@ -2444,13 +2213,11 @@ private:
         midRow->addWidget(chCard, 1);
         v->addLayout(midRow, 1);
 
-        // ── Download controls card ─────────────────────────────────────────────
         auto* dlCard = new Card(page);
         auto* dlLay  = new QVBoxLayout(dlCard);
         dlLay->setContentsMargins(16, 12, 16, 12);
         dlLay->setSpacing(8);
 
-        // Output path row
         auto* pathRow = new QHBoxLayout;
         auto* pathLbl = new QLabel("Download to:", dlCard);
         pathLbl->setStyleSheet(QString("QLabel{background:transparent;color:%1;font-size:12px;}").arg(Pal::MUTED));
@@ -2475,7 +2242,6 @@ private:
         pathNote->setStyleSheet(QString("QLabel{background:transparent;color:%1;font-size:10px;}").arg(Pal::MUTED));
         dlLay->addWidget(pathNote);
 
-        // Progress + buttons
         m_dlProgress = new SmoothProgressBar(dlCard);
         m_dlProgress->setRange(0, 100);
         m_dlProgress->setValueInstant(0);
@@ -2507,12 +2273,8 @@ private:
         return page;
     }
 
-    // ── Download logic ────────────────────────────────────────────────────────
-
-    // Extract UUID from URL like https://mangadex.org/title/<uuid>[/...]
     static QString extractMangaId(const QString& input) {
         QString s = input.trimmed();
-        // Bare UUID
         static const QRegularExpression uuid(
             "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})",
             QRegularExpression::CaseInsensitiveOption);
@@ -2536,14 +2298,12 @@ private:
         m_dlMangaGenres->setText("—");
         m_dlMangaDemog->setText("—");
 
-        // Clear old chapter list
         m_dlChapters.clear();
         m_dlChkBoxes.clear();
         QLayoutItem* item;
         while ((item = m_dlChapterLay->takeAt(0))) { delete item->widget(); delete item; }
         m_dlChapterLay->addStretch();
 
-        // Fetch manga metadata (for title + cover)
         QUrl url(QString(API_BASE) + "/manga/" + id);
         QUrlQuery q;
         q.addQueryItem("includes[]", "cover_art");
@@ -2563,13 +2323,11 @@ private:
             const auto e    = parseManga(data, "");
             m_dlMangaTitleStr = e.title;
             m_dlMangaTitle->setText(e.title);
-            // Populate info panel
             m_dlMangaAuthor->setText(e.authors.isEmpty()   ? "—" : e.authors);
             m_dlMangaArtist->setText(e.artists.isEmpty()   ? "—" : e.artists);
             m_dlMangaGenres->setText(e.genres.isEmpty()    ? "—" : e.genres);
             m_dlMangaDemog->setText( e.demographic.isEmpty()? "—" : e.demographic[0].toUpper()
                                                                      + e.demographic.mid(1));
-            // Load cover
             if (!e.coverUrl.isEmpty())
                 CoverLoader::inst().load(e.coverUrl, m_dlMangaCover, QSize(154, 220));
             m_dlStatusLbl->setText(QString("Found: %1. Fetching chapter list…").arg(e.title));
@@ -2623,7 +2381,6 @@ private:
             }
 
             if (offset + arr.size() < total && !arr.isEmpty()) {
-                // More pages
                 QTimer::singleShot(300, this, [this, offset, arr]{
                     fetchChapters(offset + arr.size());
                 });
@@ -2634,9 +2391,6 @@ private:
     }
 
     void populateChapterList(const QString& langFilter = "") {
-        // Sort numerically every time we (re-)populate — handles decimal chapters like 7.5, 10.1
-        // Use QLocale::c() to force C-locale parsing (always '.' decimal separator)
-        // so the sort works identically regardless of the user's system locale.
         std::sort(m_dlChapters.begin(), m_dlChapters.end(),
             [](const ChapterInfo& a, const ChapterInfo& b) {
                 auto toNum = [](const QString& s) -> QPair<double, bool> {
@@ -2652,7 +2406,6 @@ private:
                 if (okB) return false;
                 return a.chapter < b.chapter;  // both non-numeric: alphabetical
             });
-        // Rebuild language combo
         if (langFilter.isEmpty()) {
             QSet<QString> langs;
             for (const auto& c : m_dlChapters) langs.insert(c.lang);
@@ -2662,7 +2415,6 @@ private:
             QStringList sorted = langs.values();
             std::sort(sorted.begin(), sorted.end());
             for (const auto& l : sorted) m_dlLangFilter->addItem(l.toUpper(), l);
-            // Default to English if available
             int enIdx = m_dlLangFilter->findData("en");
             if (enIdx >= 0) m_dlLangFilter->setCurrentIndex(enIdx);
             m_dlLangFilter->blockSignals(false);
@@ -2670,7 +2422,6 @@ private:
 
         const QString activeLang = m_dlLangFilter->currentData().toString();
 
-        // Clear old widgets
         m_dlChkBoxes.clear();
         QLayoutItem* item;
         while ((item = m_dlChapterLay->takeAt(0))) { delete item->widget(); delete item; }
@@ -2713,14 +2464,12 @@ private:
             pgLbl->setStyleSheet(QString("QLabel{background:transparent;color:%1;font-size:10px;}").arg(Pal::MUTED));
             rl->addWidget(pgLbl);
 
-            // Always add group column — empty string keeps layout aligned across all rows
             {
                 auto* grp = new QLabel(row);
                 grp->setFixedWidth(150);
                 grp->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                 grp->setStyleSheet(QString("QLabel{background:transparent;color:%1;font-size:10px;}").arg(Pal::MUTED));
                 if (!ci.group.isEmpty()) {
-                    // Elide long group names instead of overflowing or wrapping
                     QFontMetrics fm(grp->font());
                     grp->setText(fm.elidedText(ci.group, Qt::ElideRight, 146));
                     grp->setToolTip(ci.group);
@@ -2730,8 +2479,6 @@ private:
 
             m_dlChapterLay->addWidget(row);
 
-            // Staggered slide-in: each row fades + slides left from +24px
-            // Delay capped at 400ms total so large chapter counts don't drag
             const int delay = qMin(shown * 18, 400);
             row->setVisible(false);
             QTimer::singleShot(delay, row, [row] {
@@ -2801,7 +2548,6 @@ private:
     void onDlStart() {
         if (m_dlRunning || m_dlMangaId.isEmpty()) return;
 
-        // Collect selected chapter ids in display order
         m_dlQueue.clear();
         QMap<QString, ChapterInfo> ciById;
         for (const auto& ci : m_dlChapters) ciById[ci.id] = ci;
@@ -2818,7 +2564,6 @@ private:
             return;
         }
 
-        // Resolve download path
         QString basePath = m_dlPathEdit->text().trimmed();
         if (basePath.isEmpty()) basePath = m_outEdit->text().trimmed();
         if (basePath.isEmpty())
@@ -2865,7 +2610,6 @@ private:
             .arg(m_dlCurrent + 1).arg(m_dlQueue.size())
             .arg(ci.chapter.isEmpty() ? "Oneshot" : ci.chapter));
 
-        // Fetch at-home server URL for the chapter
         QUrl url(QString("https://api.mangadex.org/at-home/server/") + chId);
         auto* reply = apiGet(url);
         connect(reply, &QNetworkReply::finished, this,
@@ -2893,7 +2637,6 @@ private:
                 return;
             }
 
-            // Build chapter folder: <basePath>/<Manga Title>/<Ch folder>/
             const QString mangaDir   = basePath + "/" + sanitizeName(m_dlMangaTitleStr);
             const QString chapterDir = mangaDir  + "/" + chapterFolderName(ci);
             QDir().mkpath(chapterDir);
@@ -2917,7 +2660,6 @@ private:
             ++m_dlCurrent; saveDownloadState();
             const int pct = m_dlCurrent * 100 / m_dlQueue.size();
             m_dlProgress->setValue(pct);
-            // 1.5s cooldown between chapters — MangaDex rate-limit courtesy
             QTimer::singleShot(1500, this, [this, basePath, ciById]{
                 downloadNextChapter(basePath, ciById);
             });
@@ -2929,7 +2671,6 @@ private:
         const QString ext      = pageFile.contains('.') ? pageFile.mid(pageFile.lastIndexOf('.')) : ".jpg";
         const QString savePath = dir + "/" + QString("%1").arg(pageIdx + 1, 3, 10, QChar('0')) + ext;
 
-        // Skip if already downloaded
         if (QFile::exists(savePath)) {
             m_dlStatusLbl->setText(QString("[%1/%2] Ch.%3 — page %4/%5 (cached)")
                 .arg(m_dlCurrent + 1).arg(m_dlQueue.size())
@@ -2958,7 +2699,6 @@ private:
             } else {
                 appendLog(QString("Page %1 failed: %2").arg(pageIdx + 1).arg(reply->errorString()));
             }
-            // 250ms between pages — MangaDex requests at least 40ms; 250 is safe
             QTimer::singleShot(250, this, [this, host, hash, pages, dir, pageIdx, basePath, ci, ciById]{
                 downloadPages(host, hash, pages, dir, pageIdx + 1, basePath, ci, ciById);
             });
@@ -2995,8 +2735,6 @@ private:
 
         return page;
     }
-
-    // ── Networking helpers ────────────────────────────────────────────────────
 
     QNetworkReply* apiGet(const QUrl& url) {
         QNetworkRequest req(url);
@@ -3046,18 +2784,13 @@ private:
         });
     }
 
-    // ── Auth flow ─────────────────────────────────────────────────────────────
-
     void tryAutoConnect() {
         const QString savedRefresh = m_secure.refreshToken();
         const QString savedAccess  = m_secure.accessToken();
         m_userEdit->setText(m_secure.username());
 
-        // Load persisted API credentials before using them in any token grant.
-        // Reload via SecureStore (no hardcoded defaults, user-supplied only).
         m_clientId     = m_secure.clientId();
         m_clientSecret = m_secure.clientSecret();
-        // Mirror into the UI fields so the user sees what's actually being used.
         if (m_clientIdEdit)  m_clientIdEdit->setText(m_clientId);
         if (m_clientSecEdit) m_clientSecEdit->setText(m_clientSecret);
 
@@ -3070,11 +2803,11 @@ private:
             q.addQueryItem("refresh_token", m_refreshToken);
             q.addQueryItem("client_id",     m_clientId);
             q.addQueryItem("client_secret", m_clientSecret);
-            tokenGrant(q, /*silent*/true);
+            tokenGrant(q, true);
         } else if (!savedAccess.isEmpty()) {
             m_authBadge->setNeutral("Reconnecting…");
             m_accessToken = savedAccess;
-            validateToken(/*silent*/true);
+            validateToken(true);
         }
     }
 
@@ -3095,13 +2828,10 @@ private:
         reply->deleteLater();
         bool isManual = m_manualUpdateCheck;
         m_manualUpdateCheck = false;
-        // Allow manual re-check: delete and reset so next check can run
         if (m_updateNam == qobject_cast<QNetworkAccessManager*>(reply->manager())) {
-            // keep m_updateNam for reuse, but allow next check after deleteLater of reply
         }
         if (reply->error() != QNetworkReply::NoError) {
             appendLog(QString("Update check failed: %1").arg(reply->errorString()));
-            // Reset for manual retry
             if (m_updateNam) { m_updateNam->deleteLater(); m_updateNam = nullptr; }
             if (isManual) {
                 QMessageBox box(this);
@@ -3147,7 +2877,6 @@ private:
         if (latest.startsWith('v')) latest = latest.mid(1);
         const QString current = QApplication::applicationVersion();
         if (current.isEmpty()) {
-            // Fallback if applicationVersion not set — use hardcoded 3.5.0 as baseline
             const QVersionNumber vLatest = QVersionNumber::fromString(latest);
             if (!vLatest.isNull() && m_statsLbl) {
                 const QString msg = QString("Latest: v%1 - https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/tag/%2").arg(latest, tag);
@@ -3214,7 +2943,6 @@ private:
             m_updateBannerLabel->setText(QString("Update available: v%1 -> v%2").arg(current, latest));
             m_updateBanner->show();
         }
-        // Reset for next manual check
         if (m_updateNam) { m_updateNam->deleteLater(); m_updateNam = nullptr; }
         if (isManual) {
             QMessageBox box(this);
@@ -3298,7 +3026,7 @@ private:
         q.addQueryItem("password",      pass);
         q.addQueryItem("client_id",     m_clientId);
         q.addQueryItem("client_secret", m_clientSecret);
-        tokenGrant(q, /*silent*/false);
+        tokenGrant(q, false);
     }
 
     void onTokenConnect() {
@@ -3307,7 +3035,7 @@ private:
         m_accessToken  = token;
         m_refreshToken.clear();
         m_authBadge->setNeutral("Validating…");
-        validateToken(/*silent*/false);
+        validateToken(false);
     }
 
     void validateToken(bool silent) {
@@ -3333,7 +3061,6 @@ private:
         m_accessToken  = access;
         m_refreshToken = refresh;
 
-        // Persist session via SecureStore (no hardcoded secrets)
         const bool stay = !m_stayChk || m_stayChk->isChecked();
         if (stay) {
             m_secure.setAccessToken(m_accessToken);
@@ -3342,7 +3069,6 @@ private:
             m_secure.sync();
         }
 
-        // Auto-refresh a minute before expiry so we stay connected
         if (!m_refreshToken.isEmpty())
             m_refreshTimer->start(qMax(60, expiresSec - 60) * 1000);
 
@@ -3410,8 +3136,6 @@ private:
     }
 
     void onLogout() {
-        // A running MDList sync can't continue without a session — let the
-        // in-flight request land, then the loop stops at m_mdlistStop.
         if (m_mdlistRunning) m_mdlistStop = true;
         m_refreshTimer->stop();
         m_accessToken.clear();
@@ -3474,15 +3198,10 @@ private:
         setDownloadInfoVisible(false);
     }
 
-    // Signed-out state hides the Author/Artist/Genres/Demographic block on the
-    // Download tab entirely (heading + "—" placeholder), rather than showing
-    // empty-looking labels for a tab the user can't even interact with yet.
     void setDownloadInfoVisible(bool visible) {
         for (auto* l : m_dlInfoLabels)
             if (l) l->setVisible(visible);
     }
-
-    // ── Library fetch ─────────────────────────────────────────────────────────
 
     void setFetchingUi(bool on) {
         m_fetching = on;
@@ -3533,7 +3252,6 @@ private:
                 return;
             }
 
-            // Reset library state, keep selection
             clearCards(m_libCards, m_grid);
             m_libraryOrder.clear();
             m_allIds = m_statusMap.keys();
@@ -3585,7 +3303,6 @@ private:
                 m_libraryOrder << id;
                 returned.insert(id);
             }
-            // Entries MangaDex no longer serves
             for (const auto& id : batch) {
                 if (!returned.contains(id)) {
                     MangaEntry e;
@@ -3602,7 +3319,6 @@ private:
             m_libProgress->setValue((b + 1) * 100 / totalBatches);
             m_statsLbl->setText(QString("Loading details…  batch %1 / %2").arg(b + 1).arg(totalBatches));
 
-            // 1 second between batches — keeps the API load low for large libraries
             QTimer::singleShot(1000, this, [this, b] { processBatch(b + 1); });
         });
     }
@@ -3622,7 +3338,6 @@ private:
         clearSkeletons();
         m_libProgress->hide();
         appendLog(QString("Stopped. %1 titles loaded.").arg(m_libraryOrder.size()));
-        // Render whatever we managed to fetch
         finishLibrary();
     }
 
@@ -3661,7 +3376,6 @@ private:
     void sortLibrary() {
         if (m_libCards.isEmpty() && m_libraryOrder.isEmpty()) return;
         applyLibrarySort();
-        // Re-sort the already-created card widgets to match the new order
         if (!m_libCards.isEmpty()) {
             int mode = m_sortBox ? m_sortBox->currentData().toInt() : 0;
             std::sort(m_libCards.begin(), m_libCards.end(),
@@ -3690,7 +3404,6 @@ private:
                           default: return ea.title.localeAwareCompare(eb.title) < 0;
                           }
                       });
-            // Keep m_gridPlaced in sync for appendCardsToGrid
             m_gridPlaced = 0;
             for (auto *c : m_libCards) if (!c->isHidden() && cardMatchesFilter(c)) {} // no-op, just counting handled in relayout
         }
@@ -3711,7 +3424,6 @@ private:
         if (!m_isRefresh) {
             appendLog(QString("Library loaded: %1 titles.").arg(m_libraryOrder.size()));
         } else {
-            // Refresh: diff against snapshot saved in refreshLibrary()
             QSet<QString> currSet(m_libraryOrder.begin(), m_libraryOrder.end());
             QSet<QString> prevSet(m_prevOrder.begin(), m_prevOrder.end());
             QSet<QString> added = currSet - prevSet;
@@ -3755,8 +3467,6 @@ private:
         updateRefreshButton();
         clearSkeletons();
 
-        // Build cards in small chunks — creating hundreds of widgets in one
-        // pass froze the UI and caused flicker right after fetching finished.
         buildCardsChunk(0);
     }
 
@@ -3766,20 +3476,12 @@ private:
         const int to = qMin(from + CHUNK, static_cast<int>(m_libraryOrder.size()));
         for (int i = from; i < to; ++i) {
             const QString& id = m_libraryOrder.at(i);
-            // Parent to the grid host immediately so the card can never
-            // become a floating top-level window.
-            auto* card = new MangaCard(m_entries[id], /*small*/false, m_grid->parentWidget());
+            auto* card = new MangaCard(m_entries[id], false, m_grid->parentWidget());
             card->hide();                       // shown by appendCardsToGrid()
             card->setSelected(m_selected.contains(id));
             connect(card, &MangaCard::toggled, this, &MainWindow::onCardToggled);
             m_libCards << card;
         }
-        // Only lay out the cards this chunk just created — relayoutLibrary()
-        // used to run here and re-add every card built so far on every single
-        // chunk, which is O(n^2) over the whole load (a 3000+ title library
-        // meant tens of thousands of redundant addWidget calls and got visibly
-        // slower as it progressed). Appending just the new range keeps each
-        // chunk's cost proportional to CHUNK, not to how much has loaded.
         appendCardsToGrid(from, to);
         if (to < m_libraryOrder.size())
             QTimer::singleShot(0, this, [this, to] { buildCardsChunk(to); });
@@ -3826,8 +3528,6 @@ private:
         m_statsDashLbl->setToolTip(QString("Year distribution (top 5) - total %1 titles").arg(m_libraryOrder.size()));
     }
 
-    // ── Grid / selection plumbing ─────────────────────────────────────────────
-
     void clearCards(QList<MangaCard*>& cards, QGridLayout* grid) {
         while (grid->count() > 0) {
             auto* item = grid->takeAt(0);
@@ -3838,10 +3538,8 @@ private:
         if (grid == m_grid) m_gridPlaced = 0;   // grid cells are empty again — resume placement at 0
     }
 
-    // Optimized skeleton pool — reuse widgets instead of delete/new each fetch to reduce widget churn
     QList<QWidget*> m_skeletonPool;
     void showSkeletons(int count = 10) {
-        // Hide previous but keep pool for reuse
         for (auto* w : m_skeletonCards) if (m_grid) m_grid->removeWidget(w);
         m_skeletonCards.clear();
         if (!m_grid || !m_grid->parentWidget()) return;
@@ -3856,7 +3554,6 @@ private:
                 skel = m_skeletonPool[i];
                 skel->setFixedSize(W, H);
                 skel->setParent(host);
-                // Update cover placeholder size
                 if (auto* lay = qobject_cast<QVBoxLayout*>(skel->layout())) {
                     if (lay->count() > 0) if (auto* lbl = qobject_cast<QLabel*>(lay->itemAt(0)->widget())) lbl->setFixedSize(CW, CH);
                 }
@@ -3899,7 +3596,6 @@ private:
             m_skeletonCards.append(skel);
             m_grid->addWidget(skel, i / GRID_COLS, i % GRID_COLS);
         }
-        // Hide excess pool items
         for (int i=count; i<m_skeletonPool.size(); ++i) m_skeletonPool[i]->hide();
     }
 
@@ -3914,12 +3610,10 @@ private:
     bool cardMatchesFilter(const MangaCard* c) const {
         const QString st = m_filterStatus ? m_filterStatus->currentData().toString() : QString();
         if (!st.isEmpty() && c->entry().status != st) return false;
-        // Year filter
         if (m_filterYear) {
             QString yNeedle = m_filterYear->currentData().toString();
             if (!yNeedle.isEmpty() && c->entry().year != yNeedle) return false;
         }
-        // Tag/genre filter + title/author search
         const QString needle = m_filterEdit ? m_filterEdit->text().trimmed() : QString();
         if (!needle.isEmpty()
             && !c->entry().title.contains(needle, Qt::CaseInsensitive)
@@ -3938,7 +3632,6 @@ private:
 
     void updateYearFilter() {
         if (!m_filterYear) return;
-        // Collect distinct years from library
         QSet<QString> years;
         for (auto it = m_entries.begin(); it != m_entries.end(); ++it) {
             if (!it.value().year.isEmpty()) years.insert(it.value().year);
@@ -3997,10 +3690,6 @@ private:
         }
     }
 
-    // Lays out only the freshly-created cards in m_libCards[from, to) at the
-    // next free grid cells, instead of re-adding every card built so far.
-    // Used while a library is still streaming in during buildCardsChunk();
-    // a filter/search change still goes through the full relayoutLibrary().
     void appendCardsToGrid(int from, int to) {
         auto* host = m_grid->parentWidget();
         if (host) host->setUpdatesEnabled(false);
@@ -4142,13 +3831,6 @@ private:
         });
     }
 
-    // ── MDList sync ──────────────────────────────────────────────────────────
-    // Pushes every bookmarked title (or just the selection) into a MangaDex
-    // custom list ("MDList"). Titles are added one at a time via
-    // POST /manga/{id}/list/{listId} — the list-update endpoint replaces the
-    // whole manga array and caps the request body at 8KB, so per-title adds
-    // are the only way to move a full library of 3000+ entries.
-
     void onMdlistSync(bool selectedOnly) {
         if (m_mdlistRunning) { appendLog("MDList sync already running..."); return; }
         if (m_accessToken.isEmpty()) {
@@ -4220,7 +3902,6 @@ private:
         if (m_mdlistStatusLbl) m_mdlistStatusLbl->setText(t);
     }
 
-    // Pages through GET /user/list looking for an existing list with this name.
     void mdlistResolvePage(int offset) {
         if (m_mdlistStop) { mdlistFinish(true); return; }
         QUrl url(QString(API_BASE) + "/user/list");
@@ -4298,7 +3979,6 @@ private:
                 ++m_mdlistAdded;
                 m_mdlistRateRetries = 0;
             } else if (http == 429 && m_mdlistRateRetries < 3) {
-                // Rate limited — back off, then retry the same title.
                 ++m_mdlistRateRetries;
                 setMdlistStatus(QString("Rate limited - backing off… (%1 / %2)")
                                     .arg(m_mdlistCurrent + 1).arg(m_mdlistQueue.size()));
@@ -4306,7 +3986,6 @@ private:
                 return;
             } else if (http == 401) {
                 if (!m_mdlistAuthRetried && !m_refreshToken.isEmpty()) {
-                    // Session expired mid-run — refresh the token once, retry the title.
                     m_mdlistAuthRetried = true;
                     appendLog("MDList sync: session expired - refreshing and retrying…");
                     doRefresh();
@@ -4317,7 +3996,6 @@ private:
                                 "Titles already added stay in the list.");
                 return;
             } else if (http == 400) {
-                // MangaDex rejects duplicates — already in the list.
                 ++m_mdlistSkipped;
                 m_mdlistRateRetries = 0;
             } else {
@@ -4332,7 +4010,6 @@ private:
             setMdlistStatus(QString("Adding to \"%1\"…  %2 / %3   ·   added %4 · skipped %5 · failed %6")
                                 .arg(m_mdlistListName).arg(m_mdlistCurrent).arg(m_mdlistQueue.size())
                                 .arg(m_mdlistAdded).arg(m_mdlistSkipped).arg(m_mdlistFailed));
-            // 350ms between requests — same gentle pacing as the bulk status editor.
             QTimer::singleShot(350, this, [this]{ if (m_mdlistRunning) mdlistAddNext(); });
         });
     }
@@ -4397,8 +4074,6 @@ private:
     void onCardToggled(const QString& id, bool sel) {
         pushUndoSnapshot();
         if (sel) m_selected.insert(id); else m_selected.remove(id);
-        // The toggling card is the signal sender — no need to scan every
-        // card in the library to find it by id.
         if (auto* c = qobject_cast<MangaCard*>(sender())) c->setSelected(sel);
         updateSelectionUi();
     }
@@ -4471,8 +4146,6 @@ private:
         }
         if (m_bulkApplyBtn) m_bulkApplyBtn->setEnabled(n > 0 && !m_bulkRunning);
     }
-
-    // ── Export ────────────────────────────────────────────────────────────────
 
     void onBrowse() {
         const QString dir = QFileDialog::getExistingDirectory(
@@ -4613,7 +4286,6 @@ private:
         appendLog(summary);
         for (const auto& p : saved) appendLog("Saved: " + p);
 
-        // ── Validate every file we just wrote (well-formedness + counts) ──
         QStringList warnings;
         for (const auto& p : saved) {
             QString err;
@@ -4634,10 +4306,6 @@ private:
             QString("Exported %1 title(s).\n\nFiles saved to:\n%2").arg(list.size()).arg(outDir));
     }
 
-    // ── Logging ───────────────────────────────────────────────────────────────
-
-    // Picks a color for a log line based on its content, so errors, warnings,
-    // and successes are scannable at a glance instead of one flat text color.
     static QString logColorFor(const QString& msg) {
         const QString m = msg.toLower();
         if (m.contains("failed") || m.contains("error") || m.contains("expired")
@@ -4660,9 +4328,6 @@ private:
                                "<span style='color:%3'>%4</span>")
                       .arg(Pal::MUTED, ts, logColorFor(msg), msg.toHtmlEscaped()));
 
-        // Smooth auto-scroll to bottom instead of an instant snap — animates
-        // the scrollbar value over 220ms so a burst of log lines glides
-        // instead of jittering the view on every append.
         auto* bar = m_log->verticalScrollBar();
         if (!m_logScrollAnim) {
             m_logScrollAnim = new QPropertyAnimation(bar, "value", this);
@@ -4676,10 +4341,6 @@ private:
     }
 };
 
-// ── Crash/warning log — writes qWarning/qCritical/qFatal to a file in AppData ──
-// so a bug report from someone else's machine isn't a total black box. Debug
-// messages are skipped to keep the file from ballooning; qDebug still goes to
-// the console as normal during development.
 static void fileMessageHandler(QtMsgType type, const QMessageLogContext& ctx, const QString& msg) {
     if (type == QtDebugMsg) return;
     static QFile logFile;
@@ -4701,8 +4362,6 @@ static void fileMessageHandler(QtMsgType type, const QMessageLogContext& ctx, co
     fprintf(stderr, "%s\n", qPrintable(msg));   // still show it during development
 }
 
-// ── Entry point ───────────────────────────────────────────────────────────────
-
 int main(int argc, char* argv[]) {
     qInstallMessageHandler(fileMessageHandler);
 
@@ -4711,15 +4370,8 @@ int main(int argc, char* argv[]) {
     app.setApplicationVersion("3.5.0");
     app.setOrganizationName("SentinelFlow");
 
-    // Single-instance guard — a second launch would point at the same
-    // AppData settings/cover-cache files as the first and race on writes.
-    // QSharedMemory's mere existence across processes (not its contents) is
-    // what we use as the lock; whichever instance created it first wins.
     QSharedMemory singleInstanceLock("SentinelFlow.HitPaw.MangaDexManager.instance-lock");
     if (!singleInstanceLock.create(1)) {
-        // create() fails if a segment with this key already exists, i.e.
-        // another instance is running (or crashed without releasing it on
-        // some platforms — attach()+detach() below recovers from that case).
         if (singleInstanceLock.attach()) singleInstanceLock.detach();
         if (!singleInstanceLock.create(1)) {
             QMessageBox::information(nullptr, "HitPaw MangaDex Manager",

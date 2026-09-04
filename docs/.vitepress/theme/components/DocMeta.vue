@@ -36,9 +36,6 @@ const section = ref('Documentation')
 const copied = ref(false)
 let copyTimer: ReturnType<typeof setTimeout> | null = null
 
-/** Derive the sidebar group name for the current path (e.g. "Guide").
- *  Note: route.path includes the configured base in VitePress 1.6, so it
- *  must be stripped before comparing against sidebar link config. */
 const normPath = (p: string): string =>
   '/' + p.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/^\/+|\/+$/g, '')
 
@@ -69,7 +66,6 @@ const measure = () => {
   const path = route.path
   section.value = deriveSection(path)
 
-  // Reading time from rendered article (≈220 wpm, 1 min floor)
   const doc = document.querySelector('.vp-doc') as HTMLElement | null
   if (doc) {
     const words = (doc.textContent || '').trim().split(/\s+/).filter(Boolean).length
@@ -79,7 +75,6 @@ const measure = () => {
     readingTime.value = ''
   }
 
-  // Last updated from git timestamp (VitePress lastUpdated: true)
   const ts = (page.value as any)?.lastUpdated
   if (ts) {
     try {

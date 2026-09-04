@@ -1,8 +1,5 @@
 import { defineConfig } from 'vitepress'
 
-// Single source of truth for the deployed origin. Change this one line if the
-// project ever moves off the GitHub Pages project path (e.g. to docs.hitpaw.dev) —
-// previously this URL was hardcoded in ~15 places across JSON-LD/OG/sitemap config.
 const SITE_URL = 'https://hit-paw.github.io/HitPaw-MangaDex-Manager'
 const BASE_PATH = '/HitPaw-MangaDex-Manager/'
 
@@ -11,16 +8,11 @@ export default defineConfig({
   titleTemplate: ':title — HitPaw MangaDex Manager',
   description: 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++. Fast, AMOLED, 100% local.',
   lang: 'en-US',
-  // Project site at https://hit-paw.github.io/HitPaw-MangaDex-Manager/ needs '/HitPaw-MangaDex-Manager/' — for custom domain (e.g., docs.hitpaw.dev) set BASE_PATH to '/'
   base: BASE_PATH,
-  // Brand supports both themes — light (paper + orange) & dark (AMOLED).
-  // `true` = follow system preference, manual toggle in the navbar, persisted.
   appearance: true,
   sitemap: {
-    // Include base in hostname — VitePress 1.6 does not auto-prefix base when hostname is apex
     hostname: SITE_URL
   },
-  // Robust sitemap base fix — VitePress 1.6 project-page quirk (polls until complete)
   async buildEnd(siteConfig) {
     const { readFile, writeFile, access } = await import('node:fs/promises')
     const { join } = await import('node:path')
@@ -68,7 +60,6 @@ export default defineConfig({
       xml = xml.replaceAll('HitPaw-MangaDex-Manager//', 'HitPaw-MangaDex-Manager/')
       xml = xml.replaceAll('HitPaw-MangaDex-Manager/HitPaw-MangaDex-Manager', 'HitPaw-MangaDex-Manager')
       xml = xml.replaceAll(`${SITE_URL}</loc>`, `${SITE_URL}/</loc>`)
-      // Fix: 404.html must not be indexed — drop it from the sitemap
       xml = xml.replace(/<url><loc>[^<]*\/404\.html<\/loc>[\s\S]*?<\/url>/g, '')
       if (xml !== before) await writeFile(p, xml, 'utf-8')
     } catch {}
@@ -81,12 +72,6 @@ export default defineConfig({
     lineNumbers: false,
     image: { lazyLoading: true },
     headers: { level: [2, 3] },
-    // Fix: VitePress rewrites markdown-syntax links with base + .html, and turns
-    // raw-HTML <img src>/<source srcset> into module imports (also base-prefixed).
-    // BUT raw-HTML <a href="/page"> is left as a literal string — no base prefix,
-    // no .html — so those links 404 on the GitHub Pages project site. Rewrite
-    // internal hrefs in html tokens here. Keep BASE in sync with `base` above.
-    // Only touch href — src/srcset must stay literal for Vite's import pipeline.
     config(md) {
       const BASE = BASE_PATH
       const BASE_DIR = BASE.replace(/\/$/, '')
@@ -121,18 +106,15 @@ export default defineConfig({
     }
   },
   head: [
-    // Favicon — base-prefixed for GitHub Pages project site
     ['link', { rel: 'icon', type: 'image/x-icon', href: `${BASE_PATH}hitpaw.ico` }],
     ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: `${BASE_PATH}icon_16.png` }],
     ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${BASE_PATH}icon_32.png` }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: `${BASE_PATH}icon_256.png` }],
     ['link', { rel: 'manifest', href: `${BASE_PATH}manifest.webmanifest` }],
-    // Theme — matches page background per color mode (Editorial Ink paper/charcoal)
     ['meta', { name: 'theme-color', content: '#f6f2e9', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#151310', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'dark light' }],
     ['meta', { name: 'format-detection', content: 'telephone=no' }],
-    // SEO — core
     ['meta', { name: 'author', content: 'Hit-Paw' }],
     ['meta', { name: 'keywords', content: 'MangaDex, manga manager, manga library, MAL, AniList, Kitsu, MangaBaka, Anime-Planet, Qt6, HitPaw' }],
     ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large' }],
@@ -147,7 +129,6 @@ export default defineConfig({
     ['meta', { property: 'og:image:alt', content: 'HitPaw MangaDex Manager — Desktop app preview' }],
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
-    // Twitter
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:site', content: '@HitPaw' }],
     ['meta', { name: 'twitter:creator', content: '@HitPaw' }],
@@ -155,7 +136,6 @@ export default defineConfig({
     ['meta', { name: 'twitter:description', content: 'Browse, filter, and export your MangaDex library. Built with Qt6/C++ — dark AMOLED, offline exports.' }],
     ['meta', { name: 'twitter:image', content: `${SITE_URL}/og-image.png` }],
     ['meta', { name: 'twitter:image:alt', content: 'HitPaw MangaDex Manager preview' }],
-    // Perf — critical preloads
     ['link', { rel: 'preload', as: 'image', href: `${BASE_PATH}preview-1.webp`, type: 'image/webp', fetchpriority: 'high' }],
     ['link', { rel: 'preload', as: 'image', href: `${BASE_PATH}icon_256.png`, type: 'image/png' }],
     ['link', { rel: 'preconnect', href: 'https://github.com' }],
@@ -163,7 +143,6 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://api.mangadex.org' }],
     ['link', { rel: 'dns-prefetch', href: 'https://api.mangadex.org' }],
     ['link', { rel: 'dns-prefetch', href: 'https://uploads.mangadex.org' }],
-    // JSON-LD SoftwareApplication + WebSite + Organization — primary graph
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
       '@graph': [
@@ -189,9 +168,6 @@ export default defineConfig({
             `${SITE_URL}/preview-4.png`
           ],
           featureList: 'Library grid, Cover cache, Export CSV/JSON/MAL/MB/AP, Sync to MDList, Update check, Secure local storage'
-          // aggregateRating deliberately omitted — a single self-reported 5-star
-          // rating is the pattern Google's structured-data guidelines flag as
-          // low-trust. Re-add only once there's real review-count data behind it.
         },
         {
           '@type': 'WebSite',
@@ -222,7 +198,6 @@ export default defineConfig({
     const canonical = pageData.relativePath === 'index.md' ? `${baseUrl}/` : url
     const title = (pageData.frontmatter as any)?.title || pageData.title || 'HitPaw MangaDex Manager'
     const desc = (pageData.frontmatter as any)?.description || (pageData as any).description || 'Desktop app for browsing, filtering, and exporting your MangaDex library — Qt6/C++.'
-    // Breadcrumb JSON-LD per page
     const parts = clean.replace(/\.html$/, '').split('/').filter(Boolean)
     const breadcrumb = parts.length ? {
       '@context': 'https://schema.org',
@@ -307,7 +282,6 @@ export default defineConfig({
     }
   },
   vite: {
-    // Perf: keep VitePress defaults + small tweaks — avoid aggressive manualChunks that breaks local search (mark.js)
     build: {
       chunkSizeWarningLimit: 800
     }

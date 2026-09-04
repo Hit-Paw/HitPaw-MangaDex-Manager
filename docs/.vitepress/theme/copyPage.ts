@@ -1,9 +1,4 @@
-/**
- * copyPage.ts — "Copy page as Markdown"
- * Converts the rendered .vp-doc article into clean GFM Markdown, in the
- * spirit of professional docs (Mintlify / Anthropic-style "Copy page").
- * Pure client-side: walks the DOM of the current article.
- */
+
 
 const SKIP_SELECTOR = [
   '.header-anchor',
@@ -20,10 +15,8 @@ function absUrl(url: string): string {
   }
 }
 
-/** Inline rendering: strong/em/code/links collapse into Markdown spans. */
 function renderInline(node: Node): string {
   if (node.nodeType === Node.TEXT_NODE) {
-    // Collapse whitespace the way HTML rendering does
     return (node.textContent || '').replace(/\s+/g, ' ')
   }
   if (node.nodeType !== Node.ELEMENT_NODE) return ''
@@ -68,7 +61,6 @@ function renderInline(node: Node): string {
     case 'BR':
       return ' '
     default: {
-      // Buttons inside prose (e.g. copy buttons) contribute nothing
       if (el.tagName === 'BUTTON' || el.tagName === 'SPAN' && el.classList.contains('vp-copy')) return ''
       return kids()
     }
@@ -83,7 +75,6 @@ function renderList(el: HTMLElement, indent: string, ordered: boolean): string {
     const marker = ordered ? `${index}. ` : '- '
     index++
 
-    // Split the LI into inline content vs nested blocks (lists, paragraphs)
     let inline = ''
     const nested: string[] = []
     Array.from(li.childNodes).forEach((child) => {
@@ -133,11 +124,9 @@ function codeLang(pre: HTMLElement): string {
   if (!wrapper) return ''
   const m = wrapper.className.match(/language-([\w-]+)/)
   if (!m) return ''
-  // Skip vp-demo / unknown markers
   return m[1] === 'md' ? 'markdown' : m[1]
 }
 
-/** Block rendering: headings, paragraphs, lists, tables, code, quotes. */
 function renderBlock(el: HTMLElement, depth = 0): string {
   if (el.matches(SKIP_SELECTOR)) return ''
   switch (el.tagName) {
@@ -183,7 +172,6 @@ function renderBlock(el: HTMLElement, depth = 0): string {
       return `**${sumText}**\n\n${body.join('\n\n')}`.trim()
     }
     case 'DIV': {
-      // Editorial components → sensible Markdown equivalents
       if (el.classList.contains('badge-row')) {
         const links = Array.from(el.querySelectorAll('a, span'))
           .map((n) => renderInline(n).trim()).filter(Boolean)
@@ -197,12 +185,10 @@ function renderBlock(el: HTMLElement, depth = 0): string {
           .map((c) => renderBlock(c as HTMLElement, depth)).join('\n\n')
         return [`> **${t}**`, ...inner.split('\n').map((l) => `> ${l}`.trimEnd())].join('\n')
       }
-      // Generic container: recurse over block children, ignore stray inline junk
       const out = Array.from(el.children).map((c) => renderBlock(c as HTMLElement, depth)).filter(Boolean)
       return out.join('\n\n')
     }
     default: {
-      // Unknown block-ish element: try inline rendering, else recurse
       const hasBlockKids = Array.from(el.children).some((c) =>
         /^H[1-6]|P|UL|OL|TABLE|PRE|DIV|BLOCKQUOTE|DETAILS$/.test(c.tagName)
       )
@@ -214,8 +200,6 @@ function renderBlock(el: HTMLElement, depth = 0): string {
   }
 }
 
-/** Convert the main article to Markdown. skipH1 drops the article's own
- *  title (used when the caller prepends a header with the page title). */
 export function docToMarkdown(root: HTMLElement, opts: { skipH1?: boolean } = {}): string {
   const parts: string[] = []
   let skippedH1 = false
@@ -230,14 +214,13 @@ export function docToMarkdown(root: HTMLElement, opts: { skipH1?: boolean } = {}
   return parts.join('\n\n').replace(/\n{3,}/g, '\n\n').trim() + '\n'
 }
 
-/** Clipboard with a non-secure-context fallback. */
 export async function copyText(text: string): Promise<boolean> {
   try {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text)
       return true
     }
-  } catch { /* fall through */ }
+  } catch {  }
   try {
     const ta = document.createElement('textarea')
     ta.value = text

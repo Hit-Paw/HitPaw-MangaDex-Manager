@@ -1,7 +1,3 @@
-/* Lightbox viewport — centered, max-size, mobile-safe. Overrides custom.css for fixed viewport. */
-/* (Global .VPContent fade lives in custom.css only — keep a single source of truth.) */
-
-/* Use flex centering relative to viewport — even when .VPContent has transforms */
 .lightbox {
   position: fixed !important;
   inset: 0 !important;

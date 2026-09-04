@@ -25,8 +25,6 @@ const STORAGE_KEY = 'hp-announce-v3.5.0'
 const HEIGHT = '40px'
 const visible = ref(false)
 
-// VitePress reads --vp-layout-top-height on VPNav / VPSidebar / VPContent /
-// VPDoc / VPLocalNav / VPNavScreen, so setting it shifts the whole layout.
 const setOffset = (on: boolean) => {
   try {
     if (on) document.documentElement.style.setProperty('--vp-layout-top-height', HEIGHT)
