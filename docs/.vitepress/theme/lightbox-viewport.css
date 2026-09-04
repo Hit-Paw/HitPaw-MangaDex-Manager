@@ -1,8 +1,3 @@
-html.js .VPContent {
-  animation: hitpawFadeIn 0.45s ease both !important;
-}
-@keyframes hitpawFadeIn { from { opacity: 0; } to { opacity: 1; } }
-
 .lightbox {
   position: fixed !important;
   inset: 0 !important;

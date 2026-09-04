@@ -1,12 +1,21 @@
 import DefaultTheme from 'vitepress/theme'
+import { h, onMounted, watch, nextTick } from 'vue'
+import { useRoute } from 'vitepress'
 import './custom.css'
 import './lightbox-viewport.css'
-
-import { onMounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vitepress'
+import NotFoundPage from './NotFoundPage.vue'
+import AnnounceBar from './components/AnnounceBar.vue'
+import DocMeta from './components/DocMeta.vue'
+import DocFeedback from './components/DocFeedback.vue'
 
 export default {
   extends: DefaultTheme,
+  Layout: () => h(DefaultTheme.Layout, null, {
+    'not-found': () => h(NotFoundPage),
+    'layout-top': () => h(AnnounceBar),
+    'doc-before': () => h(DocMeta),
+    'doc-after': () => h(DocFeedback)
+  }),
   setup(props: any, ctx: any) {
     let parentResult: any = undefined
     try {
@@ -16,36 +25,256 @@ export default {
 
     const route = useRoute()
 
+  const REVEAL_SELECTOR = [
+    '.stat-card',
+    '.why-card',
+    '.community-card',
+    '.quick-card',
+    '.faq-strip details',
+    '.preview-grid .preview-card',
+    '.section-head',
+    '.vs-table',
+    '.cta-banner',
+    '.vp-doc table',
+    '.vp-doc blockquote',
+    '.vp-doc div[class*="language-"]',
+    '.vp-doc .custom-block',
+    '.vp-doc details'
+  ].join(', ')
+
+    const prefersReducedMotion = () =>
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const isEditable = (el: EventTarget | null) => {
+      if (!(el instanceof HTMLElement)) return false
+      return el.isContentEditable ||
+        el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT'
+    }
+
+    const setupProgressBar = () => {
+      let bar = document.getElementById('hp-progress') as HTMLElement | null
+      if (!bar) {
+        bar = document.createElement('div')
+        bar.id = 'hp-progress'
+        bar.setAttribute('aria-hidden', 'true')
+        const fill = document.createElement('div')
+        fill.className = 'hp-progress-fill'
+        bar.appendChild(fill)
+        document.body.appendChild(bar)
+      }
+    }
+
+    const updateProgress = () => {
+      const bar = document.getElementById('hp-progress')
+      if (!bar) return
+      const doc = document.querySelector('.vp-doc')
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const active = !!doc && max > 80
+      if (!active) { bar.classList.remove('show'); return }
+      const pct = Math.min(1, Math.max(0, window.scrollY / max))
+      const fill = bar.firstElementChild as HTMLElement | null
+      if (fill) fill.style.transform = `scaleX(${pct})`
+      bar.classList.toggle('show', window.scrollY > 40)
+    }
+
+    const setupBackToTop = () => {
+      let btn = document.getElementById('hp-top') as HTMLButtonElement | null
+      if (!btn) {
+        btn = document.createElement('button')
+        btn.id = 'hp-top'
+        btn.type = 'button'
+        btn.className = 'hp-top'
+        btn.setAttribute('aria-label', 'Back to top')
+        btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>'
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+        })
+        document.body.appendChild(btn)
+      }
+    }
+
+    const updateBackToTop = () => {
+      const btn = document.getElementById('hp-top')
+      if (!btn) return
+      const show = window.scrollY > 560
+      btn.classList.toggle('show', show)
+      const lbOpen = document.getElementById('lightbox')?.classList.contains('open')
+      if (lbOpen) btn.classList.remove('show')
+    }
+
+    let scrollWired = false
+    const wireScroll = () => {
+      if (scrollWired) return
+      scrollWired = true
+      let ticking = false
+      const onScroll = () => {
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(() => {
+          updateProgress()
+          updateBackToTop()
+          ticking = false
+        })
+      }
+      window.addEventListener('scroll', onScroll, { passive: true })
+      window.addEventListener('resize', onScroll, { passive: true })
+      onScroll()
+    }
+
+    const onSearchKey = (e: KeyboardEvent) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return
+      if (isEditable(e.target)) return
+      if (document.getElementById('lightbox')?.classList.contains('open')) return
+      if (document.querySelector('.VPLocalSearchBox')) return
+      const btn = document.querySelector('.VPNavBarSearch button') as HTMLElement | null
+      if (btn && btn.offsetParent !== null) {
+        e.preventDefault()
+        btn.click()
+      }
+    }
+
+    const setupFaqFilter = () => {
+      const root = document.getElementById('faq-filter-root')
+      if (!root || root.dataset.init === '1') return
+      const doc = root.closest('.vp-doc') as HTMLElement | null
+      if (!doc) return
+      root.dataset.init = '1'
+      root.innerHTML = ''
+
+      const wrap = document.createElement('div')
+      wrap.className = 'faq-filter'
+      wrap.setAttribute('role', 'search')
+
+      const input = document.createElement('input')
+      input.type = 'search'
+      input.className = 'faq-filter-input'
+      input.placeholder = 'Filter questions…'
+      input.setAttribute('aria-label', 'Filter frequently asked questions')
+
+      const count = document.createElement('span')
+      count.className = 'faq-filter-count'
+      count.setAttribute('aria-live', 'polite')
+
+      const clear = document.createElement('button')
+      clear.type = 'button'
+      clear.className = 'faq-filter-clear'
+      clear.setAttribute('aria-label', 'Clear filter')
+      clear.textContent = '×'
+      clear.style.display = 'none'
+
+      wrap.appendChild(input)
+      wrap.appendChild(clear)
+      wrap.appendChild(count)
+      root.appendChild(wrap)
+
+      const rows = Array.from(doc.querySelectorAll('details'))
+      const sections = Array.from(doc.querySelectorAll('h2'))
+      const total = rows.length
+      const setCount = (shown: number) => {
+        count.textContent = input.value.trim()
+          ? `${shown} / ${total} shown`
+          : ''
+        clear.style.display = input.value ? 'flex' : 'none'
+      }
+
+      const apply = () => {
+        const q = input.value.trim().toLowerCase()
+        let shown = 0
+        rows.forEach((d) => {
+          const text = (d.textContent || '').toLowerCase()
+          const match = !q || text.includes(q)
+          d.classList.toggle('faq-hidden', !match)
+          if (match) shown++
+        })
+        sections.forEach((h) => {
+          let any = false
+          let node: Element | null = h.nextElementSibling
+          while (node && node.tagName !== 'H2') {
+            if (node.tagName === 'DETAILS' && !node.classList.contains('faq-hidden')) { any = true; break }
+            node = node.nextElementSibling
+          }
+          h.classList.toggle('faq-hidden', q !== '' && !any)
+        })
+        setCount(shown)
+      }
+
+      input.addEventListener('input', apply)
+      clear.addEventListener('click', () => { input.value = ''; apply(); input.focus() })
+      apply()
+    }
+
+    const stripCopyTooltips = () => {
+      document
+        .querySelectorAll('div[class*="language-"] > button.copy[title]')
+        .forEach((b) => {
+          b.removeAttribute('title')
+          if (!b.getAttribute('aria-label')) b.setAttribute('aria-label', 'Copy code')
+        })
+    }
+
+    const setupCopyTooltipStrip = () => {
+      if (copyTitleMO) return
+      stripCopyTooltips()
+      let queued = false
+      copyTitleMO = new MutationObserver(() => {
+        if (queued) return
+        queued = true
+        requestAnimationFrame(() => { queued = false; stripCopyTooltips() })
+      })
+      copyTitleMO.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributeFilter: ['title']
+      })
+    }
+
+    const setupProFeatures = () => {
+      setupProgressBar()
+      setupBackToTop()
+      wireScroll()
+      requestAnimationFrame(() => { updateProgress(); updateBackToTop() })
+      setupFaqFilter()
+      setupCopyTooltipStrip()
+    }
+
+    const onReveal = (el: Element) => {
+      el.classList.add('in-view')
+    }
+
     const markJS = () => {
       try { document.documentElement.classList.add('js') } catch {}
     }
 
+    let revealIO: IntersectionObserver | null = null
+    let copyTitleMO: MutationObserver | null = null
+
     const observe = () => {
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelectorAll('.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre')
+      if (prefersReducedMotion()) {
+        document.querySelectorAll(REVEAL_SELECTOR)
           .forEach((el) => el.classList.add('in-view'))
         return
       }
-      const els = document.querySelectorAll(
-        '.VPFeatures .item, .stat-card, .why-card, .quick-card, .featured-shot, .preview-grid img, .preview-grid .preview-card, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc table, .vp-doc p, .vp-doc li, .vp-doc blockquote, .vp-doc div[class*="language-"], .vp-doc pre'
-      )
+      const els = Array.from(document.querySelectorAll(REVEAL_SELECTOR))
+        .filter((el) => !el.classList.contains('in-view'))
       if (!els.length) return
       if (!('IntersectionObserver' in window)) {
         els.forEach((el) => el.classList.add('in-view'))
         return
       }
-      const io = new IntersectionObserver(
+      if (revealIO) revealIO.disconnect()
+      revealIO = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
             if (e.isIntersecting) {
-              e.target.classList.add('in-view')
-              io.unobserve(e.target)
+              onReveal(e.target)
+              revealIO?.unobserve(e.target)
             }
           })
         },
         { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
       )
-      els.forEach((el) => io.observe(el))
+      els.forEach((el) => revealIO?.observe(el))
     }
 
     let cleanupLightbox: (() => void) | null = null
@@ -135,13 +364,17 @@ export default {
       const onKey = (e: KeyboardEvent) => {
         if (!lb.classList.contains('open')) return
         if (e.key === 'Escape') { e.preventDefault(); close(); return }
-        if (e.key === 'Tab' && btn && img) {
-          if (e.shiftKey && document.activeElement === btn) { e.preventDefault(); btn.focus() }
+        if (e.key === 'Tab' && btn) {
+          const inside = lb.contains(document.activeElement)
+          if (!inside || document.activeElement === btn) {
+            e.preventDefault()
+            btn.focus()
+          }
         }
       }
       document.addEventListener('keydown', onKey, { signal: ac() })
 
-      const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img, .featured-shot img')
+      const previews = document.querySelectorAll<HTMLImageElement>('.preview-grid img')
       previews.forEach((el) => {
         const picture = el.closest('picture')
         const getBestSrc = () => {
@@ -168,7 +401,7 @@ export default {
         el.addEventListener('keydown', (e: KeyboardEvent) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler() }
         }, { signal: ac() })
-        const card = el.closest('.preview-card, .featured-shot') as HTMLElement | null
+        const card = el.closest('.preview-card') as HTMLElement | null
         if (card && card !== el) {
           card.style.cursor = 'zoom-in'
           card.addEventListener('click', (e) => {
@@ -180,6 +413,10 @@ export default {
 
       cleanupLightbox = () => {
         controllers.forEach((c) => c.abort())
+        if (lb.classList.contains('open')) {
+          lb.classList.remove('open')
+          lb.setAttribute('aria-hidden', 'true')
+        }
         document.body.style.overflow = ''
       }
     }
@@ -194,11 +431,13 @@ export default {
           setTimeout(() => window.scrollTo(0, 0), 50)
         }
       } catch {}
-      nextTick(() => { observe(); setupLightbox() })
+      nextTick(() => { observe(); setupLightbox(); setupProFeatures(); setTimeout(observe, 250) })
+      document.addEventListener('keydown', onSearchKey)
     })
     watch(() => route.path, () => nextTick(() => {
       try { if (!window.location.hash) window.scrollTo(0, 0) } catch {}
-      observe(); setupLightbox()
+      observe(); setupLightbox(); setupProFeatures()
+      setTimeout(observe, 250)
     }))
 
     return parentResult

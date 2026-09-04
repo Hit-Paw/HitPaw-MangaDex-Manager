@@ -1,5 +1,5 @@
 ---
-title: Security — HitPaw MangaDex Manager
+title: Security
 description: How HitPaw stores credentials locally via QSettings, OS keychain roadmap, and how to report vulnerabilities.
 outline: deep
 ---

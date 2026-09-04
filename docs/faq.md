@@ -1,5 +1,5 @@
 ---
-title: FAQ — HitPaw MangaDex Manager
+title: FAQ
 description: Frequently asked questions — login, covers, export, performance, and troubleshooting for HitPaw.
 outline: deep
 ---
@@ -10,6 +10,9 @@ outline: deep
   <span class="badge badge--accent">Latest</span>
   <a href="https://discord.gg/z6yYYpcYYc" class="badge badge--brand">Discord</a>
 </div>
+
+<!-- Live filter UI mounts here from the theme (theme/index.ts) -->
+<div id="faq-filter-root"></div>
 
 ## Login & Library
 
@@ -68,7 +71,7 @@ HitPaw checks headers, XML well-formedness, and node counts. Re-try with fewer t
 <details>
 <summary><strong>How does update check work?</strong></summary>
 
-Manual: `Check for updates` → popup with version info → one-click download. Silent: 3.5s after launch, queries GitHub API. If newer version exists, logs it in the stats label.
+Manual: `Check for updates` → popup with version info → one-click download. Silent: 3.5s after launch, queries GitHub API. If newer version exists, logs it in the Activity Log.
 </details>
 
 <details>
@@ -79,8 +82,10 @@ Filter first (status/year/tag/search) → `Show All (N)` on filtered subset is i
 
 ## Still stuck?
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
-[![Bug Report](https://img.shields.io/badge/GitHub-Issues-181717)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml)
+<p class="hp-badge-row">
+  <a href="https://discord.gg/z6yYYpcYYc" target="_blank" rel="noreferrer" class="badge badge--brand">Discord — join server</a>
+  <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/issues/new?template=bug_report.yml" target="_blank" rel="noreferrer" class="badge">GitHub — report an issue</a>
+</p>
 
 ::: tip Edit this page
 Every docs page has **Edit this page on GitHub** — add your question via PR (see [Contributing](/contributing)).

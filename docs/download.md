@@ -1,5 +1,5 @@
 ---
-title: Download — HitPaw MangaDex Manager
+title: Download
 description: Download HitPaw MangaDex Manager for Windows, macOS, Linux. Portable, no install, SHA256 + SBOM on every release. Verify in 10s.
 outline: deep
 ---
@@ -17,16 +17,16 @@ outline: deep
   <div class="cta-title">Get HitPaw MangaDex Manager</div>
   <div class="cta-sub">Portable • ~80 MB • MIT • No ads • <span id="os-hint">Auto-detecting your OS…</span></div>
   <a class="cta-btn" href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank" rel="noreferrer">Go to Latest Release →</a>
-  <div style="margin-top:10px; font-size:0.84rem; opacity:.88"><a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases" target="_blank" rel="noreferrer" style="color:white; text-decoration:underline; text-underline-offset:3px">All releases</a> • checksums + SBOM + provenance attached</div>
+  <div style="margin-top:10px; font-size:0.84rem; opacity:.88"><a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases" target="_blank" rel="noreferrer" style="color:var(--hp-orange-soft); text-decoration:underline; text-underline-offset:3px">All releases</a> • checksums + SBOM + provenance attached</div>
 </div>
 
 ## Files
 
 | Platform | File | Size | Run | Notes |
 |----------|------|------|-----|-------|
-| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | ~78 MB | Extract → `MangaDexExporter.exe` | DLLs bundled, no runtime |
-| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | ~65 MB | Extract → `MangaDexExporter.app` | Universal-ish via Qt 6.x |
-| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | ~62 MB | `tar xzf … && ./MangaDexExporter` | Needs `zlib1g` |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | ~78&nbsp;MB | Extract → `MangaDexExporter.exe` | DLLs bundled, no runtime |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | ~65&nbsp;MB | Extract → `MangaDexExporter.app` | Universal-ish via Qt 6.x |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | ~62&nbsp;MB | `tar xzf … && ./MangaDexExporter` | Needs `zlib1g` |
 
 ::: tip Tip: which file for me?
 Windows → zip. macOS → macOS tar.gz. Linux → Linux tar.gz. All three are portable — no installer. Delete the folder to uninstall.

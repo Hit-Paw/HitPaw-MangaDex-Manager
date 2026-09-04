@@ -1,5 +1,5 @@
 ---
-title: Contributing — HitPaw MangaDex Manager
+title: Contributing
 description: How to contribute to HitPaw — dev setup, style, tests, and PR process.
 outline: deep
 ---
@@ -43,7 +43,7 @@ cmake --preset macos-release && cmake --build --preset macos
 
 :::
 
-- **C++/Qt6** codebase — `CMakeLists.txt` `project(VERSION 3.4.6)` must match changelog
+- **C++/Qt6** codebase — `CMakeLists.txt` `project(VERSION 3.5.0)` must match changelog
 - Formatting: `.clang-format` — run before push
 - Tests: Qt Test (`tests/test_export.cpp`) via `ctest`
 
@@ -77,7 +77,7 @@ cmake -S tests -B build_tests && ctest --test-dir build_tests --output-on-failur
 
 ## Community
 
-- [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2)](https://discord.gg/z6yYYpcYYc)
+- Questions → ask on [Discord](https://discord.gg/z6yYYpcYYc)
 - Be respectful — see [Code of Conduct](/code-of-conduct)
 - Security issues → private advisory — see [Security](/security)
 

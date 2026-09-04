@@ -1,5 +1,5 @@
 ---
-title: Getting Started — HitPaw MangaDex Manager
+title: Getting Started
 description: Download HitPaw, create your free MangaDex API client, load your library, and export. 100% local & secure — under 2 minutes.
 outline: deep
 ---
@@ -21,9 +21,9 @@ Grab the matching archive from **[Latest Release](https://github.com/Hit-Paw/Hit
 
 | Platform | File | Extract & Run | Size |
 |----------|------|---------------|------|
-| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | `MangaDexExporter.exe` — DLLs bundled | ~78 MB |
-| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | `MangaDexExporter.app` or binary | ~65 MB |
-| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | `tar xzf … && ./MangaDexExporter` | ~62 MB |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | `MangaDexExporter.exe` — DLLs bundled | ~78&nbsp;MB |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | `MangaDexExporter.app` or binary | ~65&nbsp;MB |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | `tar xzf … && ./MangaDexExporter` | ~62&nbsp;MB |
 
 > **No install needed.** On Windows all Qt DLLs are inside the zip — just extract and run. On Linux ensure `zlib1g` is installed. See [Download](/download) for SHA256 + SBOM verification.
 
@@ -107,14 +107,8 @@ Select 2–3 titles → **Export** → pick **CSV** (opens in Excel) or **MAL XM
 ## Next
 
 - [Export Formats](/export) — which sites import which files + MDList sync
-- [Download](/download) — system requirements, SHA256, SBOM, whats inside the zip
+- [Download](/download) — system requirements, SHA256, SBOM, what's inside the zip
 - [Building from Source](/building) — Qt 6.8.3 + MinGW 13.1 steps, CMake presets, clang-format
 - [Security](/security) — credential storage & vulnerability reporting
 - [FAQ](/faq) — login, covers, export, performance
 
-<script setup>
-import { onMounted } from 'vue'
-onMounted(() => {
-  // Smooth scroll for anchor links inside page handled by VitePress
-})
-</script>
