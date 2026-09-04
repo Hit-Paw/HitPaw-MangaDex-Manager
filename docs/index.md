@@ -28,18 +28,6 @@ hero:
 
 > **Disclaimer:** HitPaw MangaDex Manager is not affiliated with or endorsed by MangaDex. Built by the community, for the community.
 
-<div class="featured-shot" role="figure" aria-label="Library Grid preview with 3276 titles">
-  <div class="shot-bar" aria-hidden="true">
-    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-    <span class="shot-url">HitPaw — Library Grid • 3,276 titles loaded</span>
-  </div>
-  <picture>
-    <source srcset="/preview-1.webp" type="image/webp" />
-    <img src="/preview-1.png" alt="HitPaw — Library Grid • 3276 titles • 5-column AMOLED grid with HitPaw orange accents" loading="eager" fetchpriority="high" decoding="async" width="1477" height="1164" sizes="(max-width: 960px) 100vw, 1080px" />
-  </picture>
-  <div class="featured-caption"><span>Library Grid — 3,276 titles</span> <small>5 cols • instant search • Show All (N) • offline</small></div>
-</div>
-
 <div class="stats-bar" aria-label="Key stats">
   <div class="stat-card">
     <div class="stat-number">5</div>

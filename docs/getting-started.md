@@ -21,9 +21,9 @@ Grab the matching archive from **[Latest Release](https://github.com/Hit-Paw/Hit
 
 | Platform | File | Extract & Run | Size |
 |----------|------|---------------|------|
-| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | `MangaDexExporter.exe` — DLLs bundled | ~78 MB |
-| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | `MangaDexExporter.app` or binary | ~65 MB |
-| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | `tar xzf … && ./MangaDexExporter` | ~62 MB |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | `MangaDexExporter.exe` — DLLs bundled | ~78&nbsp;MB |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | `MangaDexExporter.app` or binary | ~65&nbsp;MB |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | `tar xzf … && ./MangaDexExporter` | ~62&nbsp;MB |
 
 > **No install needed.** On Windows all Qt DLLs are inside the zip — just extract and run. On Linux ensure `zlib1g` is installed. See [Download](/download) for SHA256 + SBOM verification.
 

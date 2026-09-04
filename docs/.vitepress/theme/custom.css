@@ -14,8 +14,8 @@
   --hp-ink: #211c15;
   --hp-ink-2: #5a5344;
   --hp-ink-3: #8a8271;
-  --hp-line: rgba(255, 106, 0, .35);
-  --hp-line-strong: rgba(255, 106, 0, .65);
+  --hp-line: rgba(33, 28, 21, .16);
+  --hp-line-strong: rgba(33, 28, 21, .52);
   --hp-wash: rgba(33, 28, 21, .045);
   --hp-shadow: rgba(33, 28, 21, .08);
 
@@ -89,8 +89,16 @@
   --vp-code-color: var(--hp-orange-text);
   --vp-code-bg: var(--hp-paper-3);
   --vp-code-copy-code-bg: transparent;
-  --vp-code-copy-code-hover-bg: var(--hp-wash);
+  --vp-code-copy-code-hover-bg: var(--hp-paper-3);
   --vp-code-copy-code-border-color: var(--hp-line);
+  --vp-code-copy-code-hover-border-color: var(--hp-line-strong);
+  --vp-code-copy-code-active-text: var(--hp-orange-text);
+  /* Copy-button glyphs — VitePress hardcodes mid-gray strokes; re-drawn here
+     in the Editorial Ink palette (light: warm ink / copied: deep orange).
+     These are background-image data URIs: never touch them with a CSS
+     `background:` shorthand, which would erase the glyph. */
+  --vp-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%237d7462' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E");
+  --vp-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23a54100' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' viewBox='0 0 24 24'%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
 
   /* Custom containers */
   --vp-custom-block-tip-bg: var(--hp-accent-wash);
@@ -132,8 +140,8 @@ html.dark {
   --hp-ink: #ece4d4;
   --hp-ink-2: #b0a794;
   --hp-ink-3: #7f776a;
-  --hp-line: rgba(255, 154, 61, .3);
-  --hp-line-strong: rgba(255, 154, 61, .5);
+  --hp-line: rgba(236, 228, 212, .14);
+  --hp-line-strong: rgba(236, 228, 212, .42);
   --hp-wash: rgba(236, 228, 212, .05);
   --hp-shadow: rgba(0, 0, 0, .35);
 
@@ -167,6 +175,10 @@ html.dark {
   --vp-code-tab-bg: var(--hp-paper-3);
   --vp-code-color: var(--hp-orange-text);
   --vp-code-bg: var(--hp-paper-3);
+
+  /* Dark copy-button glyphs — paper-toned ink / bright orange for copied */
+  --vp-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23b0a794' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E");
+  --vp-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23ffa257' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' viewBox='0 0 24 24'%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
 }
 
 /* ---------- 2. BASE ---------- */
@@ -249,10 +261,52 @@ hr {
 /* ---------- 3. NAVBAR — flat paper bar with hairline ---------- */
 .VPNavBar {
   background: var(--hp-paper) !important;
-  border-bottom: 2px solid var(--hp-orange);
+}
+/* Continuous bottom hairline — painted as a navbar-level overlay.
+   A plain border-bottom gets covered mid-bar by the opaque navbar
+   .content-body background, which visually breaks the rule into
+   disconnected segments (title column | gap | right edge). The ::after
+   overlay stacks above all navbar children, so the rule stays unbroken
+   edge-to-edge and the sidebar rule plugs into it cleanly. */
+.VPNavBar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--hp-line);
+  z-index: 50;
+  pointer-events: none;
 }
 .VPNavBar .wrapper { background: transparent; }
 .VPNavBar .divider, .VPNavBar .curtain { display: none; }
+
+/* Unified masthead geometry — the navbar must occupy the exact same
+   position on every page (home, docs, 404). VitePress's has-sidebar
+   variant stretches the navbar full-bleed (wrapper padding 0, container
+   max-width 100%) and re-anchors the title over the sidebar column, so
+   on docs pages the title/search/menu land at different x positions
+   than on the home page (the "stretched" masthead). Force docs pages
+   into the same centered container the home page uses. The .Layout
+   prefix out-ranks VitePress's scoped [data-v] attribute specificity,
+   so one >=960 block also beats their >=1440 padding rules. */
+@media (min-width: 960px) {
+  .Layout .VPNavBar.has-sidebar .wrapper { padding: 0 32px; }
+  .Layout .VPNavBar.has-sidebar .container {
+    max-width: calc(var(--vp-layout-max-width, 1440px) - 64px);
+  }
+  .Layout .VPNavBar.has-sidebar .title {
+    position: static;
+    width: auto;
+    padding: 0;
+    background: transparent;
+  }
+  .Layout .VPNavBar.has-sidebar .content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 
 .VPNavBar .title {
   font-size: 15.5px;
@@ -263,6 +317,7 @@ hr {
 .VPNavBar .title .VPImage { border-radius: 2px; }
 
 .VPNavBarMenuLink {
+  position: relative;
   font-size: 13.5px;
   font-weight: 500;
   letter-spacing: .01em;
@@ -274,7 +329,18 @@ hr {
 .VPNavBarMenuLink:hover { color: var(--hp-ink); }
 .VPNavBarMenuLink.active {
   color: var(--hp-ink);
-  border-bottom-color: var(--hp-orange);
+  border-bottom-color: transparent;
+}
+/* Tab indicator — 2px orange bar sitting flush ON the navbar hairline
+   (link box protrudes 1px below the navbar, hence bottom: 1px) */
+.VPNavBarMenuLink.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  height: 2px;
+  background: var(--hp-orange);
 }
 
 /* Search trigger — mono field */
@@ -436,13 +502,19 @@ hr {
   margin-top: 20px;
 }
 
-/* ---------- Tables: ruled editorial columns ---------- */
+/* ---------- Tables: ruled editorial columns ----------
+   display:block + overflow-x keeps a too-wide table INSIDE the text
+   column (scrolls in place) instead of protruding under the right TOC.
+   Code chips inside cells may wrap (overflow-wrap) so long filenames
+   don't force the table wider than the column at common widths. */
 .vp-doc table {
   width: 100%;
   border-collapse: collapse;
   margin: 22px 0;
   font-size: .92rem;
-  display: table;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .vp-doc table th {
   font-family: var(--hp-font-mono);
@@ -452,12 +524,18 @@ hr {
   text-transform: uppercase;
   color: var(--hp-ink-3);
   text-align: left;
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-bottom: 2px solid var(--hp-ink);
   background: transparent;
+  white-space: nowrap;
 }
+/* Width hint: the trailing column (usually prose notes) yields its spare
+   space to the middle columns, so long filename chips get room to wrap at
+   their natural hyphen breaks instead of mid-token. Min-content floors it,
+   so the column can never actually starve. */
+.vp-doc table th:last-child { width: 16%; }
 .vp-doc table td {
-  padding: 12px 14px;
+  padding: 12px;
   border-bottom: 1px solid var(--hp-line);
   color: var(--hp-ink);
   background: transparent;
@@ -466,7 +544,15 @@ hr {
 .vp-doc table tr { background: transparent; }
 .vp-doc table tr:hover td { background: var(--hp-wash); }
 .vp-doc table th code, .vp-doc table td code {
-  white-space: nowrap;
+  /* Atomic unit: fits → whole chip on one line (no mid-token orphan);
+     too long → the BOX wraps to its own line and only then breaks inside
+     itself at natural points (hyphens). Auto table-layout can no longer
+     create "…ex / e" splits. */
+  display: inline-block;
+  max-width: 24ch;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 11.5px;
 }
 
 /* ---------- Blockquote: pull-note with orange spine ---------- */
@@ -520,22 +606,38 @@ hr {
   top: 8px;
   right: 12px;
 }
+/* Copy button — bordered ink chip. The glyph is painted by VitePress via
+   background-image (see --vp-icon-* tokens): only longhand background-*
+   properties may be used here, a `background:` shorthand erases the icon
+   and leaves an empty box. The VitePress "Copied!" ::before chip is killed
+   — it is sized for the stock 40px button and renders detached from this
+   34px chip; the orange border + swapped glyph is feedback enough. */
 .vp-doc div[class*='language-'] .copy {
   width: 34px;
   height: 34px;
-  border: 1px solid var(--hp-line);
-  border-radius: 3px;
-  background: var(--hp-paper-2);
-  color: var(--hp-ink-3);
   top: 8px;
   right: 8px;
-  transition: color var(--hp-fast), border-color var(--hp-fast);
+  border: 1px solid var(--hp-line);
+  border-radius: 3px;
+  background-color: var(--hp-paper-2);
+  background-image: var(--vp-icon-copy);
+  background-position: 50%;
+  background-size: 18px;
+  background-repeat: no-repeat;
+  color: var(--hp-ink-3);
+  transition: border-color var(--hp-fast), background-color var(--hp-fast), opacity var(--hp-med);
 }
 .vp-doc div[class*='language-'] .copy:hover {
   color: var(--hp-ink);
-  border-color: var(--hp-line-strong);
 }
-.vp-doc div[class*='language-'] .copy.copied { color: var(--hp-orange-text); border-color: var(--hp-orange); }
+.vp-doc div[class*='language-'] .copy.copied,
+.vp-doc div[class*='language-'] .copy:hover.copied {
+  border-color: color-mix(in srgb, var(--hp-orange) 55%, transparent);
+  border-radius: 3px;
+  background-color: var(--hp-paper-2);
+  background-image: var(--vp-icon-copied);
+}
+.vp-doc div[class*='language-'] .copy.copied::before { content: none; }
 
 /* Code line numbers off, but keep highlight lines visible */
 .vp-doc div[class*='language-'] .line { color: inherit; }
@@ -905,51 +1007,6 @@ a.badge:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); backg
 }
 .badge--brand { color: var(--hp-orange-text); }
 .badge--brand:hover { border-color: var(--hp-orange); }
-
-/* Featured screenshot — print figure */
-.featured-shot {
-  border: 1px solid var(--hp-line-strong);
-  border-radius: var(--hp-r);
-  background: var(--hp-paper-2);
-  overflow: hidden;
-  margin: 28px 0;
-}
-.featured-shot .shot-bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 14px;
-  border-bottom: 1px solid var(--hp-line);
-  background: var(--hp-paper-3);
-}
-.featured-shot .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 1px;
-  background: var(--hp-ink-3);
-}
-.featured-shot .dot:first-child { background: var(--hp-orange); }
-.featured-shot .shot-url {
-  margin-left: 8px;
-  font-family: var(--hp-font-mono);
-  font-size: 10.5px;
-  letter-spacing: .06em;
-  color: var(--hp-ink-3);
-}
-.featured-shot img { display: block; width: 100%; height: auto; }
-.featured-shot .featured-caption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 10px;
-  padding: 11px 16px;
-  border-top: 0;
-  font-family: var(--hp-font-mono);
-  font-size: 11px;
-  letter-spacing: .05em;
-}
-.featured-shot .featured-caption span { color: var(--hp-ink); font-weight: 700; }
-.featured-shot .featured-caption small { color: var(--hp-ink-3); }
 
 /* Stats — ruled stat strip */
 .stats-bar {
@@ -1412,7 +1469,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   html.js .quick-card,
   html.js .preview-grid .preview-card,
   html.js .faq-strip details,
-  html.js .featured-shot,
   html.js .section-head,
   html.js .vs-table,
   html.js .cta-banner,
@@ -1434,7 +1490,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
   html.js .quick-card:not(.in-view),
   html.js .preview-grid .preview-card:not(.in-view),
   html.js .faq-strip details:not(.in-view),
-  html.js .featured-shot:not(.in-view),
   html.js .section-head:not(.in-view),
   html.js .vs-table:not(.in-view),
   html.js .cta-banner:not(.in-view),
@@ -1512,7 +1567,6 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 
 @media (max-width: 640px) {
   .feature-grid { grid-template-columns: 1fr; }
-  .vp-doc table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .VPHero .actions .action { width: 100%; }
   .VPHero .actions .action .VPButton { width: 100%; justify-content: center; }
   .section-head { margin-top: 52px; }
@@ -1530,4 +1584,394 @@ a.why-card:hover .cc-go .arrow, a.community-card:hover .cc-go .arrow { transform
 @media print {
   .VPNavBar, .VPSidebar, .VPFooter, .VPDocAside, .pager-link, .cta-banner { display: none !important; }
   body { background: #fff; color: #000; }
+  .hp-announce, .hp-docmeta, .hp-feedback, #hp-progress, .hp-top,
+  .faq-filter, .VPDocFooter .edit-link { display: none !important; }
 }
+
+/* ============================================================
+   14. PRO LAYER — professional docs features
+   Announcement bar · version chip · doc meta row · copy page ·
+   page feedback · reading progress · back-to-top · FAQ filter
+   (Same ink-on-paper language: hairlines, mono labels, one orange)
+   ============================================================ */
+
+:root {
+  /* Announcement bar surfaces — ink plate in light, charcoal in dark */
+  --hp-ann-bg: #211c15;
+  --hp-ann-fg: #ece4d4;
+  --hp-ann-fg-2: rgba(236, 228, 212, .62);
+  --hp-ann-line: rgba(236, 228, 212, .16);
+  --hp-ann-accent: #ff8a3d;
+}
+html.dark {
+  --hp-ann-bg: #1c1915;
+  --hp-ann-fg: #ece4d4;
+  --hp-ann-fg-2: rgba(236, 228, 212, .6);
+  --hp-ann-line: rgba(236, 228, 212, .12);
+  --hp-ann-accent: #ffa257;
+}
+
+/* ----- Announcement bar (fixed, layout shifts via --vp-layout-top-height) ----- */
+.hp-announce {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--vp-z-index-layout-top, 40);
+  background: var(--hp-ann-bg);
+  color: var(--hp-ann-fg);
+  border-bottom: 1px solid var(--hp-ann-line);
+  font-family: var(--hp-font-mono);
+}
+.hp-announce-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 40px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hp-announce-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  background: var(--hp-orange);
+  animation: hpAnnPulse 2.4s ease-in-out infinite;
+}
+@keyframes hpAnnPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
+.hp-announce-text {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--hp-ann-fg-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hp-announce-text strong {
+  color: var(--hp-ann-fg);
+  font-weight: 700;
+}
+.hp-announce-sep { margin: 0 8px; }
+.hp-announce-link {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--hp-ann-accent);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color var(--hp-fast);
+}
+.hp-announce-link:hover { color: var(--hp-ann-fg); }
+.hp-announce-link svg { transition: transform var(--hp-fast); }
+.hp-announce-link:hover svg { transform: translateX(2px); }
+.hp-announce-close {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 4px;
+  border: none;
+  border-radius: var(--hp-r);
+  background: transparent;
+  color: var(--hp-ann-fg-2);
+  cursor: pointer;
+  transition: color var(--hp-fast), background var(--hp-fast);
+}
+.hp-announce-close:hover { color: var(--hp-ann-fg); background: rgba(236, 228, 212, .08); }
+
+@media (max-width: 700px) {
+  .hp-announce-text span:not(.hp-announce-sep) { display: none; }
+  .hp-announce-inner { padding: 0 16px; gap: 10px; }
+  .hp-announce-link { margin-left: auto; }
+}
+
+/* ----- Doc meta row (section · reading time · updated · copy page) ----- */
+.hp-docmeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--hp-line);
+  font-family: var(--hp-font-mono);
+  min-height: 32px;
+}
+.hp-docmeta-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.hp-docmeta-item {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--hp-ink-3);
+  white-space: nowrap;
+}
+.hp-docmeta-section { color: var(--hp-orange-text); }
+.hp-docmeta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hp-ink-3);
+  flex: 0 0 auto;
+}
+.hp-docmeta-copy {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-r);
+  background: transparent;
+  color: var(--hp-ink-2);
+  font-family: var(--hp-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--hp-fast), color var(--hp-fast), background var(--hp-fast);
+}
+.hp-docmeta-copy:hover {
+  border-color: var(--hp-line-strong);
+  color: var(--hp-ink);
+  background: var(--hp-wash);
+}
+.hp-docmeta-copy[data-copied='1'] {
+  border-color: color-mix(in srgb, var(--hp-orange) 55%, transparent);
+  color: var(--hp-orange-text);
+  background: var(--hp-accent-wash);
+}
+@media (max-width: 560px) {
+  .hp-docmeta { flex-wrap: wrap; }
+  .hp-docmeta-updated { display: none; }
+}
+
+/* ----- Page feedback ("Was this helpful?") ----- */
+.hp-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 18px 0 6px;
+  border-top: 1px solid var(--hp-line);
+  font-family: var(--hp-font-mono);
+}
+.hp-feedback-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--hp-ink-2);
+}
+.hp-feedback-actions { display: flex; gap: 8px; }
+.hp-feedback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-r);
+  background: transparent;
+  color: var(--hp-ink-2);
+  font-family: var(--hp-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--hp-fast), color var(--hp-fast), background var(--hp-fast);
+}
+.hp-feedback-btn:hover {
+  border-color: color-mix(in srgb, var(--hp-orange) 55%, transparent);
+  color: var(--hp-orange-text);
+  background: var(--hp-accent-wash);
+}
+.hp-feedback-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .02em;
+  color: var(--hp-ink-2);
+}
+.hp-feedback-done svg { color: #3fae5a; }
+.hp-feedback-done a {
+  color: var(--hp-orange-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--hp-orange-text) 38%, transparent);
+  text-underline-offset: 3px;
+}
+.hp-feedback-done a:hover { text-decoration-color: currentColor; }
+
+/* ----- Reading progress bar ----- */
+#hp-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: calc(var(--vp-z-index-nav, 30) + 20);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--hp-med);
+}
+#hp-progress.show { opacity: 1; }
+.hp-progress-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--hp-orange);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* ----- Back to top ----- */
+.hp-top {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  z-index: calc(var(--vp-z-index-nav, 30) + 10);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-r);
+  background: var(--hp-paper-2);
+  color: var(--hp-ink-2);
+  cursor: pointer;
+  box-shadow: 0 2px 10px var(--hp-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity var(--hp-med),
+    visibility 0s linear var(--hp-med),
+    transform var(--hp-med),
+    border-color var(--hp-fast),
+    color var(--hp-fast);
+}
+.hp-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--hp-med),
+    transform var(--hp-med),
+    border-color var(--hp-fast),
+    color var(--hp-fast);
+}
+.hp-top:hover { border-color: var(--hp-line-strong); color: var(--hp-ink); }
+@media (max-width: 640px) {
+  .hp-top { right: 14px; bottom: 14px; width: 36px; height: 36px; }
+}
+
+/* ----- FAQ live filter ----- */
+#faq-filter-root { margin: 18px 0 26px; }
+.faq-filter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.faq-filter-input {
+  flex: 1 1 auto;
+  height: 42px;
+  padding: 0 40px 0 38px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-r);
+  background: var(--hp-paper-2);
+  color: var(--hp-ink);
+  font-family: var(--hp-font-mono);
+  font-size: 13px;
+  transition: border-color var(--hp-fast), background var(--hp-fast);
+}
+.faq-filter-input::placeholder { color: var(--hp-ink-3); }
+.faq-filter-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--hp-orange) 55%, transparent);
+  background: var(--hp-paper-2);
+}
+.faq-filter-input::-webkit-search-cancel-button { display: none; }
+.faq-filter::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  transform: translateY(-50%);
+  background: var(--hp-ink-3);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+.faq-filter-clear {
+  position: absolute;
+  right: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: var(--hp-r);
+  background: transparent;
+  color: var(--hp-ink-2);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--hp-fast), background var(--hp-fast);
+}
+.faq-filter-clear:hover { color: var(--hp-ink); background: var(--hp-wash); }
+.faq-filter-input:not(:placeholder-shown) ~ .faq-filter-clear { display: flex; }
+.faq-filter-count {
+  flex: 0 0 auto;
+  font-family: var(--hp-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--hp-ink-3);
+  white-space: nowrap;
+}
+.faq-hidden { display: none !important; }
+@media (max-width: 560px) {
+  .faq-filter-count { display: none; }
+}
+
+/* ----- Design polish: thin ink scrollbars ----- */
+* { scrollbar-width: thin; scrollbar-color: var(--hp-line-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--hp-line-strong);
+  border-radius: 5px;
+  border: 3px solid var(--hp-paper);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--hp-ink-3); }

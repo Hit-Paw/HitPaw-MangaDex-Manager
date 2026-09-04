@@ -11,6 +11,9 @@ outline: deep
   <a href="https://discord.gg/z6yYYpcYYc" class="badge badge--brand">Discord</a>
 </div>
 
+<!-- Live filter UI mounts here from the theme (theme/index.ts) -->
+<div id="faq-filter-root"></div>
+
 ## Login & Library
 
 <details>

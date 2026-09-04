@@ -24,9 +24,9 @@ outline: deep
 
 | Platform | File | Size | Run | Notes |
 |----------|------|------|-----|-------|
-| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | ~78 MB | Extract → `MangaDexExporter.exe` | DLLs bundled, no runtime |
-| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | ~65 MB | Extract → `MangaDexExporter.app` | Universal-ish via Qt 6.x |
-| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | ~62 MB | `tar xzf … && ./MangaDexExporter` | Needs `zlib1g` |
+| **Windows** | `HitPawMangaDexManager-v*-windows-x64.zip` | ~78&nbsp;MB | Extract → `MangaDexExporter.exe` | DLLs bundled, no runtime |
+| **macOS** | `HitPawMangaDexManager-v*-macOS.tar.gz` | ~65&nbsp;MB | Extract → `MangaDexExporter.app` | Universal-ish via Qt 6.x |
+| **Linux** | `HitPawMangaDexManager-v*-Linux.tar.gz` | ~62&nbsp;MB | `tar xzf … && ./MangaDexExporter` | Needs `zlib1g` |
 
 ::: tip Tip: which file for me?
 Windows → zip. macOS → macOS tar.gz. Linux → Linux tar.gz. All three are portable — no installer. Delete the folder to uninstall.
