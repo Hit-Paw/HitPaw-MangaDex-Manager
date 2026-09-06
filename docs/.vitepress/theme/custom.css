@@ -1789,13 +1789,20 @@ html.dark {
 
 #faq-filter-root { margin: 18px 0 26px; }
 .faq-filter {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
 }
+.faq-filter-input-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
 .faq-filter-input {
   flex: 1 1 auto;
+  width: 100%;
   height: 42px;
   padding: 0 40px 0 38px;
   border: 1px solid var(--hp-line);
@@ -1813,7 +1820,7 @@ html.dark {
   background: var(--hp-paper-2);
 }
 .faq-filter-input::-webkit-search-cancel-button { display: none; }
-.faq-filter::before {
+.faq-filter-input-wrap::before {
   content: '';
   position: absolute;
   left: 13px;
@@ -1829,6 +1836,8 @@ html.dark {
 .faq-filter-clear {
   position: absolute;
   right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   display: none;
   align-items: center;
   justify-content: center;

@@ -163,8 +163,12 @@ export default {
       clear.textContent = '×'
       clear.style.display = 'none'
 
-      wrap.appendChild(input)
-      wrap.appendChild(clear)
+      const inputWrap = document.createElement('div')
+      inputWrap.className = 'faq-filter-input-wrap'
+      inputWrap.appendChild(input)
+      inputWrap.appendChild(clear)
+
+      wrap.appendChild(inputWrap)
       wrap.appendChild(count)
       root.appendChild(wrap)
 
