@@ -5,7 +5,7 @@ titleTemplate: false
 hero:
   name: HitPaw MangaDex Manager
   text: Your library. <span class="hp-accent">Offline.</span> Under your control.
-  tagline: Browse 3,000+ titles instantly, filter by status, year and tags, then export anywhere — no cloud, no tracking, no ads.
+  tagline: Browse unlimited titles instantly, filter by status, year and tags, then export anywhere — no cloud, no tracking, no ads.
   actions:
     - theme: brand
       text: Download Latest
@@ -58,7 +58,7 @@ hero:
   <a class="why-card" href="/getting-started">
     <div class="icon-wrap"><img src="/icons/outline-library.svg" alt="" width="22" height="22" loading="lazy" /></div>
     <strong>Library Grid</strong>
-    <p>Cover grid with instant search by title, status, year, and tags. Smooth at 3,000+ titles — no pagination games.</p>
+    <p>Cover grid with instant search by title, status, year, and tags. Smooth at any library size — no pagination games.</p>
     <span class="cc-go">Learn more <span class="arrow">→</span></span>
   </a>
 
