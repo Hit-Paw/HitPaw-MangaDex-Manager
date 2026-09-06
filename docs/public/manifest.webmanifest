@@ -23,7 +23,7 @@
     { "src": "/HitPaw-MangaDex-Manager/icon_512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
-    { "src": "/HitPaw-MangaDex-Manager/preview-1.png", "sizes": "1477x1164", "type": "image/png", "form_factor": "wide", "label": "Library Grid — 3276 titles" },
+    { "src": "/HitPaw-MangaDex-Manager/preview-1.png", "sizes": "1477x1164", "type": "image/png", "form_factor": "wide", "label": "Library Grid — unlimited titles" },
     { "src": "/HitPaw-MangaDex-Manager/preview-2.png", "sizes": "1200x800", "type": "image/png", "form_factor": "wide", "label": "Activity Log" },
     { "src": "/HitPaw-MangaDex-Manager/preview-3.png", "sizes": "1200x800", "type": "image/png", "form_factor": "wide", "label": "Export — 5 formats" },
     { "src": "/HitPaw-MangaDex-Manager/preview-4.png", "sizes": "1200x800", "type": "image/png", "form_factor": "wide", "label": "Download" }
