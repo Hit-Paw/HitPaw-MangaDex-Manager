@@ -55,17 +55,20 @@ Paste **Client ID + Client Secret** into the login screen. Check **Remember cred
 Click **Load Library**. You'll see skeletons → covers → your grid. Use `Show All (N)` to load everything at once — smooth at any library size.
 
 <div class="why-grid">
-  <div class="why-card" style="text-align:center">
-    <div class="icon-wrap" style="margin-bottom:10px"><img src="/icons/outline-layers.svg" alt="" width="22" height="22" loading="lazy" /></div>
-    <strong>Pagination</strong><br/><span style="opacity:.78"><code>Show more (60)</code> incremental<br/> <code>Show All (N)</code> loads entire filtered set</span>
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-layers.svg" alt="" width="22" height="22" loading="lazy" /></div>
+    <strong>Pagination</strong>
+    <p><code>Show more (60)</code> incremental • <code>Show All (N)</code> loads entire filtered set</p>
   </div>
-  <div class="why-card" style="text-align:center">
-    <div class="icon-wrap" style="margin-bottom:10px"><img src="/icons/outline-library.svg" alt="" width="22" height="22" loading="lazy" /></div>
-    <strong>Filtering</strong><br/><span style="opacity:.78">Search title, status, year, tags<br/> Status chips are color-coded</span>
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-library.svg" alt="" width="22" height="22" loading="lazy" /></div>
+    <strong>Filtering</strong>
+    <p>Search title, status, year, tags • Status chips are color-coded</p>
   </div>
-  <div class="why-card" style="text-align:center">
-    <div class="icon-wrap" style="margin-bottom:10px"><img src="/icons/outline-sync.svg" alt="" width="22" height="22" loading="lazy" /></div>
-    <strong>Status refresh</strong><br/><span style="opacity:.78"><code>Refresh library</code> re-fetches & diffs<br/> Shows + added, ~ changed, − removed</span>
+  <div class="why-card">
+    <div class="icon-wrap"><img src="/icons/outline-sync.svg" alt="" width="22" height="22" loading="lazy" /></div>
+    <strong>Status refresh</strong>
+    <p><code>Refresh library</code> re-fetches & diffs • Shows + added, ~ changed, − removed</p>
   </div>
 </div>
 
