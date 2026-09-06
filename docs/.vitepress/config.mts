@@ -158,7 +158,7 @@ export default defineConfig({
           author: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
           publisher: { '@type': 'Organization', name: 'Hit-Paw', url: 'https://github.com/Hit-Paw' },
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', availability: 'https://schema.org/InStock' },
-          softwareVersion: '3.5.0',
+          softwareVersion: '3.7.0',
           releaseNotes: `${SITE_URL}/changelog.html`,
           license: 'https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE',
           screenshot: [

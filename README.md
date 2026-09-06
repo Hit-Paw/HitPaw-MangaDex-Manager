@@ -2,7 +2,7 @@
 
 A desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
 
-[![version](https://img.shields.io/badge/version-3.5.0-orange)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
+[![version](https://img.shields.io/badge/version-3.7.0-orange)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
 [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](BUILDING.md)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml/badge.svg)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml)
@@ -13,12 +13,12 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 
 ## Preview
 
-![Library Grid — 3276 titles, 5 columns, Show All + Check for updates (v3.4.6)](screenshots/preview-1.png)
-![Activity Log — Up to date v3.4.6, HitPaw icon](screenshots/preview-2.png)
-![Export — Output Folder & Formats](screenshots/preview-3.png)
-![Download — Paste URL & Chapters](screenshots/preview-4.png)
+![Library Grid — 3333 titles, 5 columns, Show All + Check for updates (v3.7.0)](screenshots/preview-1.png)
+![Activity Log — Up to date v3.7.0, HitPaw icon](screenshots/preview-2.png)
+![Export — Output Folder & Formats + Sync to MDList](screenshots/preview-3.png)
+![Download — Paste URL & Chapters (323 loaded)](screenshots/preview-4.png)
 
-> Preview updated for **v3.4.6** — grid density toggle removed, `Show All (N)` added, manual update popup now uses HitPaw icon.
+> Preview updated for **v3.7.0** — reading progress tracking, right-click context menu, and cover prefetch.
 
 ## Features
 
@@ -28,8 +28,11 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 - Manual update check: `Check for updates` → popup with HitPaw icon showing `You are on vX / Latest vY / You are outdated` and `Download Latest Version` → `https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest` (silent auto-check still runs at launch)
 - Bulk-select and export titles with undo/redo (`Ctrl+Z` / `Ctrl+Y`), and bulk status editor (`Reading/Completed/On Hold/Plan to Read/Dropped/Re-reading`)
 - **Sync to MDList**: push your whole library (or just the selected titles) into a MangaDex custom list — reuses an existing list by name or creates one, skips duplicates, live progress, never touches reading statuses
+- **Reading progress**: per-manga chapters read / total in `QSettings`, gradient bar + `Ch. X / Y` label on cards, auto-status Reading → Completed
+- **Card context menu**: right-click for Open/Copy URL, progress +1/+5/set/reset, set status via API, select/deselect — double-click opens on MangaDex
+- **Cover prefetch**: next covers load in background while you browse — scrolling stays instant
 - Export to CSV, JSON, MAL-compatible XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire), MangaBaka JSON, and Anime-Planet's gzipped XML — with validation and import guides
-- Cover caching with disk-backed CDN retry/backoff + `Clear Cover Cache` and stats dashboard (`Years: 2026:143 … Total 3276`)
+- Cover caching with disk-backed CDN retry/backoff + `Clear Cover Cache` and stats dashboard (`Years: 2026:147 … Total 3333`)
 - Library sorting (`Title A-Z/Z-A, Year Newest/Oldest, Status`), year/tag filters, and status-color chips
 - Dark AMOLED-style UI, smooth scrolling, and skeleton loading
 

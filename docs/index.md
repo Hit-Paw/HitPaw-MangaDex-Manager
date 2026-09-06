@@ -19,7 +19,7 @@ hero:
 ---
 
 <div class="badge-row">
-  <a href="/changelog" class="badge badge--accent">v3.5.0 • Latest</a>
+  <a href="/changelog" class="badge badge--accent">v3.7.0 • Latest</a>
   <a href="/download" class="badge">Windows • macOS • Linux</a>
   <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE" target="_blank" rel="noreferrer" class="badge">MIT • Open Source</a>
   <span class="badge">Portable • ~80 MB</span>
@@ -109,15 +109,15 @@ hero:
   <div class="preview-card">
     <picture>
       <source srcset="/preview-1.webp" type="image/webp" />
-      <img src="/preview-1.png" alt="Library Grid — 3276 shown • 0 selected • filter bar with status chips" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
+      <img src="/preview-1.png" alt="Library Grid — 3333 titles • 5 columns • filter bar with status chips" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
     </picture>
-    <div class="preview-caption"><span>Library</span> <small>3276 shown • filter • search</small></div>
+    <div class="preview-caption"><span>Library</span> <small>3333 titles • filter • search</small></div>
   </div>
 
   <div class="preview-card">
     <picture>
       <source srcset="/preview-2.webp" type="image/webp" />
-      <img src="/preview-2.png" alt="Activity Log — Found saved session, Up to date v3.4.6 with HitPaw icon" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
+      <img src="/preview-2.png" alt="Activity Log — Found saved session, Up to date v3.7.0 with HitPaw icon" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
     </picture>
     <div class="preview-caption"><span>Activity Log</span> <small>Session • update check</small></div>
   </div>
@@ -125,7 +125,7 @@ hero:
   <div class="preview-card">
     <picture>
       <source srcset="/preview-3.webp" type="image/webp" />
-      <img src="/preview-3.png" alt="Export — Output Folder & 5 formats CSV JSON MAL AP MB with validation" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
+      <img src="/preview-3.png" alt="Export — Output Folder & 5 formats CSV JSON MAL AP MB plus Sync to MDList" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
     </picture>
     <div class="preview-caption"><span>Export</span> <small>CSV • JSON • MAL • AP • MB</small></div>
   </div>
@@ -133,7 +133,7 @@ hero:
   <div class="preview-card">
     <picture>
       <source srcset="/preview-4.webp" type="image/webp" />
-      <img src="/preview-4.png" alt="Download — Paste MangaDex URL or UUID • Look Up • chapters queue" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
+      <img src="/preview-4.png" alt="Download — Paste MangaDex URL or UUID • Look Up • 323 chapters queue" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
     </picture>
     <div class="preview-caption"><span>Download</span> <small>Paste URL • Look Up • queue</small></div>
   </div>

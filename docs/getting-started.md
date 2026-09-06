@@ -11,7 +11,7 @@ No installer, no Qt needed. From download to **"Library loaded" in under 2 minut
 <div class="badge-row">
   <a href="/download" class="badge badge--accent">Windows • macOS • Linux</a>
   <span class="badge">Portable • ~80 MB</span>
-  <a href="/changelog" class="badge">v3.5.0 Latest</a>
+  <a href="/changelog" class="badge">v3.7.0 Latest</a>
   <span class="badge">Offline first</span>
 </div>
 

@@ -2,6 +2,40 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [3.7.0] - 2026-09-06
+
+### Added — Reading progress tracking
+- **Per-manga reading progress**: Track chapters read / total chapters for every manga in your library. Progress is persisted locally via `QSettings` (`progress/{mangaId}/read`, `progress/{mangaId}/total`, `progress/{mangaId}/lastReadAt`) and restored on every library load — survives restarts, sign-outs, and refreshes.
+- **Progress bar on cards**: A 3px gradient bar (orange→amber) at the bottom of each cover, drawn manually in `paintEvent` so it sits on top of the cover pixmap. Only visible when `chaptersRead > 0` and `totalChapters > 0`.
+- **Progress label**: "Ch. 12 / 64 · 18%" shown below the status chip on each card. Updates live when you set progress via the context menu.
+- **Auto-status sync**: When you mark chapters read on a "Plan to Read" manga, it auto-flips to "Reading". When `chaptersRead >= totalChapters`, it auto-flips to "Completed" (unless already completed). No more manually moving statuses as you read.
+
+### Added — Right-click context menu on cards
+- Replaces the old right-click → open-MangaDex behavior with a full `QMenu`:
+  - **Open on MangaDex** — opens the title page in your browser
+  - **Copy MangaDex URL** — copies `https://mangadex.org/title/{id}` to clipboard
+  - **Reading progress** submenu:
+    - Current: X / Y (disabled, info-only)
+    - Mark +1 chapter read
+    - Mark +5 chapters read
+    - Set chapters read… (QInputDialog)
+    - Set total chapters… (QInputDialog)
+    - Reset progress
+  - **Set status** submenu: Reading / Completed / On Hold / Plan to Read / Re-reading / Dropped — pushes to MangaDex API (`POST /manga/{id}/status`) and updates local state
+  - **Select for export** / **Deselect** — toggle selection without left-clicking
+- Double-click on a card now opens on MangaDex (was right-click in v3.6).
+
+### Added — Cover prefetch
+- After each chunk of 30 cards is laid out, the next 20 covers are queued for background download via `CoverLoader::prefetch()`. Prefetch requests use the same drip queue and concurrency cap as visible loads, so they never compete with the user's actual browsing. Only uncached URLs are queued — no wasted requests.
+- Result: when you scroll down, covers are already on disk and appear instantly instead of loading on demand.
+
+### Changed
+- `MangaEntry` extended with `chaptersRead`, `totalChapters`, `lastChapterRead`, `lastReadAt` fields + `progressPercent()` helper. All defaults preserve v3.6 compatibility — old code that constructs `MangaEntry{}` is unaffected.
+- `CoverLoader::load()` now skips `apply()` for null labels (prefetch entries have null labels).
+- `MangaCard::mouseReleaseEvent` no longer opens MangaDex on right-click — right-click now emits `contextMenuRequested` signal.
+- `MangaCard::mouseDoubleClickEvent` now opens MangaDex (was right-click in v3.6).
+- Tooltip updated: "Right-click: context menu" / "Double-click: open on MangaDex".
+
 ## [3.5.0] - 2026-09-01
 
 ### Added

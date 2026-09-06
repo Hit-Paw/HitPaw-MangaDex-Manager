@@ -1,7 +1,7 @@
 {
   "name": "hitpaw-mangadex-manager-docs",
   "private": true,
-  "version": "3.5.0",
+  "version": "3.7.0",
   "scripts": {
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
