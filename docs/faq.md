@@ -75,7 +75,7 @@ Manual: `Check for updates` → popup with version info → one-click download. 
 </details>
 
 <details>
-<summary><strong>App feels slow with 3000 titles?</strong></summary>
+<summary><strong>App feels slow with a huge library?</strong></summary>
 
 Filter first (status/year/tag/search) → `Show All (N)` on filtered subset is instant. Sorting is in-memory. Clear cover cache if disk is full.
 </details>

@@ -28,7 +28,7 @@ For commit-level details see **[CHANGELOG.md on GitHub](https://github.com/Hit-P
 ## v3.4.6 — August 27, 2026
 
 - HitPaw icon on all update popups (manual + silent auto-check)
-- `Show All (N)` loads entire filtered library at once — smooth at 3000+ titles
+- `Show All (N)` loads entire filtered library at once — smooth at any library size
 - Grid fixed to **5 columns** (density toggle removed for density + performance)
 
 ## v3.4.3 — August 26, 2026

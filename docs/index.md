@@ -109,9 +109,9 @@ hero:
   <div class="preview-card">
     <picture>
       <source srcset="/preview-1.webp" type="image/webp" />
-      <img src="/preview-1.png" alt="Library Grid — 3333 titles • 5 columns • filter bar with status chips" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
+      <img src="/preview-1.png" alt="Library Grid — unlimited titles • 5 columns • filter bar with status chips" loading="lazy" decoding="async" width="1477" height="1164" sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" />
     </picture>
-    <div class="preview-caption"><span>Library</span> <small>3333 titles • filter • search</small></div>
+    <div class="preview-caption"><span>Library</span> <small>unlimited titles • filter • search</small></div>
   </div>
 
   <div class="preview-card">
@@ -191,7 +191,7 @@ hero:
   </div>
   <div class="vs-row" role="row">
     <div class="vs-feature" data-label="Feature">Offline search</div>
-    <div class="vs-hitpaw" data-label="HitPaw"><span>Instant 3000+</span></div>
+    <div class="vs-hitpaw" data-label="HitPaw"><span>Instant, unlimited</span></div>
     <div class="vs-manual" data-label="Manual">Slow</div>
     <div class="vs-bookmark" data-label="Bookmark">Site only</div>
   </div>

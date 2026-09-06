@@ -58,7 +58,7 @@ Beyond file exports, the **Export tab → Sync to MDList** pushes your bookmarks
     <strong>Reuse or create</strong><br/><span style="opacity:.78">Existing list with same name (case-insensitive) is <b>reused</b>; otherwise a new one is <b>created</b> with chosen visibility</span>
   </div>
   <div class="why-card">
-    <strong>Gentle pacing</strong><br/><span style="opacity:.78"><code>POST /manga/{id}/list/{listId}</code> one-by-one, 350 ms spacing — safe for 3000+ titles</span>
+    <strong>Gentle pacing</strong><br/><span style="opacity:.78"><code>POST /manga/{id}/list/{listId}</code> one-by-one, 350 ms spacing — safe at any library size</span>
   </div>
   <div class="why-card">
     <strong>Smart & safe</strong><br/><span style="opacity:.78">Already-in-list skipped • 429 backoff • session refresh once mid-run • <code>Stop</code> resumes later</span>

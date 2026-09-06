@@ -13,7 +13,7 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 
 ## Preview
 
-![Library Grid — 3333 titles, 5 columns, Show All + Check for updates (v3.7.0)](screenshots/preview-1.png)
+![Library Grid — unlimited titles, 5 columns, Show All + Check for updates (v3.7.0)](screenshots/preview-1.png)
 ![Activity Log — Up to date v3.7.0, HitPaw icon](screenshots/preview-2.png)
 ![Export — Output Folder & Formats + Sync to MDList](screenshots/preview-3.png)
 ![Download — Paste URL & Chapters (323 loaded)](screenshots/preview-4.png)
@@ -32,7 +32,7 @@ A desktop app for browsing, filtering, and exporting your MangaDex library — b
 - **Card context menu**: right-click for Open/Copy URL, progress +1/+5/set/reset, set status via API, select/deselect — double-click opens on MangaDex
 - **Cover prefetch**: next covers load in background while you browse — scrolling stays instant
 - Export to CSV, JSON, MAL-compatible XML (MyAnimeList/AniList/MangaBaka/Kitsu/MangaFire), MangaBaka JSON, and Anime-Planet's gzipped XML — with validation and import guides
-- Cover caching with disk-backed CDN retry/backoff + `Clear Cover Cache` and stats dashboard (`Years: 2026:147 … Total 3333`)
+- Cover caching with disk-backed CDN retry/backoff + `Clear Cover Cache` and stats dashboard (per-year `Years:` breakdown with unlimited total)
 - Library sorting (`Title A-Z/Z-A, Year Newest/Oldest, Status`), year/tag filters, and status-color chips
 - Dark AMOLED-style UI, smooth scrolling, and skeleton loading
 

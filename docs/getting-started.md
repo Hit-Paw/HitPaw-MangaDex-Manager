@@ -52,7 +52,7 @@ Paste **Client ID + Client Secret** into the login screen. Check **Remember cred
 
 ### 4. Load Library
 
-Click **Load Library**. You'll see skeletons → covers → your grid. Use `Show All (N)` to load everything at once — smooth even at 3000+ titles.
+Click **Load Library**. You'll see skeletons → covers → your grid. Use `Show All (N)` to load everything at once — smooth at any library size.
 
 <div class="why-grid">
   <div class="why-card" style="text-align:center">
