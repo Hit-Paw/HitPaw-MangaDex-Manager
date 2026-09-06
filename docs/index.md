@@ -262,7 +262,7 @@ hero:
   <details>
     <summary>Why does the grid show X / Y instead of everything?</summary>
     <div class="faq-body">
-      <code>Show more (60)</code> loads 60 covers at a time to keep scrolling smooth. <code>Show All (N)</code> loads your entire filtered set in one go — instant even at 3,000+ titles.
+      <code>Show more (60)</code> loads 60 covers at a time to keep scrolling smooth. <code>Show All (N)</code> loads your entire filtered set in one go — instant at any library size.
     </div>
   </details>
 
