@@ -453,9 +453,11 @@ hr {
   border-collapse: collapse;
   margin: 22px 0;
   font-size: .92rem;
+  line-height: 1.6;
   display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  table-layout: auto;
 }
 .vp-doc table th {
   font-family: var(--hp-font-mono);
@@ -470,24 +472,48 @@ hr {
   background: transparent;
   white-space: nowrap;
 }
-
-.vp-doc table th:last-child { width: 16%; }
+.vp-doc table th,
+.vp-doc table td {
+  min-width: 120px;
+  overflow-wrap: break-word;
+  word-break: normal;
+  vertical-align: top;
+}
+.vp-doc table th:first-child,
+.vp-doc table td:first-child {
+  min-width: 140px;
+}
+.vp-doc table th:last-child,
+.vp-doc table td:last-child {
+  min-width: 200px;
+}
 .vp-doc table td {
   padding: 12px;
   border-bottom: 1px solid var(--hp-line);
   color: var(--hp-ink);
   background: transparent;
   vertical-align: top;
+  white-space: normal;
 }
 .vp-doc table tr { background: transparent; }
 .vp-doc table tr:hover td { background: var(--hp-wash); }
 .vp-doc table th code, .vp-doc table td code {
-  
-  display: inline-block;
-  max-width: 24ch;
+  display: inline;
+  max-width: none;
   white-space: normal;
   overflow-wrap: anywhere;
+  word-break: break-word;
   font-size: 11.5px;
+}
+@media (max-width: 640px) {
+  .vp-doc table th,
+  .vp-doc table td {
+    min-width: 140px;
+    padding: 10px;
+  }
+  .vp-doc table th {
+    white-space: normal;
+  }
 }
 
 .vp-doc blockquote {
