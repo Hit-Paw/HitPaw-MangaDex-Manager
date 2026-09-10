@@ -19,7 +19,7 @@ hero:
 ---
 
 <div class="badge-row">
-  <a href="/changelog" class="badge badge--accent">v3.7.0 • Latest</a>
+  <a href="/changelog" class="badge badge--accent">v3.7.1 • Latest</a>
   <a href="/download" class="badge">Windows • macOS • Linux</a>
   <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/LICENSE" target="_blank" rel="noreferrer" class="badge">MIT • Open Source</a>
   <span class="badge">Portable • ~80 MB</span>

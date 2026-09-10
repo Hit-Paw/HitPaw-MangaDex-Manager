@@ -7,7 +7,7 @@ outline: deep
 # Download
 
 <div class="badge-row">
-  <span class="badge badge--accent">v3.7.0 Latest</span>
+  <span class="badge badge--accent">v3.7.1 Latest</span>
   <span class="badge">Windows 10/11 x64</span>
   <span class="badge">macOS 13+ • Apple/Intel</span>
   <span class="badge">Linux x64</span>
@@ -95,7 +95,7 @@ HitPaw checks silently 3.5 s after launch via GitHub API. If newer version exist
 
 ## Older versions
 
-All tags at **[Releases](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)**. We recommend **Latest** — stays in sync with MangaDex API changes. Check [Changelog](/changelog) for what's new in v3.7.0 (reading progress, context menu, cover prefetch).
+All tags at **[Releases](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)**. We recommend **Latest** — stays in sync with MangaDex API changes. Check [Changelog](/changelog) for what's new in v3.7.1 (text-safe button sizing) and v3.7.0 (reading progress, context menu, cover prefetch).
 
 <script setup>
 import { onMounted } from 'vue'
