@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "../export.h" // relative to tests/ — headers are header-only
+#include "../export.h"
 
 class TestExport : public QObject {
     Q_OBJECT
