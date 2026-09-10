@@ -597,16 +597,20 @@ hr {
 .vp-doc div[class*='language-'] .line { color: inherit; }
 
 .vp-code-group .tabs {
+  position: relative;
   display: flex;
   gap: 2px;
   overflow-x: auto;
+  overflow-y: hidden;
   background: transparent;
   border-bottom: 1px solid var(--hp-line);
+  box-shadow: none;
   scrollbar-width: thin;
   margin: 0;
   padding: 0 8px;
 }
 .vp-code-group .tabs label {
+  position: relative;
   font-family: var(--hp-font-mono);
   font-size: 11.5px;
   font-weight: 600;
@@ -614,16 +618,31 @@ hr {
   color: var(--hp-ink-3);
   padding: 9px 12px;
   border: none;
-  border-bottom: 2px solid transparent;
   background: transparent;
   outline: none;
   white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
   transition: color var(--hp-fast), border-color var(--hp-fast);
+}
+.vp-code-group .tabs label::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  bottom: -1px;
+  left: 8px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: transparent;
+  transition: background-color var(--hp-fast);
 }
 .vp-code-group .tabs label:hover { color: var(--hp-ink-2); }
 .vp-code-group .tabs input:checked + label {
   color: var(--hp-ink);
-  border-bottom-color: var(--hp-orange);
+}
+.vp-code-group .tabs input:checked + label::after {
+  background-color: var(--hp-orange);
 }
 .vp-code-group .tabs::after { display: none; }
 .vp-code-group div[class*='language-'] { margin-top: 0; border-top: none; border-radius: 0 0 var(--hp-r) var(--hp-r); }
