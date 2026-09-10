@@ -57,6 +57,7 @@
 #include <QShortcut>
 #include <QKeySequence>
 #include <QMouseEvent>
+#include <QFontDatabase>
 #include <QVersionNumber>
 #include <QXmlStreamReader>
 #include <QMenu>           // v3.7 — right-click context menu
@@ -454,20 +455,102 @@ public:
     }
 };
 
+// ── Button font & text-safe sizing ───────────────────────────────────────────
+// The global stylesheet asks for 'Inter' → 'Segoe UI Variable' → 'Segoe UI' →
+// Arial at 13px, but a QSS font only lands on a widget when it is polished
+// (shown), and which family actually wins depends on what is installed. So
+// hard-coded button widths tuned on one machine's metrics clip their labels
+// wherever Qt falls back to a wider family (Linux without Inter → DejaVu Sans,
+// CJK locale substitutions, …): screenshots showed "Clear", "None" and "Copy"
+// losing their right edge. Two things fix that:
+//
+//   1. buttonFont() resolves the same family chain the QSS asks for, eagerly,
+//      against the installed families — so font metrics (and every width
+//      computed from them) match what will actually be rendered, on every
+//      platform, before the widget is polished.
+//   2. TextSafeButton never reports a size hint narrower than its label plus
+//      its QSS side padding, and fitWidth()/refit() turn hard-coded design
+//      widths into "design width, but never below what the text needs".
+static QFont buttonFont(bool bold) {
+    static const QFont base = [] {
+        QFont f;
+        const QStringList preferred = { "Inter", "Segoe UI Variable", "Segoe UI", "Arial" };
+        const QStringList installed = QFontDatabase::families();
+        for (const QString& fam : preferred) {
+            if (installed.contains(fam)) { f.setFamily(fam); break; }
+        }
+        f.setPixelSize(13);   // same size the stylesheets ask for
+        return f;
+    }();
+    QFont f = base;
+    f.setBold(bold);
+    return f;
+}
+
+class TextSafeButton : public QPushButton {
+public:
+    // Width below which the label would start clipping: text advance + both
+    // QSS side paddings + 2px for the 1px disabled-state border.
+    int minTextWidth() const {
+        return text().isEmpty() ? 0
+                                : fontMetrics().horizontalAdvance(text()) + m_padX * 2 + 2;
+    }
+
+    QSize sizeHint() const override {
+        QSize s = QPushButton::sizeHint();
+        const int mw = minTextWidth();
+        if (mw > 0) s.setWidth(qMax(s.width(), mw));
+        return s;
+    }
+
+    QSize minimumSizeHint() const override {
+        QSize s = QPushButton::minimumSizeHint();
+        const int mw = minTextWidth();
+        if (mw > 0) s.setWidth(qMax(s.width(), mw));
+        return s;
+    }
+
+    // Keep the designed width when it already fits the label; grow it only as
+    // far as the real font demands. On systems where the design width was
+    // correct, nothing changes visually.
+    void fitWidth(int designW) {
+        m_designW = qMax(designW, 0);
+        setFixedWidth(qMax(m_designW, sizeHint().width()));
+    }
+
+    // Re-apply the fit after the label changes at runtime
+    // (e.g. "Sync Entire Library" → "Sync Entire Library (3333)").
+    void refit() {
+        if (m_designW >= 0) setFixedWidth(qMax(m_designW, sizeHint().width()));
+    }
+
+protected:
+    explicit TextSafeButton(int padX, const QString& text, QWidget* parent = nullptr)
+        : QPushButton(text, parent), m_padX(padX) {}
+
+    int m_padX;   // horizontal QSS padding baked into the button's stylesheet
+
+private:
+    int m_designW = -1;   // design width passed to fitWidth(); -1 = unmanaged
+};
+
 // ── Animated AccentButton ─────────────────────────────────────────────────────
 // Hover: orange outer glow fades in (painted in paintEvent, 180ms ease-out)
 // Press: quick scale-down pop (0.93×) that springs back (120ms + 100ms)
-class AccentButton : public QPushButton {
+class AccentButton : public TextSafeButton {
     Q_OBJECT
     Q_PROPERTY(qreal glowOpacity READ glowOpacity WRITE setGlowOpacity)
     Q_PROPERTY(qreal scaleF       READ scaleF       WRITE setScaleF)
 public:
     explicit AccentButton(const QString& text, QWidget* parent = nullptr)
-        : QPushButton(text, parent)
+        : TextSafeButton(20, text, parent)   // 20px side padding in the QSS below
     {
         setCursor(Qt::PointingHandCursor);
         setFixedHeight(40);
         setAttribute(Qt::WA_Hover);
+        // Resolve the real UI font up front (see buttonFont) so text metrics —
+        // and therefore fitWidth()/sizeHint() — are valid before polish.
+        setFont(buttonFont(true));
         // Base style — no :hover/:pressed rules; we paint the glow manually
         setStyleSheet(
             "QPushButton {"
@@ -571,25 +654,21 @@ private:
 // ── Animated GhostButton ──────────────────────────────────────────────────────
 // Hover: border fades from grey → orange, text shifts to ACCENT_H (180ms)
 // Press: scale-down pop same as AccentButton
-class GhostButton : public QPushButton {
+class GhostButton : public TextSafeButton {
     Q_OBJECT
     Q_PROPERTY(qreal hoverT READ hoverT WRITE setHoverT)
     Q_PROPERTY(qreal scaleF  READ scaleF  WRITE setScaleF)
 public:
     explicit GhostButton(const QString& text, QWidget* parent = nullptr)
-        : QPushButton(text, parent)
+        : TextSafeButton(16, text, parent)   // 16px side padding in the QSS below
     {
         setCursor(Qt::PointingHandCursor);
         setFixedHeight(40);
         setAttribute(Qt::WA_Hover);
-        // Static base — no hover rules, we paint the border manually
-        setStyleSheet(
-            "QPushButton {"
-            "  background: transparent; color: " + QString(Pal::TEXT) + ";"
-            "  border: none; border-radius: 12px;"
-            "  padding: 0 16px; font-size: 13px;"
-            "}"
-        );
+        // Resolve the real UI font up front (see buttonFont) — same reason as
+        // AccentButton: text metrics must be valid before polish.
+        setFont(buttonFont(false));
+        applyStyle();
         // Same ClearType-fringe fix as AccentButton — this button's fills and
         // border are hand-painted (see paintEvent below), so Qt has no flat
         // background color to calibrate subpixel text AA against. Plain
@@ -612,6 +691,15 @@ public:
 
     qreal scaleF() const { return m_scaleF; }
     void  setScaleF(qreal v) { m_scaleF = v; update(); }
+
+    // The default 16px side padding is for text pills. Square single-glyph
+    // buttons ("×" dismiss chip) call this with 0 so fitWidth()/setFixedSize
+    // can keep them square instead of being forced oval by phantom padding.
+    void setPaddingX(int px) {
+        m_padX = qMax(px, 0);
+        applyStyle();
+        updateGeometry();
+    }
 
 protected:
     void enterEvent(QEnterEvent* e) override { QPushButton::enterEvent(e); animateHover(1.0); }
@@ -675,6 +763,17 @@ protected:
     }
 
 private:
+    void applyStyle() {
+        // Static base — no hover rules, we paint the border manually.
+        // Side padding comes from m_padX so setPaddingX() can adjust it.
+        setStyleSheet(
+            "QPushButton {"
+            "  background: transparent; color: " + QString(Pal::TEXT) + ";"
+            "  border: none; border-radius: 12px;"
+            "  padding: 0 " + QString::number(m_padX) + "px; font-size: 13px;"
+            "}"
+        );
+    }
     static QColor lerpColor(const QColor& a, const QColor& b, qreal t) {
         return QColor::fromRgbF(
             a.redF()   + (b.redF()   - a.redF())   * t,
@@ -1702,7 +1801,7 @@ private:
             m_clientSecEdit->setText(m_clientSecret);
             m_clientSecEdit->addAction(QIcon(":/icons/nav/icons8-password-48-text.png"), QLineEdit::LeadingPosition);
             auto* clearCredsBtn = new GhostButton("Clear", loginPage);
-            clearCredsBtn->setFixedWidth(64);
+            clearCredsBtn->fitWidth(64);
             clearCredsBtn->setToolTip("Wipe the saved API client id & secret from this device");
             connect(clearCredsBtn, &QPushButton::clicked, this, &MainWindow::onClearCredentials);
             credRow->addWidget(m_clientIdEdit, 1);
@@ -1730,7 +1829,7 @@ private:
             m_passEdit->setPlaceholderText("Password");
             m_passEdit->setEchoMode(QLineEdit::Password);
             m_loginBtn = new AccentButton("Sign In", loginPage);
-            m_loginBtn->setFixedWidth(110);
+            m_loginBtn->fitWidth(110);
             row->addWidget(m_userEdit, 1);
             row->addWidget(m_passEdit, 1);
             row->addWidget(m_loginBtn);
@@ -1775,7 +1874,7 @@ private:
             m_tokenEdit->setEchoMode(QLineEdit::Password);
             m_tokenEdit->setPlaceholderText("Paste your access token here…");
             m_tokenBtn = new AccentButton("Connect", tokenPage);
-            m_tokenBtn->setFixedWidth(110);
+            m_tokenBtn->fitWidth(110);
             row->addWidget(m_tokenEdit, 1);
             row->addWidget(m_tokenBtn);
             v->addLayout(row);
@@ -1830,8 +1929,6 @@ private:
             cmdBox->setCursorPosition(0);
 
             auto* copyBtn = new GhostButton("Copy", tutFrame);
-            copyBtn->setFixedWidth(52);
-            copyBtn->setFixedHeight(24);
             connect(copyBtn, &QPushButton::clicked, [cmdBox]{
                 QGuiApplication::clipboard()->setText(cmdBox->text());
             });
@@ -1839,7 +1936,8 @@ private:
             auto* cmdRow = new QHBoxLayout;
             cmdRow->setContentsMargins(0, 0, 0, 0);
             cmdRow->setSpacing(6);
-            copyBtn->setFixedSize(58, 28);   // explicit fixed size — no size policy fight
+            copyBtn->setFixedHeight(28);       // height fixed; width is text-safe
+            copyBtn->fitWidth(58);             // grows past 58 only if the font demands it
             copyBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             cmdBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             cmdRow->addWidget(cmdBox, 1);
@@ -2078,6 +2176,7 @@ private:
             QDesktopServices::openUrl(QUrl("https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest"));
         });
         auto* bannerDismissBtn = new GhostButton("×", m_updateBanner);
+        bannerDismissBtn->setPaddingX(0);   // square chip — text pills' 16px side padding would distort it
         bannerDismissBtn->setFixedSize(26, 26);
         bannerDismissBtn->setToolTip("Dismiss");
         connect(bannerDismissBtn, &QPushButton::clicked, [this]{ if (m_updateBanner) m_updateBanner->hide(); });
@@ -2442,10 +2541,10 @@ private:
         m_outEdit->setText(m_settings.value("export/dir",
             QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)).toString());
         auto* browseBtn = new GhostButton("Browse", card);
-        browseBtn->setFixedWidth(80);
+        browseBtn->fitWidth(80);
         connect(browseBtn, &QPushButton::clicked, this, &MainWindow::onBrowse);
         auto* openBtn = new GhostButton("Open Folder", card);
-        openBtn->setFixedWidth(110);
+        openBtn->fitWidth(110);
         connect(openBtn, &QPushButton::clicked, [this]{
             QDesktopServices::openUrl(QUrl::fromLocalFile(m_outEdit->text()));
         });
@@ -2486,11 +2585,11 @@ private:
         // Action row — two explicit, independent export actions
         auto* aRow = new QHBoxLayout;
         m_exportAllBtn = new AccentButton("Export Entire Library", page);
-        m_exportAllBtn->setFixedWidth(200);
+        m_exportAllBtn->fitWidth(200);
         connect(m_exportAllBtn, &QPushButton::clicked, this, [this]{ onExport(/*selectedOnly*/false); });
 
         m_exportSelBtn = new GhostButton("Export Selected", page);
-        m_exportSelBtn->setFixedWidth(200);
+        m_exportSelBtn->fitWidth(200);
         m_exportSelBtn->setEnabled(false);
         connect(m_exportSelBtn, &QPushButton::clicked, this, [this]{ onExport(/*selectedOnly*/true); });
 
@@ -2531,16 +2630,16 @@ private:
 
         auto* mdBtnRow = new QHBoxLayout;
         m_mdlistAllBtn = new AccentButton("Sync Entire Library", mdCard);
-        m_mdlistAllBtn->setFixedWidth(210);
+        m_mdlistAllBtn->fitWidth(210);   // re-fitted whenever the count in the label changes
         m_mdlistAllBtn->setToolTip("Add every bookmarked title in your library to this MDList on MangaDex");
         connect(m_mdlistAllBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(/*selectedOnly*/false); });
         m_mdlistSelBtn = new GhostButton("Sync Selected", mdCard);
-        m_mdlistSelBtn->setFixedWidth(210);
+        m_mdlistSelBtn->fitWidth(210);
         m_mdlistSelBtn->setEnabled(false);
         m_mdlistSelBtn->setToolTip("Add only the titles selected in Library to this MDList on MangaDex");
         connect(m_mdlistSelBtn, &QPushButton::clicked, this, [this]{ onMdlistSync(/*selectedOnly*/true); });
         m_mdlistStopBtn = new GhostButton("Stop", mdCard);
-        m_mdlistStopBtn->setFixedWidth(80);
+        m_mdlistStopBtn->fitWidth(80);
         m_mdlistStopBtn->hide();
         connect(m_mdlistStopBtn, &QPushButton::clicked, this, &MainWindow::onMdlistStopClicked);
         mdBtnRow->addWidget(m_mdlistAllBtn);
@@ -2599,7 +2698,7 @@ private:
         m_dlUrlEdit = new QLineEdit(urlCard);
         m_dlUrlEdit->setPlaceholderText("https://mangadex.org/title/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
         m_dlLookupBtn = new AccentButton("Look Up", urlCard);
-        m_dlLookupBtn->setFixedWidth(110);
+        m_dlLookupBtn->fitWidth(110);
         connect(m_dlLookupBtn, &QPushButton::clicked, this, &MainWindow::onDlLookup);
         connect(m_dlUrlEdit, &QLineEdit::returnPressed, this, &MainWindow::onDlLookup);
         urlRow->addWidget(m_dlUrlEdit, 1);
@@ -2688,10 +2787,12 @@ private:
         chCtrl->addWidget(m_dlLangFilter);
 
         auto* selAllCh  = new GhostButton("All",  chCard);
-        selAllCh->setFixedSize(52, 28);
+        selAllCh->setFixedHeight(28);
+        selAllCh->fitWidth(52);
         connect(selAllCh, &QPushButton::clicked, [this]{ for(auto*c:m_dlChkBoxes) c->setChecked(true); });
         auto* selNoneCh = new GhostButton("None", chCard);
-        selNoneCh->setFixedSize(58, 28);
+        selNoneCh->setFixedHeight(28);
+        selNoneCh->fitWidth(58);
         connect(selNoneCh, &QPushButton::clicked, [this]{ for(auto*c:m_dlChkBoxes) c->setChecked(false); });
         chCtrl->addWidget(selAllCh);
         chCtrl->addWidget(selNoneCh);
@@ -2727,7 +2828,7 @@ private:
         m_dlPathEdit->setPlaceholderText("Same as Export folder…");
         m_dlPathEdit->setText(m_settings.value("download/dir", "").toString());
         auto* dlBrowse = new GhostButton("Browse", dlCard);
-        dlBrowse->setFixedWidth(80);
+        dlBrowse->fitWidth(80);
         connect(dlBrowse, &QPushButton::clicked, this, [this]{
             QString d = QFileDialog::getExistingDirectory(this, "Download Folder",
                 m_dlPathEdit->text().isEmpty() ? m_outEdit->text() : m_dlPathEdit->text());
@@ -3248,7 +3349,8 @@ private:
         auto* logLabel = new QLabel("Activity Log", logCard);
         logLabel->setStyleSheet(QString("QLabel { background: transparent; color: %1; font-size: 13px; font-weight: 700; }").arg(Pal::TEXT));
         auto* clearBtn = new GhostButton("Clear", logCard);
-        clearBtn->setFixedSize(58, 26);
+        clearBtn->setFixedHeight(26);
+        clearBtn->fitWidth(58);
         connect(clearBtn, &QPushButton::clicked, [this]{ m_log->clear(); });
         hdr->addWidget(logLabel);
         hdr->addStretch();
@@ -4963,6 +5065,7 @@ private:
             m_exportSelBtn->setEnabled(n > 0);
             m_exportSelBtn->setText(n > 0 ? QString("Export Selected (%1)").arg(n)
                                            : "Export Selected");
+            m_exportSelBtn->refit();   // label grew — make sure it still fits
         }
         if (m_selInfo) {
             m_selInfo->setText(n == 0
@@ -4973,11 +5076,13 @@ private:
             const int total = m_libraryOrder.size();
             m_mdlistAllBtn->setText(total > 0 ? QString("Sync Entire Library (%1)").arg(total)
                                               : "Sync Entire Library");
+            m_mdlistAllBtn->refit();   // count digits change the label width
             m_mdlistAllBtn->setEnabled(!m_mdlistRunning);
         }
         if (m_mdlistSelBtn) {
             m_mdlistSelBtn->setEnabled(n > 0 && !m_mdlistRunning);
             m_mdlistSelBtn->setText(n > 0 ? QString("Sync Selected (%1)").arg(n) : "Sync Selected");
+            m_mdlistSelBtn->refit();
         }
         if (m_countLbl) {
             int shown = 0, totalMatched = 0;
