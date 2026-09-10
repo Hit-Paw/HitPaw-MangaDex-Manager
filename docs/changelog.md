@@ -1,20 +1,26 @@
 ---
 title: Changelog
-description: Version history and release notes for HitPaw MangaDex Manager — v3.7.0 reading progress + context menu + prefetch, v3.5.0 MDList sync, and earlier.
+description: Version history and release notes for HitPaw MangaDex Manager — v3.7.1 text-safe button sizing, v3.7.0 reading progress + context menu + prefetch, and earlier.
 outline: deep
 ---
 
 # Changelog
 
 <div class="badge-row">
-  <span class="badge badge--accent">Current: v3.7.0</span>
+  <span class="badge badge--accent">Current: v3.7.1</span>
   <span class="badge">MIT • Open Source</span>
   <a href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases" target="_blank" rel="noreferrer" class="badge">All Releases →</a>
 </div>
 
 For commit-level details see **[CHANGELOG.md on GitHub](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/blob/main/CHANGELOG.md)**.
 
-## v3.7.0 — September 6, 2026 <Badge type="tip" text="Latest" />
+## v3.7.1 — September 10, 2026 <Badge type="tip" text="Latest" />
+
+- **Text-safe button sizing**: hard-coded-width buttons ("Clear", "All"/"None", "Copy", and more) no longer clip their right edge when the platform font renders wider than designed — most visible on Linux with the DejaVu Sans fallback and at larger scale factors
+- **Dynamic labels stay fitted**: "Export Selected (N)", "Sync Entire Library (N)" and "Sync Selected (N)" re-fit their width as the count changes, so 5-digit libraries no longer clip the sync buttons
+- `GhostButton`/`AccentButton` now resolve the UI font eagerly, never report a size hint smaller than label + padding, and route every hard-coded width through `fitWidth()` — designed width when it fits, grows only as far as the text demands
+
+## v3.7.0 — September 6, 2026
 
 - **Reading progress tracking**: per-manga chapters read / total persisted locally via `QSettings`, 3px gradient bar + `Ch. X / Y · N%` label on cards, auto-flips Plan to Read → Reading → Completed
 - **Right-click context menu**: Open on MangaDex, Copy URL, Reading progress (+1 / +5 / set / reset), Set status via API, Select/Deselect — double-click now opens on MangaDex

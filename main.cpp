@@ -4968,7 +4968,7 @@ int main(int argc, char* argv[]) {
 
     QApplication app(argc, argv);
     app.setApplicationName("HitPaw MangaDex Manager");
-    app.setApplicationVersion("3.7.0");
+    app.setApplicationVersion("3.7.1");
     app.setOrganizationName("SentinelFlow");
 
     QSharedMemory singleInstanceLock("SentinelFlow.HitPaw.MangaDexManager.instance-lock");

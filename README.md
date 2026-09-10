@@ -2,7 +2,7 @@
 
 A desktop app for browsing, filtering, and exporting your MangaDex library — built with Qt6/C++.
 
-[![version](https://img.shields.io/badge/version-3.7.0-orange)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
+[![version](https://img.shields.io/badge/version-3.7.1-orange)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases)
 [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](BUILDING.md)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml/badge.svg)](https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/actions/workflows/ci.yml)
