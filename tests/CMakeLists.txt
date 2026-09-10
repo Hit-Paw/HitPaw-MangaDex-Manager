@@ -19,3 +19,10 @@ target_include_directories(test_export PRIVATE ${CMAKE_SOURCE_DIR}/..)
 target_link_libraries(test_export PRIVATE Qt6::Core Qt6::Test)
 
 add_test(NAME test_export COMMAND test_export)
+
+# Text-safe button sizing — pure logic test (Qt mocked), no Qt linkage needed
+add_executable(test_button_sizing
+  test_button_sizing_logic.cpp
+)
+
+add_test(NAME test_button_sizing COMMAND test_button_sizing)

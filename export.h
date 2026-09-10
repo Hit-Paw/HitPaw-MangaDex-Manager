@@ -245,4 +245,4 @@ inline void toAnimeplanetGZ(const QList<MangaEntry>& lib, const QString& path) {
     writeGzip(buf, path);
 }
 
-} // namespace Export
+}

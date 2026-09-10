@@ -2,6 +2,13 @@
 
 All notable changes to HitPaw MangaDex Manager will be documented in this file.
 
+## [Unreleased]
+
+### Fixed — Button labels no longer clip
+- **Text-safe button sizing**: buttons with hard-coded widths ("Clear" in Activity Log and on the login page, "All"/"None" in the Download tab, "Copy" in the token tutorial, and several others) could clip their right edge whenever the platform font rendered wider than the width assumed — most visibly on Linux without Inter (DejaVu Sans fallback) and at larger scale factors. `GhostButton`/`AccentButton` now resolve the UI font eagerly (same family chain and 13px size the stylesheets ask for), their size hints never report less than label + horizontal padding, and every hard-coded width goes through `fitWidth()`, which keeps the designed width when it fits and grows only as far as the text demands.
+- **Dynamic labels stay fitted**: "Export Selected (N)", "Sync Entire Library (N)" and "Sync Selected (N)" re-fit their width via `refit()` whenever the count in the label changes, so 5-digit libraries no longer clip the sync buttons.
+- The square "×" update-banner dismiss chip now sets zero horizontal padding (`setPaddingX(0)`) so it stays square instead of being sized for text-pill padding.
+
 ## [3.7.0] - 2026-09-06
 
 ### Added — Reading progress tracking
