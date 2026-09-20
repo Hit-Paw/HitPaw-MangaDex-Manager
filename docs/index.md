@@ -131,31 +131,3 @@ hero:
   <p>See <a href="/faq">FAQ</a>, <a href="/export">Export guide</a>, or join <a href="https://discord.gg/z6yYYpcYYc" target="_blank" rel="noreferrer">Discord</a>.</p>
 </div>
 
-<div class="cta-banner">
-  <div class="cta-title">Ready to take control of your library?</div>
-  <div class="cta-sub">Private, portable, MIT.</div>
-  <a class="cta-btn" href="https://github.com/Hit-Paw/HitPaw-MangaDex-Manager/releases/latest" target="_blank" rel="noreferrer" aria-label="Download HitPaw latest release on GitHub">Download Latest →</a>
-  <div style="margin-top:14px; font-size:.84rem; opacity:.85">or <a href="/getting-started" style="color:var(--hp-plate-accent); text-decoration:underline; text-underline-offset:3px">Getting Started guide</a> • <a href="/download" style="color:var(--hp-plate-accent); text-decoration:underline; text-underline-offset:3px">All platforms</a></div>
-</div>
-
-
-<script setup>
-import { onMounted } from 'vue'
-onMounted(() => {
-  try {
-    // OS hint on CTA — non-blocking polish. Reads the banner's own original
-    // text each time rather than checking for a previously-appended "Detected"
-    // marker, since VitePress SPA navigation remounts this component with a
-    // fresh textContent every time — the old marker-based guard never fired.
-    const ua = navigator.userAgent || ''
-    const banner = document.querySelector('.cta-sub')
-    if (banner) {
-      let hint = ''
-      if (/Windows/.test(ua)) hint = ' • Detected Windows • zip with bundled DLLs'
-      else if (/Mac/.test(ua)) hint = ' • Detected macOS • tar.gz for Intel & Apple Silicon'
-      else if (/Linux/.test(ua)) hint = ' • Detected Linux • tar.gz + zlib1g'
-      if (hint) banner.textContent = banner.textContent.split(' • Detected')[0] + hint
-    }
-  } catch {}
-})
-</script>
